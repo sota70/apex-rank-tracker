@@ -1,0 +1,1 @@
+startBot: node src/js/index.js
