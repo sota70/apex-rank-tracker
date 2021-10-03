@@ -1,1 +1,1 @@
-discordbot: node ./src/js/index.js
+discordbot: node index.js
