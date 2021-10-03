@@ -1,1 +1,1 @@
-discordbot: node ./apex-rank-tracker/src/js/index.js
+index: node ./src/js/index.js
