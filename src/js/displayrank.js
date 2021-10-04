@@ -41,9 +41,9 @@ var jsonfilemanager_1 = require("./jsonfilemanager");
 var jsonplayerdatagetter_1 = require("./jsonplayerdatagetter");
 var jsonFileManager = new jsonfilemanager_1.JsonFileManager();
 function startTimer(client) {
-    // let min = 60000
-    // let loopTime = min * 5
-    setInterval(setDiscordUserRole, 10000, client);
+    var min = 60000;
+    var loopTime = min * 5;
+    setInterval(setDiscordUserRole, loopTime, client);
     console.log("タイマーがスタートしました");
 }
 exports.startTimer = startTimer;

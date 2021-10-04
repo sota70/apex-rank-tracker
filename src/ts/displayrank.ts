@@ -5,9 +5,9 @@ import { PlayerDataLoader } from './jsonplayerdatagetter'
 const jsonFileManager = new JsonFileManager()
 
 export function startTimer(client: Client) {
-    // let min = 60000
-    // let loopTime = min * 5
-    setInterval(setDiscordUserRole, 10000, client)
+    let min = 60000
+    let loopTime = min * 5
+    setInterval(setDiscordUserRole,loopTime, client)
     console.log("タイマーがスタートしました")
 }
 
