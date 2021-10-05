@@ -76,25 +76,20 @@ var client = new discord_js_1.Client({
 /* TOKENと適するボットとしてログインする */
 loginToClient();
 client.on('ready', function () { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, _b;
-    var _c;
-    return __generator(this, function (_d) {
-        switch (_d.label) {
+    var _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                console.log(((_c = client.user) === null || _c === void 0 ? void 0 : _c.tag) + "\u3067\u30ED\u30B0\u30A4\u30F3\u3057\u3066\u3044\u307E\u3059");
+                console.log(((_a = client.user) === null || _a === void 0 ? void 0 : _a.tag) + "\u3067\u30ED\u30B0\u30A4\u30F3\u3057\u3066\u3044\u307E\u3059");
                 console.log('準備完了');
                 client.application = new discord_js_1.ClientApplication(client, {});
                 return [4 /*yield*/, client.application.fetch()];
             case 1:
-                _d.sent();
+                _b.sent();
                 return [4 /*yield*/, registerCommands()];
             case 2:
-                _d.sent();
+                _b.sent();
                 displayrank.startTimer(client);
-                _b = (_a = console).log;
-                return [4 /*yield*/, commandChannelSetter.fetchCommandChannels()];
-            case 3:
-                _b.apply(_a, [_d.sent()]);
                 return [2 /*return*/];
         }
     });
@@ -156,16 +151,21 @@ function registerCommands() {
  */
 client.on('interactionCreate', function (interaction) {
     return __awaiter(this, void 0, void 0, function () {
-        var commandHandler;
+        var serverId, channelId, commandChannelId, commandHandler;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     if (!interaction.isCommand())
                         return [2 /*return*/];
-                    return [4 /*yield*/, commandChannelSetter.getCommandChannelId(interaction === null || interaction === void 0 ? void 0 : interaction.guildId)];
+                    serverId = interaction.guildId;
+                    channelId = interaction.channelId;
+                    return [4 /*yield*/, commandChannelSetter.getCommandChannelId(serverId)];
                 case 1:
-                    if ((_a.sent()) !== interaction.channelId) {
+                    commandChannelId = _a.sent();
+                    console.log("(InteractionCreate) ServerID: " + serverId + ", ChannelID: " + channelId + ", CommandChannelID: " + commandChannelId);
+                    if (channelId !== commandChannelId) {
                         interaction.reply({ content: "This is not the command channel", ephemeral: true });
+                        return [2 /*return*/];
                     }
                     commandHandler = new commandhandler_1.CommandHandler(interaction);
                     commandHandler.handle();
