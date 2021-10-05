@@ -50,29 +50,33 @@ exports.startTimer = startTimer;
 function setDiscordUserRole(client) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            jsonFileManager.getPlayerDatas().forEach(function (data) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var playerDataLoader, serverId, guild, discordUser, username, platform;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                playerDataLoader = new jsonplayerdatagetter_1.PlayerDataLoader();
-                                serverId = '814796519131185156';
-                                return [4 /*yield*/, client.guilds.fetch(serverId)];
-                            case 1:
-                                guild = _a.sent();
-                                return [4 /*yield*/, guild.members.fetch(data.discordUserId)];
-                            case 2:
-                                discordUser = _a.sent();
-                                username = data.username;
-                                platform = data.platform;
-                                playerDataLoader.setPlayerRankRole(discordUser, username, platform, client);
-                                return [2 /*return*/];
-                        }
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, jsonFileManager.getPlayerDatas()];
+                case 1:
+                    (_a.sent()).forEach(function (data) {
+                        return __awaiter(this, void 0, void 0, function () {
+                            var playerDataLoader, serverId, guild, discordUser, username, platform;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        playerDataLoader = new jsonplayerdatagetter_1.PlayerDataLoader();
+                                        serverId = '814796519131185156';
+                                        return [4 /*yield*/, client.guilds.fetch(serverId)];
+                                    case 1:
+                                        guild = _a.sent();
+                                        return [4 /*yield*/, guild.members.fetch(data.discordUserId)];
+                                    case 2:
+                                        discordUser = _a.sent();
+                                        username = data.username;
+                                        platform = data.platform;
+                                        playerDataLoader.setPlayerRankRole(discordUser, username, platform, client);
+                                        return [2 /*return*/];
+                                }
+                            });
+                        });
                     });
-                });
-            });
-            return [2 /*return*/];
+                    return [2 /*return*/];
+            }
         });
     });
 }

@@ -12,7 +12,7 @@ export function startTimer(client: Client) {
 }
 
 async function setDiscordUserRole(client: Client) {
-    jsonFileManager.getPlayerDatas().forEach(async function (data) {
+    (await jsonFileManager.getPlayerDatas()).forEach(async function (data) {
         let playerDataLoader = new PlayerDataLoader()
         let serverId = '814796519131185156'
         let guild = await client.guilds.fetch(serverId)
