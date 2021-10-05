@@ -4,9 +4,8 @@ import * as http from 'http'
 import * as querystring from 'querystring'
 import * as command from './commandtype'
 import * as displayrank from './displayrank'
+import * as databaseLoader from './databaseloader'
 import { CommandHandler } from './commandhandler'
-import { JsonFileManager } from './jsonfilemanager'
-import { PlayerDataLoader } from './jsonplayerdatagetter'
 import { Intents, Client, ClientApplication } from 'discord.js'
 
 const guildId = "814796519131185156"
@@ -29,6 +28,8 @@ client.on('ready',async () => {
     await client.application.fetch()
     await registerCommands()
     displayrank.startTimer(client)
+
+    databaseLoader.load()
 })
 
 /* ボットを動かしているサーバーに送られてきたメソッドメソッドを受け取り、処理するメソッド*/
@@ -81,32 +82,6 @@ client.on('interactionCreate', async function (interaction) {
     if (!interaction.isCommand()) return
     let commandHandler = new CommandHandler(interaction)
     commandHandler.handle()
-    // const { commandName, options, channel, guild } = interaction
-    // const commandNames = command.commandNames
-    // if (channel?.id !== commandChannelSetter.getCommandChannelId(guild?.id!)) return
-    // if (commandName === commandNames.APEX || commandName === commandNames.APEXALIASE) {
-    //     let username = options.getString("username", true)
-    //     let platform = options.getString("platform", true)
-    //     let playerDataLoader = new PlayerDataLoader()
-    //     let apexUserData = await playerDataLoader.obtainPlayerData(username, platform)
-    //     let playerName = apexUserData.playerName
-    //     let playerLevel = apexUserData.playerLevel
-    //     let playerRank = apexUserData.playerRank
-    //     let playerRankImage = apexUserData.playerRankImage
-    //     let playerRankRP = apexUserData.playerRankRP
-    //     let playerRanking = apexUserData.playerRanking
-    //     let embedMessage = 
-    //         createMessageEmbed(playerName, playerLevel, playerRank, playerRankRP, playerRanking, playerRankImage)
-    //     interaction.reply({ ephemeral: true, embeds: [embedMessage] })
-    // }
-    // if (commandName === commandNames.SETCOMMANDCHANNEL || commandName === commandNames.SETCOMMANDCHANNELALIASE) {
-    //     let commandChannelName = options.getString("channel")
-    //     let newCommandChannel = guild?.channels.cache.find(ch => ch.name === commandChannelName)
-    //     if (newCommandChannel === undefined) interaction.reply({ content: "Couldn't find the channel", ephemeral: true })
-    //     console.log(`NewCommandChannelName: ${newCommandChannel?.name}, NewCommandChannelID: ${newCommandChannel?.id}`)
-    //     commandChannelSetter.setCommandChannel(guild?.id!, newCommandChannel?.id!)
-    //     interaction.reply({ content: `The command channel has been set to ${newCommandChannel?.name}`, ephemeral: true })
-    // }
 })
 
 function loginToClient() {
