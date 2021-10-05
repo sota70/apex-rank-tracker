@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -56,29 +37,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCommandChannelId = exports.setCommandChannel = void 0;
-var fs = __importStar(require("fs"));
 var pg_1 = require("pg");
 var commandchannel_1 = require("./commandchannel");
 function setCommandChannel(serverId, channelId) {
     return __awaiter(this, void 0, void 0, function () {
-        var commandChannels;
+        var client;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, fetchCommandChannels()
-                    // 一つのサーバーIDに二つ以上のチャンネルIDが入るのを避けるためにフィルターをかけている
-                ];
-                case 1:
-                    commandChannels = _a.sent();
-                    return [4 /*yield*/, isCommandChannelSet(serverId)];
-                case 2:
-                    // 一つのサーバーIDに二つ以上のチャンネルIDが入るのを避けるためにフィルターをかけている
-                    if (_a.sent())
-                        removeCommandChannel(serverId, commandChannels);
-                    console.log(channelId + " has been set to " + serverId);
-                    commandChannels.push(new commandchannel_1.CommandChannel(serverId, channelId));
-                    fs.writeFileSync("./command-channel.json", JSON.stringify(commandChannels));
-                    return [2 /*return*/];
-            }
+            client = new pg_1.Client({
+                connectionString: process.env.DATABASE_URL,
+                ssl: {
+                    rejectUnauthorized: false
+                }
+            });
+            client.connect();
+            client.query("UPDATE command_channel SET serverId = " + serverId + ", channelId = " + channelId + ";", function (err, res) {
+                if (err)
+                    throw err;
+                console.log(channelId + " has been set to " + serverId);
+                client.end();
+            });
+            return [2 /*return*/];
         });
     });
 }

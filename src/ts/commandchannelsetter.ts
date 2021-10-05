@@ -1,15 +1,19 @@
-import * as fs from 'fs'
 import { Client } from 'pg'
 import { CommandChannel } from './commandchannel'
 
 export async function setCommandChannel(serverId: string, channelId: string) {
-    let commandChannels = await fetchCommandChannels()
-
-    // 一つのサーバーIDに二つ以上のチャンネルIDが入るのを避けるためにフィルターをかけている
-    if (await isCommandChannelSet(serverId)) removeCommandChannel(serverId, commandChannels)
-    console.log(`${channelId} has been set to ${serverId}`)
-    commandChannels.push(new CommandChannel(serverId, channelId))
-    fs.writeFileSync("./command-channel.json", JSON.stringify(commandChannels))
+    let client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    })
+    client.connect()
+    client.query(`UPDATE command_channel SET serverId = ${serverId}, channelId = ${channelId};`, (err, res) => {
+        if (err) throw err
+        console.log(`${channelId} has been set to ${serverId}`)
+        client.end()
+    })
 }
 
 export async function getCommandChannelId(serverId: string): Promise<string> {
