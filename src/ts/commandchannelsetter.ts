@@ -65,7 +65,7 @@ async function fetchCommandChannels(): Promise<Array<CommandChannel>> {
         })
         client.end()
     })
-    await delay(2)
+    await delay(1)
     return commandChannels
 }
 
