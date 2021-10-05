@@ -78,17 +78,15 @@ async function registerCommands() {
  * プレイヤーが打ったメッセージからコマンドを検知して、それぞれのコマンドに適応した処理をするメソッド
  */
 client.on('interactionCreate', async function (interaction) {
-    if (!interaction.isCommand()) return
     let serverId = interaction.guildId
     let channelId = interaction.channelId
     let commandChannelId = await commandChannelSetter.getCommandChannelId(serverId!)
-    console.log(`(InteractionCreate) ServerID: ${serverId}, ChannelID: ${channelId}, CommandChannelID: ${commandChannelId}`)
+    if (!interaction.isCommand()) return
     if (channelId !== commandChannelId) {
         interaction.reply({ content: "This is not the command channel", ephemeral: true })
         return
     }
-    let commandHandler = new CommandHandler(interaction)
-    commandHandler.handle()
+    new CommandHandler(interaction).handle()
 })
 
 function loginToClient() {

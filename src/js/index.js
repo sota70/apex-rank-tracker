@@ -151,24 +151,22 @@ function registerCommands() {
  */
 client.on('interactionCreate', function (interaction) {
     return __awaiter(this, void 0, void 0, function () {
-        var serverId, channelId, commandChannelId, commandHandler;
+        var serverId, channelId, commandChannelId;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    if (!interaction.isCommand())
-                        return [2 /*return*/];
                     serverId = interaction.guildId;
                     channelId = interaction.channelId;
                     return [4 /*yield*/, commandChannelSetter.getCommandChannelId(serverId)];
                 case 1:
                     commandChannelId = _a.sent();
-                    console.log("(InteractionCreate) ServerID: " + serverId + ", ChannelID: " + channelId + ", CommandChannelID: " + commandChannelId);
+                    if (!interaction.isCommand())
+                        return [2 /*return*/];
                     if (channelId !== commandChannelId) {
                         interaction.reply({ content: "This is not the command channel", ephemeral: true });
                         return [2 /*return*/];
                     }
-                    commandHandler = new commandhandler_1.CommandHandler(interaction);
-                    commandHandler.handle();
+                    new commandhandler_1.CommandHandler(interaction).handle();
                     return [2 /*return*/];
             }
         });
