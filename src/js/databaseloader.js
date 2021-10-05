@@ -1,32 +1,55 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.load = void 0;
+exports.createTable = exports.load = exports.insert = void 0;
 var pg_1 = require("pg");
+function insert() {
+    var client = new pg_1.Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
+    client.connect();
+    client.query("INSERT INTO command_channel (serverId, channelId) VALUES ('Emotional_Sota', 'pc');", function (err, res) {
+        if (err)
+            throw err;
+        console.log(res);
+        client.end();
+    });
+}
+exports.insert = insert;
 function load() {
     var client = new pg_1.Client({
-        user: 'torktcyfbxppag',
-        host: 'ec2-3-209-65-193.compute-1.amazonaws.com',
-        database: 'de7r68kvfqj9n',
-        password: '72152abc371e1ab711da281cc0c25854ff748517bf795ce4e590ca1710713dcf',
-        port: 5432
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
     });
-    var query = {
-        text: "INSERT INTO users(username, platform) VALUES($1, $2)",
-        values: ["Emotional_Sota", "pc"]
-    };
     client.connect();
-    client.query(query, function (err, res) {
-        console.log(res);
+    client.query("SELECT serverId, channelId FROM command_channel;", function (err, res) {
+        if (err)
+            throw err;
+        res.rows.forEach(function (row) {
+            var r = JSON.parse(JSON.stringify(row));
+            console.log(r);
+        });
+        client.end();
     });
 }
 exports.load = load;
-function login() {
+function createTable() {
     var client = new pg_1.Client({
-        user: 'torktcyfbxppag',
-        host: 'ec2-3-209-65-193.compute-1.amazonaws.com',
-        database: 'de7r68kvfqj9n',
-        password: '72152abc371e1ab711da281cc0c25854ff748517bf795ce4e590ca1710713dcf',
-        port: 5432
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
     });
     client.connect();
+    client.query("CREATE TABLE command_channel (serverId char(100), channelId char(100));", function (err, res) {
+        if (err)
+            throw err;
+        console.log(res);
+        client.end();
+    });
 }
+exports.createTable = createTable;

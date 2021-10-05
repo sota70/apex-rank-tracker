@@ -5,6 +5,7 @@ import * as querystring from 'querystring'
 import * as command from './commandtype'
 import * as displayrank from './displayrank'
 import * as databaseLoader from './databaseloader'
+import * as commandChannelSetter from './commandchannelsetter'
 import { CommandHandler } from './commandhandler'
 import { Intents, Client, ClientApplication } from 'discord.js'
 
@@ -28,8 +29,6 @@ client.on('ready',async () => {
     await client.application.fetch()
     await registerCommands()
     displayrank.startTimer(client)
-
-    databaseLoader.load()
 })
 
 /* ボットを動かしているサーバーに送られてきたメソッドメソッドを受け取り、処理するメソッド*/

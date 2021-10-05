@@ -1,30 +1,50 @@
 import { Client } from 'pg'
+import { CommandChannel } from './commandchannel'
 
-export function load() {
+export function insert() {
     let client = new Client({
-        user: 'torktcyfbxppag',
-        host: 'ec2-3-209-65-193.compute-1.amazonaws.com',
-        database: 'de7r68kvfqj9n',
-        password: '72152abc371e1ab711da281cc0c25854ff748517bf795ce4e590ca1710713dcf',
-        port: 5432
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
     })
-    let query = {
-        text: "INSERT INTO users(username, platform) VALUES($1, $2)",
-        values: ["Emotional_Sota", "pc"]
-    }
     client.connect()
-    client.query(query, (err, res) => {
+    client.query("INSERT INTO command_channel (serverId, channelId) VALUES ('Emotional_Sota', 'pc');", (err, res) => {
+        if (err) throw err
         console.log(res)
+        client.end()
     })
 }
 
-function login() {
+export function load() {
     let client = new Client({
-        user: 'torktcyfbxppag',
-        host: 'ec2-3-209-65-193.compute-1.amazonaws.com',
-        database: 'de7r68kvfqj9n',
-        password: '72152abc371e1ab711da281cc0c25854ff748517bf795ce4e590ca1710713dcf',
-        port: 5432
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
     })
     client.connect()
+    client.query("SELECT serverId, channelId FROM command_channel;", (err, res) => {
+        if (err) throw err
+        res.rows.forEach(function (row) {
+            let r = JSON.parse(JSON.stringify(row))
+            console.log(r)
+        })
+        client.end()
+    })
+}
+
+export function createTable() {
+    let client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    })
+    client.connect()
+    client.query("CREATE TABLE command_channel (serverId char(100), channelId char(100));", (err, res) => {
+        if (err) throw err
+        console.log(res)
+        client.end()
+    })
 }

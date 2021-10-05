@@ -61,7 +61,6 @@ var http = __importStar(require("http"));
 var querystring = __importStar(require("querystring"));
 var command = __importStar(require("./commandtype"));
 var displayrank = __importStar(require("./displayrank"));
-var databaseLoader = __importStar(require("./databaseloader"));
 var commandhandler_1 = require("./commandhandler");
 var discord_js_1 = require("discord.js");
 var guildId = "814796519131185156";
@@ -90,7 +89,6 @@ client.on('ready', function () { return __awaiter(void 0, void 0, void 0, functi
             case 2:
                 _b.sent();
                 displayrank.startTimer(client);
-                databaseLoader.load();
                 return [2 /*return*/];
         }
     });
