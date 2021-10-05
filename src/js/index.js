@@ -61,6 +61,7 @@ var http = __importStar(require("http"));
 var querystring = __importStar(require("querystring"));
 var command = __importStar(require("./commandtype"));
 var displayrank = __importStar(require("./displayrank"));
+var commandChannelSetter = __importStar(require("./commandchannelsetter"));
 var commandhandler_1 = require("./commandhandler");
 var discord_js_1 = require("discord.js");
 var guildId = "814796519131185156";
@@ -152,11 +153,19 @@ client.on('interactionCreate', function (interaction) {
     return __awaiter(this, void 0, void 0, function () {
         var commandHandler;
         return __generator(this, function (_a) {
-            if (!interaction.isCommand())
-                return [2 /*return*/];
-            commandHandler = new commandhandler_1.CommandHandler(interaction);
-            commandHandler.handle();
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    if (!interaction.isCommand())
+                        return [2 /*return*/];
+                    return [4 /*yield*/, commandChannelSetter.getCommandChannelId(interaction === null || interaction === void 0 ? void 0 : interaction.guildId)];
+                case 1:
+                    if ((_a.sent()) !== interaction.channelId) {
+                        interaction.reply({ content: "This is not the command channel", ephemeral: true });
+                    }
+                    commandHandler = new commandhandler_1.CommandHandler(interaction);
+                    commandHandler.handle();
+                    return [2 /*return*/];
+            }
         });
     });
 });

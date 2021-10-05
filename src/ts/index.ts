@@ -79,6 +79,9 @@ async function registerCommands() {
  */
 client.on('interactionCreate', async function (interaction) {
     if (!interaction.isCommand()) return
+    if (await commandChannelSetter.getCommandChannelId(interaction?.guildId!) !== interaction.channelId) {
+        interaction.reply({ content: "This is not the command channel", ephemeral: true })
+    }
     let commandHandler = new CommandHandler(interaction)
     commandHandler.handle()
 })
