@@ -47,7 +47,7 @@ async function isCommandChannelSet(serverId: string): Promise<Boolean> {
     return dataExists
 }
 
-async function fetchCommandChannels(): Promise<Array<CommandChannel>> {
+export async function fetchCommandChannels(): Promise<Array<CommandChannel>> {
     let client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -71,6 +71,6 @@ async function fetchCommandChannels(): Promise<Array<CommandChannel>> {
 
 function delay(sec: number) {
     return new Promise((resolve) => {
-        setTimeout(resolve, sec * 1000)
+        setTimeout(resolve, sec * 1350)
     })
 }

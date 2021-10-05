@@ -76,20 +76,25 @@ var client = new discord_js_1.Client({
 /* TOKENと適するボットとしてログインする */
 loginToClient();
 client.on('ready', function () { return __awaiter(void 0, void 0, void 0, function () {
-    var _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var _a, _b;
+    var _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
-                console.log(((_a = client.user) === null || _a === void 0 ? void 0 : _a.tag) + "\u3067\u30ED\u30B0\u30A4\u30F3\u3057\u3066\u3044\u307E\u3059");
+                console.log(((_c = client.user) === null || _c === void 0 ? void 0 : _c.tag) + "\u3067\u30ED\u30B0\u30A4\u30F3\u3057\u3066\u3044\u307E\u3059");
                 console.log('準備完了');
                 client.application = new discord_js_1.ClientApplication(client, {});
                 return [4 /*yield*/, client.application.fetch()];
             case 1:
-                _b.sent();
+                _d.sent();
                 return [4 /*yield*/, registerCommands()];
             case 2:
-                _b.sent();
+                _d.sent();
                 displayrank.startTimer(client);
+                _b = (_a = console).log;
+                return [4 /*yield*/, commandChannelSetter.fetchCommandChannels()];
+            case 3:
+                _b.apply(_a, [_d.sent()]);
                 return [2 /*return*/];
         }
     });

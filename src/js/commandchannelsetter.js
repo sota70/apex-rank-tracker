@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCommandChannelId = exports.setCommandChannel = void 0;
+exports.fetchCommandChannels = exports.getCommandChannelId = exports.setCommandChannel = void 0;
 var pg_1 = require("pg");
 var commandchannel_1 = require("./commandchannel");
 function setCommandChannel(serverId, channelId) {
@@ -145,7 +145,7 @@ function fetchCommandChannels() {
                         });
                         client.end();
                     });
-                    return [4 /*yield*/, delay(2)];
+                    return [4 /*yield*/, delay(1)];
                 case 1:
                     _a.sent();
                     return [2 /*return*/, commandChannels];
@@ -153,8 +153,9 @@ function fetchCommandChannels() {
         });
     });
 }
+exports.fetchCommandChannels = fetchCommandChannels;
 function delay(sec) {
     return new Promise(function (resolve) {
-        setTimeout(resolve, sec * 1000);
+        setTimeout(resolve, sec * 1350);
     });
 }
