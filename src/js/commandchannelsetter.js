@@ -43,20 +43,33 @@ function setCommandChannel(serverId, channelId) {
     return __awaiter(this, void 0, void 0, function () {
         var client;
         return __generator(this, function (_a) {
-            client = new pg_1.Client({
-                connectionString: process.env.DATABASE_URL,
-                ssl: {
-                    rejectUnauthorized: false
-                }
-            });
-            client.connect();
-            client.query("UPDATE command_channel SET serverId = " + serverId + ", channelId = " + channelId + ";", function (err, res) {
-                if (err)
-                    throw err;
-                console.log(channelId + " has been set to " + serverId);
-                client.end();
-            });
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    client = new pg_1.Client({
+                        connectionString: process.env.DATABASE_URL,
+                        ssl: { rejectUnauthorized: false }
+                    });
+                    return [4 /*yield*/, isCommandChannelSet(serverId)];
+                case 1:
+                    if (!(_a.sent())) {
+                        client.connect();
+                        client.query("INSERT INTO command_channel (serverId, channelId) VALUES (" + serverId + ", " + channelId + ");", function (err, res) {
+                            if (err)
+                                throw err;
+                            console.log(channelId + " has been set to " + serverId);
+                            client.end();
+                        });
+                        return [2 /*return*/];
+                    }
+                    client.connect();
+                    client.query("UPDATE command_channel SET serverId = " + serverId + ", channelId = " + channelId + ";", function (err, res) {
+                        if (err)
+                            throw err;
+                        console.log(channelId + " has been set to " + serverId);
+                        client.end();
+                    });
+                    return [2 /*return*/];
+            }
         });
     });
 }
@@ -77,13 +90,6 @@ function getCommandChannelId(serverId) {
     });
 }
 exports.getCommandChannelId = getCommandChannelId;
-function removeCommandChannel(serverId, commandChannels) {
-    for (var i = 0; i < commandChannels.length; i++) {
-        if (commandChannels[i].serverId !== serverId)
-            continue;
-        commandChannels.splice(i, 1);
-    }
-}
 function getCommandChannel(serverId) {
     return __awaiter(this, void 0, void 0, function () {
         var commandChannels, i;

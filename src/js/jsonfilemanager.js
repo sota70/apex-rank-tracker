@@ -107,27 +107,55 @@ var JsonFileManager = /** @class */ (function () {
             client.end();
         });
     };
-    // public isDataExists(discordUserId: String): Boolean {
-    //     let playerData = this.getPlayerDatas()
-    //     let dataExists = false
-    //     for (let i = 0; i < playerData.length; i++) {
-    //         if (playerData[i].discordUserId !== discordUserId) continue
-    //         dataExists = true
-    //     }
-    //     return dataExists
-    // }
-    JsonFileManager.prototype.writeData = function (discordUser, username, platform) {
-        var client = new pg_1.Client({
-            connectionString: process.env.DATABASE_URL,
-            ssl: {
-                rejectUnauthorized: false
-            }
+    JsonFileManager.prototype.isDataExists = function (discordUserId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var playerData, dataExists, i;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getPlayerDatas()];
+                    case 1:
+                        playerData = _a.sent();
+                        dataExists = false;
+                        for (i = 0; i < playerData.length; i++) {
+                            if (playerData[i].discordUserId !== discordUserId)
+                                continue;
+                            dataExists = true;
+                        }
+                        return [2 /*return*/, dataExists];
+                }
+            });
         });
-        client.connect();
-        client.query("UPDATE username SET discordUserId = " + discordUser.id + ", username = " + username + ", platform = " + platform + ";", function (err, res) {
-            if (err)
-                throw err;
-            client.end();
+    };
+    JsonFileManager.prototype.writeData = function (discordUser, username, platform) {
+        return __awaiter(this, void 0, void 0, function () {
+            var client;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        client = new pg_1.Client({
+                            connectionString: process.env.DATABASE_URL,
+                            ssl: { rejectUnauthorized: false }
+                        });
+                        return [4 /*yield*/, this.isDataExists(discordUser.id)];
+                    case 1:
+                        if (!(_a.sent())) {
+                            client.connect();
+                            client.query("INSERT INTO username (discordUserId, username, platform) VALUES (" + discordUser.id + ", " + username + ", " + platform + ");", function (err, res) {
+                                if (err)
+                                    throw err;
+                                client.end();
+                            });
+                            return [2 /*return*/];
+                        }
+                        client.connect();
+                        client.query("UPDATE username SET discordUserId = " + discordUser.id + ", username = " + username + ", platform = " + platform + ";", function (err, res) {
+                            if (err)
+                                throw err;
+                            client.end();
+                        });
+                        return [2 /*return*/];
+                }
+            });
         });
     };
     JsonFileManager.prototype.delay = function (sec) {
