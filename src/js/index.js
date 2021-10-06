@@ -62,6 +62,7 @@ var querystring = __importStar(require("querystring"));
 var command = __importStar(require("./commandtype"));
 var displayrank = __importStar(require("./displayrank"));
 var commandChannelSetter = __importStar(require("./commandchannelsetter"));
+var sqlDataEditor = __importStar(require("./sqldataeditor"));
 var commandhandler_1 = require("./commandhandler");
 var discord_js_1 = require("discord.js");
 var guildId = "814796519131185156";
@@ -76,6 +77,7 @@ var client = new discord_js_1.Client({
 /* TOKENと適するボットとしてログインする */
 loginToClient();
 client.on('ready', function () { return __awaiter(void 0, void 0, void 0, function () {
+    var rows;
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
@@ -90,6 +92,11 @@ client.on('ready', function () { return __awaiter(void 0, void 0, void 0, functi
             case 2:
                 _b.sent();
                 displayrank.startTimer(client);
+                rows = new Map([
+                    ["serverId", "EMPTY"],
+                    ["channelId", "EMPTY"]
+                ]);
+                sqlDataEditor.update("command_channel", rows);
                 return [2 /*return*/];
         }
     });

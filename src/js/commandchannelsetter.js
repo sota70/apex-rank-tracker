@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -37,37 +56,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchCommandChannels = exports.isCommandChannelSet = exports.getCommandChannelId = exports.setCommandChannel = void 0;
-var pg_1 = require("pg");
 var commandchannel_1 = require("./commandchannel");
+var sqlDataEditor = __importStar(require("./sqldataeditor"));
 function setCommandChannel(serverId, channelId) {
     return __awaiter(this, void 0, void 0, function () {
-        var client;
+        var rows;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    client = new pg_1.Client({
-                        connectionString: process.env.DATABASE_URL,
-                        ssl: { rejectUnauthorized: false }
-                    });
+                    rows = new Map([
+                        ["serverId", serverId],
+                        ["channelId", channelId]
+                    ]);
                     return [4 /*yield*/, isCommandChannelSet(serverId)];
                 case 1:
                     if (!(_a.sent())) {
-                        client.connect();
-                        client.query("INSERT INTO command_channel (serverId, channelId) VALUES (" + serverId + ", " + channelId + ");", function (err, res) {
-                            if (err)
-                                throw err;
-                            console.log(channelId + " has been set to " + serverId);
-                            client.end();
-                        });
+                        sqlDataEditor.insert("command_channel", rows);
+                        console.log(channelId + " has been set to " + serverId);
                         return [2 /*return*/];
                     }
-                    client.connect();
-                    client.query("UPDATE command_channel SET serverId = " + serverId + ", channelId = " + channelId + ";", function (err, res) {
-                        if (err)
-                            throw err;
-                        console.log(channelId + " has been set to " + serverId);
-                        client.end();
-                    });
+                    sqlDataEditor.update("command_channel", rows);
+                    console.log(channelId + " has been set to " + serverId);
                     return [2 /*return*/];
             }
         });
@@ -124,37 +133,39 @@ function isCommandChannelSet(serverId) {
 exports.isCommandChannelSet = isCommandChannelSet;
 function fetchCommandChannels() {
     return __awaiter(this, void 0, void 0, function () {
-        var commandChannels, client;
+        var commandChannels, rows;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     commandChannels = [];
-                    client = new pg_1.Client({
-                        connectionString: process.env.DATABASE_URL,
-                        ssl: { rejectUnauthorized: false }
-                    });
-                    client.connect();
-                    client.query("SELECT serverId, channelId FROM command_channel;", function (err, res) {
-                        if (err)
-                            throw err;
-                        res.rows.forEach(function (row) {
-                            var serverId = JSON.parse(JSON.stringify(row.serverid));
-                            var channelId = JSON.parse(JSON.stringify(row.channelid));
-                            commandChannels.push(new commandchannel_1.CommandChannel(serverId, channelId));
-                        });
-                        client.end();
-                    });
-                    return [4 /*yield*/, delay(1)];
+                    return [4 /*yield*/, sqlDataEditor.select("command_channel")];
                 case 1:
-                    _a.sent();
-                    return [2 /*return*/, commandChannels];
+                    rows = _a.sent();
+                    rows.forEach(function (row) {
+                        var serverId = JSON.parse(JSON.stringify(row.serverid));
+                        var channelId = JSON.parse(JSON.stringify(row.channelid));
+                        commandChannels.push(new commandchannel_1.CommandChannel(serverId, channelId));
+                    });
+                    return [2 /*return*/, commandChannels
+                        // let client = new Client({
+                        //     connectionString: process.env.DATABASE_URL,
+                        //     ssl: { rejectUnauthorized: false }
+                        // })
+                        // client.connect()
+                        // client.query("SELECT serverId, channelId FROM command_channel;", (err, res) => {
+                        //     if (err) throw err
+                        //     res.rows.forEach(function (row) {
+                        //         let serverId = JSON.parse(JSON.stringify(row.serverid))
+                        //         let channelId = JSON.parse(JSON.stringify(row.channelid))
+                        //         commandChannels.push(new CommandChannel(serverId, channelId))
+                        //     })
+                        //     client.end()
+                        // })
+                        // await delay(1)
+                        // return commandChannels
+                    ];
             }
         });
     });
 }
 exports.fetchCommandChannels = fetchCommandChannels;
-function delay(sec) {
-    return new Promise(function (resolve) {
-        setTimeout(resolve, sec * 1350);
-    });
-}

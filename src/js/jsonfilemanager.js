@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -37,6 +56,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JsonFileManager = void 0;
+var sqlDataEditor = __importStar(require("./sqldataeditor"));
 var pg_1 = require("pg");
 var userdata_1 = require("./userdata");
 var JsonFileManager = /** @class */ (function () {
@@ -64,32 +84,20 @@ var JsonFileManager = /** @class */ (function () {
     };
     JsonFileManager.prototype.getPlayerDatas = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var users, client;
+            var users, rows;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         users = [];
-                        client = new pg_1.Client({
-                            connectionString: process.env.DATABASE_URL,
-                            ssl: {
-                                rejectUnauthorized: false
-                            }
-                        });
-                        client.connect();
-                        client.query("SELECT discordUserId, username, platform FROM username;", function (err, res) {
-                            if (err)
-                                throw err;
-                            res.rows.forEach(function (row) {
-                                var discordUserId = JSON.parse(JSON.stringify(row.discorduserid));
-                                var username = JSON.parse(JSON.stringify(row.username));
-                                var platform = JSON.parse(JSON.stringify(row.platform));
-                                users.push(new userdata_1.User(discordUserId, username, platform));
-                            });
-                            client.end();
-                        });
-                        return [4 /*yield*/, this.delay(1)];
+                        return [4 /*yield*/, sqlDataEditor.select("username")];
                     case 1:
-                        _a.sent();
+                        rows = _a.sent();
+                        rows.forEach(function (row) {
+                            var discordUserId = JSON.parse(JSON.stringify(row.discorduserid));
+                            var username = JSON.parse(JSON.stringify(row.username));
+                            var platform = JSON.parse(JSON.stringify(row.platform));
+                            users.push(new userdata_1.User(discordUserId, username, platform));
+                        });
                         return [2 /*return*/, users];
                 }
             });
@@ -122,31 +130,22 @@ var JsonFileManager = /** @class */ (function () {
     };
     JsonFileManager.prototype.writeData = function (discordUser, username, platform) {
         return __awaiter(this, void 0, void 0, function () {
-            var client;
+            var rows;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        client = new pg_1.Client({
-                            connectionString: process.env.DATABASE_URL,
-                            ssl: { rejectUnauthorized: false }
-                        });
+                        rows = new Map([
+                            ["discordUserId", discordUser.id],
+                            ["username", username],
+                            ["platform", platform]
+                        ]);
                         return [4 /*yield*/, this.isDataExists(discordUser.id)];
                     case 1:
                         if (!(_a.sent())) {
-                            client.connect();
-                            client.query("INSERT INTO username (discordUserId, username, platform) VALUES ('" + discordUser.id + "', '" + username + "', '" + platform + "');", function (err, res) {
-                                if (err)
-                                    throw err;
-                                client.end();
-                            });
+                            sqlDataEditor.insert("username", rows);
                             return [2 /*return*/];
                         }
-                        client.connect();
-                        client.query("UPDATE username SET discordUserId = '" + discordUser.id + "', username = '" + username + "', platform = '" + platform + "';", function (err, res) {
-                            if (err)
-                                throw err;
-                            client.end();
-                        });
+                        sqlDataEditor.update("username", rows);
                         return [2 /*return*/];
                 }
             });

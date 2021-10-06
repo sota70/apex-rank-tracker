@@ -1,4 +1,5 @@
 import * as Discord from 'discord.js'
+import * as sqlDataEditor from './sqldataeditor'
 import { Client } from 'pg'
 import { User } from './userdata'
 
@@ -16,24 +17,13 @@ export class JsonFileManager {
 
     public async getPlayerDatas(): Promise<Array<User>> {
         let users: Array<User> = []
-        let client = new Client({
-            connectionString: process.env.DATABASE_URL,
-            ssl: {
-                rejectUnauthorized: false
-            }
+        let rows = await sqlDataEditor.select("username")
+        rows.forEach(function (row) {
+            let discordUserId = JSON.parse(JSON.stringify(row.discorduserid))
+            let username = JSON.parse(JSON.stringify(row.username))
+            let platform = JSON.parse(JSON.stringify(row.platform))
+            users.push(new User(discordUserId, username, platform))
         })
-        client.connect()
-        client.query("SELECT discordUserId, username, platform FROM username;", (err, res) => {
-            if (err) throw err
-            res.rows.forEach(function (row) {
-                let discordUserId = JSON.parse(JSON.stringify(row.discorduserid))
-                let username = JSON.parse(JSON.stringify(row.username))
-                let platform = JSON.parse(JSON.stringify(row.platform))
-                users.push(new User(discordUserId, username, platform))
-            })
-            client.end()
-        })
-        await this.delay(1)
         return users
     }
 
@@ -59,23 +49,16 @@ export class JsonFileManager {
         username: string,
         platform: string
     ) {
-        let client = new Client({
-            connectionString: process.env.DATABASE_URL,
-            ssl: { rejectUnauthorized: false }
-        })
+        let rows = new Map<string, any>([
+            ["discordUserId", discordUser.id],
+            ["username", username],
+            ["platform", platform]
+        ])
         if (!await this.isDataExists(discordUser.id)) {
-            client.connect()
-            client.query(`INSERT INTO username (discordUserId, username, platform) VALUES ('${discordUser.id}', '${username}', '${platform}');`, (err, res) => {
-                if (err) throw err
-                client.end()
-            })
+            sqlDataEditor.insert("username", rows)
             return
         }
-        client.connect()
-        client.query(`UPDATE username SET discordUserId = '${discordUser.id}', username = '${username}', platform = '${platform}';`, (err, res) => {
-            if (err) throw err
-            client.end()
-        })
+        sqlDataEditor.update("username", rows)
     }
 
     private delay(sec: number) {

@@ -1,26 +1,18 @@
-import { Client } from 'pg'
 import { CommandChannel } from './commandchannel'
+import * as sqlDataEditor from './sqldataeditor'
 
 export async function setCommandChannel(serverId: string, channelId: string) {
-    let client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false }
-    })
+    let rows = new Map<string, any>([
+        ["serverId", serverId],
+        ["channelId", channelId]
+    ])
     if (!await isCommandChannelSet(serverId)) {
-        client.connect()
-        client.query(`INSERT INTO command_channel (serverId, channelId) VALUES (${serverId}, ${channelId});`, (err, res) => {
-            if (err) throw err
-            console.log(`${channelId} has been set to ${serverId}`)
-            client.end()
-        })
+        sqlDataEditor.insert("command_channel", rows)
+        console.log(`${channelId} has been set to ${serverId}`)
         return
     }
-    client.connect()
-    client.query(`UPDATE command_channel SET serverId = ${serverId}, channelId = ${channelId};`, (err, res) => {
-        if (err) throw err
-        console.log(`${channelId} has been set to ${serverId}`)
-        client.end()
-    })
+    sqlDataEditor.update("command_channel", rows)
+    console.log(`${channelId} has been set to ${serverId}`)
 }
 
 export async function getCommandChannelId(serverId: string): Promise<string> {
@@ -44,26 +36,27 @@ export async function isCommandChannelSet(serverId: string): Promise<Boolean> {
 
 export async function fetchCommandChannels(): Promise<Array<CommandChannel>> {
     let commandChannels: Array<CommandChannel> = []
-    let client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false }
+    let rows = await sqlDataEditor.select("command_channel")
+    rows.forEach(function (row) {
+        let serverId = JSON.parse(JSON.stringify(row.serverid))
+        let channelId = JSON.parse(JSON.stringify(row.channelid))
+        commandChannels.push(new CommandChannel(serverId, channelId))
     })
-    client.connect()
-    client.query("SELECT serverId, channelId FROM command_channel;", (err, res) => {
-        if (err) throw err
-        res.rows.forEach(function (row) {
-            let serverId = JSON.parse(JSON.stringify(row.serverid))
-            let channelId = JSON.parse(JSON.stringify(row.channelid))
-            commandChannels.push(new CommandChannel(serverId, channelId))
-        })
-        client.end()
-    })
-    await delay(1)
     return commandChannels
-}
-
-function delay(sec: number) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, sec * 1350)
-    })
+    // let client = new Client({
+    //     connectionString: process.env.DATABASE_URL,
+    //     ssl: { rejectUnauthorized: false }
+    // })
+    // client.connect()
+    // client.query("SELECT serverId, channelId FROM command_channel;", (err, res) => {
+    //     if (err) throw err
+    //     res.rows.forEach(function (row) {
+    //         let serverId = JSON.parse(JSON.stringify(row.serverid))
+    //         let channelId = JSON.parse(JSON.stringify(row.channelid))
+    //         commandChannels.push(new CommandChannel(serverId, channelId))
+    //     })
+    //     client.end()
+    // })
+    // await delay(1)
+    // return commandChannels
 }

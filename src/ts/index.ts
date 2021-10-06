@@ -6,7 +6,7 @@ import * as command from './commandtype'
 import * as displayrank from './displayrank'
 import * as databaseLoader from './databaseloader'
 import * as commandChannelSetter from './commandchannelsetter'
-import * as pg from 'pg'
+import * as sqlDataEditor from './sqldataeditor'
 import { CommandHandler } from './commandhandler'
 import { Intents, Client, ClientApplication } from 'discord.js'
 
