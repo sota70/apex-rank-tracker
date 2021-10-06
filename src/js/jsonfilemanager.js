@@ -109,19 +109,13 @@ var JsonFileManager = /** @class */ (function () {
     };
     JsonFileManager.prototype.isDataExists = function (discordUserId) {
         return __awaiter(this, void 0, void 0, function () {
-            var playerData, dataExists, i;
+            var playerData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getPlayerDatas()];
                     case 1:
                         playerData = _a.sent();
-                        dataExists = false;
-                        for (i = 0; i < playerData.length; i++) {
-                            if (playerData[i].discordUserId !== discordUserId)
-                                continue;
-                            dataExists = true;
-                        }
-                        return [2 /*return*/, dataExists];
+                        return [2 /*return*/, playerData.some(function (data) { return data.discordUserId === discordUserId; })];
                 }
             });
         });
@@ -140,7 +134,7 @@ var JsonFileManager = /** @class */ (function () {
                     case 1:
                         if (!(_a.sent())) {
                             client.connect();
-                            client.query("INSERT INTO username (discordUserId, username, platform) VALUES (" + discordUser.id + ", " + username + ", " + platform + ");", function (err, res) {
+                            client.query("INSERT INTO username (discordUserId, username, platform) VALUES ('" + discordUser.id + "', '" + username + "', '" + platform + "');", function (err, res) {
                                 if (err)
                                     throw err;
                                 client.end();
@@ -148,7 +142,7 @@ var JsonFileManager = /** @class */ (function () {
                             return [2 /*return*/];
                         }
                         client.connect();
-                        client.query("UPDATE username SET discordUserId = " + discordUser.id + ", username = " + username + ", platform = " + platform + ";", function (err, res) {
+                        client.query("UPDATE username SET discordUserId = '" + discordUser.id + "', username = '" + username + "', platform = '" + platform + "';", function (err, res) {
                             if (err)
                                 throw err;
                             client.end();

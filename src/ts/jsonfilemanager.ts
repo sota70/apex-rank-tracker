@@ -51,12 +51,7 @@ export class JsonFileManager {
 
     public async isDataExists(discordUserId: String): Promise<Boolean> {
         let playerData = await this.getPlayerDatas()
-        let dataExists = false
-        for (let i = 0; i < playerData.length; i++) {
-            if (playerData[i].discordUserId !== discordUserId) continue
-            dataExists = true
-        }
-        return dataExists
+        return playerData.some(data => data.discordUserId === discordUserId)
     }
 
     public async writeData(
@@ -70,14 +65,14 @@ export class JsonFileManager {
         })
         if (!await this.isDataExists(discordUser.id)) {
             client.connect()
-            client.query(`INSERT INTO username (discordUserId, username, platform) VALUES (${discordUser.id}, ${username}, ${platform});`, (err, res) => {
+            client.query(`INSERT INTO username (discordUserId, username, platform) VALUES ('${discordUser.id}', '${username}', '${platform}');`, (err, res) => {
                 if (err) throw err
                 client.end()
             })
             return
         }
         client.connect()
-        client.query(`UPDATE username SET discordUserId = ${discordUser.id}, username = ${username}, platform = ${platform};`, (err, res) => {
+        client.query(`UPDATE username SET discordUserId = '${discordUser.id}', username = '${username}', platform = '${platform}';`, (err, res) => {
             if (err) throw err
             client.end()
         })

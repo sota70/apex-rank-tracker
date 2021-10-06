@@ -37,24 +37,17 @@ async function getCommandChannel(serverId: string): Promise<CommandChannel | und
     }
 }
 
-async function isCommandChannelSet(serverId: string): Promise<Boolean> {
+export async function isCommandChannelSet(serverId: string): Promise<Boolean> {
     let commandChannels = await fetchCommandChannels()
-    let dataExists = false
-    for (let i = 0; i < commandChannels.length; i++) {
-        if (commandChannels[i].serverId !== serverId) continue
-        dataExists = true
-    } 
-    return dataExists
+    return commandChannels.some(ch => ch.serverId === serverId)
 }
 
 export async function fetchCommandChannels(): Promise<Array<CommandChannel>> {
+    let commandChannels: Array<CommandChannel> = []
     let client = new Client({
         connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
+        ssl: { rejectUnauthorized: false }
     })
-    let commandChannels: Array<CommandChannel> = []
     client.connect()
     client.query("SELECT serverId, channelId FROM command_channel;", (err, res) => {
         if (err) throw err

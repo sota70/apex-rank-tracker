@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createTable = exports.load = exports.insert = void 0;
+exports.deleteTable = exports.createTable = exports.load = exports.insert = void 0;
 var pg_1 = require("pg");
 function insert() {
     var client = new pg_1.Client({
@@ -10,7 +10,7 @@ function insert() {
         }
     });
     client.connect();
-    client.query("INSERT INTO command_channel (serverId, channelId) VALUES ('Emotional_Sota', 'pc');", function (err, res) {
+    client.query("INSERT INTO test (key, value) VALUES ('KEY', 'VALUE');", function (err, res) {
         if (err)
             throw err;
         console.log(res);
@@ -26,7 +26,7 @@ function load() {
         }
     });
     client.connect();
-    client.query("SELECT serverId, channelId FROM command_channel;", function (err, res) {
+    client.query("SELECT key, value FROM test;", function (err, res) {
         if (err)
             throw err;
         res.rows.forEach(function (row) {
@@ -40,12 +40,10 @@ exports.load = load;
 function createTable() {
     var client = new pg_1.Client({
         connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
+        ssl: { rejectUnauthorized: false }
     });
     client.connect();
-    client.query("CREATE TABLE command_channel (serverId char(100), channelId char(100));", function (err, res) {
+    client.query("CREATE TABLE username (discordUserId text, username text, platform text);", function (err, res) {
         if (err)
             throw err;
         console.log(res);
@@ -53,3 +51,17 @@ function createTable() {
     });
 }
 exports.createTable = createTable;
+function deleteTable() {
+    var client = new pg_1.Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }
+    });
+    client.connect();
+    client.query("DROP TABLE username", function (err, res) {
+        if (err)
+            throw err;
+        console.log(res);
+        client.end();
+    });
+}
+exports.deleteTable = deleteTable;

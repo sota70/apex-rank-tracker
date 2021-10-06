@@ -9,7 +9,7 @@ export function insert() {
         }
     })
     client.connect()
-    client.query("INSERT INTO command_channel (serverId, channelId) VALUES ('Emotional_Sota', 'pc');", (err, res) => {
+    client.query(`INSERT INTO test (key, value) VALUES ('KEY', 'VALUE');`, (err, res) => {
         if (err) throw err
         console.log(res)
         client.end()
@@ -24,7 +24,7 @@ export function load() {
         }
     })
     client.connect()
-    client.query("SELECT serverId, channelId FROM command_channel;", (err, res) => {
+    client.query("SELECT key, value FROM test;", (err, res) => {
         if (err) throw err
         res.rows.forEach(function (row) {
             let r = JSON.parse(JSON.stringify(row))
@@ -37,12 +37,23 @@ export function load() {
 export function createTable() {
     let client = new Client({
         connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
+        ssl: { rejectUnauthorized: false }
     })
     client.connect()
-    client.query("CREATE TABLE command_channel (serverId char(100), channelId char(100));", (err, res) => {
+    client.query("CREATE TABLE username (discordUserId text, username text, platform text);", (err, res) => {
+        if (err) throw err
+        console.log(res)
+        client.end()
+    })
+}
+
+export function deleteTable() {
+    let client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }
+    })
+    client.connect()
+    client.query("DROP TABLE username", (err, res) => {
         if (err) throw err
         console.log(res)
         client.end()

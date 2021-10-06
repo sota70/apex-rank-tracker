@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchCommandChannels = exports.getCommandChannelId = exports.setCommandChannel = void 0;
+exports.fetchCommandChannels = exports.isCommandChannelSet = exports.getCommandChannelId = exports.setCommandChannel = void 0;
 var pg_1 = require("pg");
 var commandchannel_1 = require("./commandchannel");
 function setCommandChannel(serverId, channelId) {
@@ -110,36 +110,29 @@ function getCommandChannel(serverId) {
 }
 function isCommandChannelSet(serverId) {
     return __awaiter(this, void 0, void 0, function () {
-        var commandChannels, dataExists, i;
+        var commandChannels;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, fetchCommandChannels()];
                 case 1:
                     commandChannels = _a.sent();
-                    dataExists = false;
-                    for (i = 0; i < commandChannels.length; i++) {
-                        if (commandChannels[i].serverId !== serverId)
-                            continue;
-                        dataExists = true;
-                    }
-                    return [2 /*return*/, dataExists];
+                    return [2 /*return*/, commandChannels.some(function (ch) { return ch.serverId === serverId; })];
             }
         });
     });
 }
+exports.isCommandChannelSet = isCommandChannelSet;
 function fetchCommandChannels() {
     return __awaiter(this, void 0, void 0, function () {
-        var client, commandChannels;
+        var commandChannels, client;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    commandChannels = [];
                     client = new pg_1.Client({
                         connectionString: process.env.DATABASE_URL,
-                        ssl: {
-                            rejectUnauthorized: false
-                        }
+                        ssl: { rejectUnauthorized: false }
                     });
-                    commandChannels = [];
                     client.connect();
                     client.query("SELECT serverId, channelId FROM command_channel;", function (err, res) {
                         if (err)
