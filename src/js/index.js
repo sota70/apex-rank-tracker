@@ -93,10 +93,10 @@ client.on('ready', function () { return __awaiter(void 0, void 0, void 0, functi
                 _b.sent();
                 displayrank.startTimer(client);
                 rows = new Map([
-                    ["serverId", "EMPTY"],
-                    ["channelId", "EMPTY"]
+                    ["serverId", sqlDataEditor.RowTypes.STRING],
+                    ["channelId", sqlDataEditor.RowTypes.STRING]
                 ]);
-                sqlDataEditor.update("command_channel", rows);
+                sqlDataEditor.createTable("command_channel", rows);
                 return [2 /*return*/];
         }
     });
