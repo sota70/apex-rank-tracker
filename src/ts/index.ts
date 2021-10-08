@@ -42,13 +42,20 @@ http.createServer(function (req, res) {
                 res.end("No Post Data")
                 return
             }
-            var dataObject = querystring.parse(data)
-            console.log(`post: ${dataObject.type}`)
-            if (dataObject.type == "wake") {
-                console.log("Woke up in post")
+            var dataObject = new URLSearchParams(data)
+            console.log(`post: ${dataObject.get('type')}`)
+            if (dataObject.get('type') == 'wake') {
+                console.log('Woke up in post')
                 res.end()
                 return
             }
+            // var dataObject = querystring.parse(data)
+            // console.log(`post: ${dataObject.type}`)
+            // if (dataObject.type == "wake") {
+            //     console.log("Woke up in post")
+            //     res.end()
+            //     return
+            // }
             res.end()
         })
     } else if (req.method == "GET") {

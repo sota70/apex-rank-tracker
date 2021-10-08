@@ -58,7 +58,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var env = __importStar(require("dotenv"));
 var Discord = __importStar(require("discord.js"));
 var http = __importStar(require("http"));
-var querystring = __importStar(require("querystring"));
 var command = __importStar(require("./commandtype"));
 var displayrank = __importStar(require("./displayrank"));
 var commandChannelSetter = __importStar(require("./commandchannelsetter"));
@@ -104,13 +103,20 @@ http.createServer(function (req, res) {
                 res.end("No Post Data");
                 return;
             }
-            var dataObject = querystring.parse(data);
-            console.log("post: " + dataObject.type);
-            if (dataObject.type == "wake") {
-                console.log("Woke up in post");
+            var dataObject = new URLSearchParams(data);
+            console.log("post: " + dataObject.get('type'));
+            if (dataObject.get('type') == 'wake') {
+                console.log('Woke up in post');
                 res.end();
                 return;
             }
+            // var dataObject = querystring.parse(data)
+            // console.log(`post: ${dataObject.type}`)
+            // if (dataObject.type == "wake") {
+            //     console.log("Woke up in post")
+            //     res.end()
+            //     return
+            // }
             res.end();
         });
     }
