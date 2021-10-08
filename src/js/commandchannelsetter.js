@@ -146,24 +146,7 @@ function fetchCommandChannels() {
                         var channelId = JSON.parse(JSON.stringify(row.channelid));
                         commandChannels.push(new commandchannel_1.CommandChannel(serverId, channelId));
                     });
-                    return [2 /*return*/, commandChannels
-                        // let client = new Client({
-                        //     connectionString: process.env.DATABASE_URL,
-                        //     ssl: { rejectUnauthorized: false }
-                        // })
-                        // client.connect()
-                        // client.query("SELECT serverId, channelId FROM command_channel;", (err, res) => {
-                        //     if (err) throw err
-                        //     res.rows.forEach(function (row) {
-                        //         let serverId = JSON.parse(JSON.stringify(row.serverid))
-                        //         let channelId = JSON.parse(JSON.stringify(row.channelid))
-                        //         commandChannels.push(new CommandChannel(serverId, channelId))
-                        //     })
-                        //     client.end()
-                        // })
-                        // await delay(1)
-                        // return commandChannels
-                    ];
+                    return [2 /*return*/, commandChannels];
             }
         });
     });

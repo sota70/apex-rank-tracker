@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildInsertRows = exports.select = exports.dropTable = exports.update = exports.insert = exports.createTable = exports.RowTypes = void 0;
+exports.buildInsertRows = exports.select = exports.deleteRows = exports.dropTable = exports.update = exports.insert = exports.createTable = exports.RowTypes = void 0;
 var pg_1 = require("pg");
 var RowTypes;
 (function (RowTypes) {
@@ -99,6 +99,20 @@ function dropTable(tableName) {
     });
 }
 exports.dropTable = dropTable;
+function deleteRows(tableName) {
+    var client = new pg_1.Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }
+    });
+    client.connect();
+    client.query("DELETE FROM " + tableName, function (err, res) {
+        if (err)
+            throw err;
+        console.log(res);
+        client.end();
+    });
+}
+exports.deleteRows = deleteRows;
 function select(tableName) {
     return __awaiter(this, void 0, void 0, function () {
         var data, client;

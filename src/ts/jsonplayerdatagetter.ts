@@ -65,6 +65,26 @@ export class PlayerDataLoader {
             return
         }
         switch (rankName) {
+            case "Gold 4":
+                role = guild.roles.cache.find(r => r.name === "Gold 4")
+                this.resetPlayerRankRole(awaitedDiscordUser, guild)
+                await discordUser.roles.add(role!).catch(console.error)
+                break
+            case "Gold 3":
+                role = guild.roles.cache.find(r => r.name === "Gold 3")
+                this.resetPlayerRankRole(awaitedDiscordUser, guild)
+                await discordUser.roles.add(role!).catch(console.error)
+                break
+            case "Gold 2":
+                role = guild.roles.cache.find(r => r.name === "Gold 2")
+                this.resetPlayerRankRole(awaitedDiscordUser, guild)
+                await discordUser.roles.add(role!).catch(console.error)
+                break
+            case "Gold 1":
+                role = guild.roles.cache.find(r => r.name === "Gold 1")
+                this.resetPlayerRankRole(awaitedDiscordUser, guild)
+                await discordUser.roles.add(role!).catch(console.error)
+                break
             case "Platinum 4":
                 role = guild.roles.cache.find(r => r.name === "Platinum 4")
                 this.resetPlayerRankRole(awaitedDiscordUser, guild)
@@ -117,6 +137,10 @@ export class PlayerDataLoader {
 
     private async resetPlayerRankRole(discordUser: discord.GuildMember, guild: discord.Guild) {
         let rankRoles = [
+            guild.roles.cache.find(r => r.name === "Gold 4"),
+            guild.roles.cache.find(r => r.name === "Gold 3"),
+            guild.roles.cache.find(r => r.name === "Gold 2"),
+            guild.roles.cache.find(r => r.name === "Gold 1"),
             guild.roles.cache.find(r => r.name === "Platinum 4"),
             guild.roles.cache.find(r => r.name === "Platinum 3"),
             guild.roles.cache.find(r => r.name === "Platinum 2"),

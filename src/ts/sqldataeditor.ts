@@ -57,6 +57,19 @@ export function dropTable(tableName: string) {
     })
 }
 
+export function deleteRows(tableName: string) {
+    let client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }
+    })
+    client.connect()
+    client.query(`DELETE FROM ${tableName}`, (err, res) => {
+        if (err) throw err
+        console.log(res)
+        client.end()
+    })
+}
+
 export async function select(tableName: string): Promise<Array<any>> {
     let data: Array<any> = []
     let client = new Client({

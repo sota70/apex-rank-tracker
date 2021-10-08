@@ -110,13 +110,6 @@ http.createServer(function (req, res) {
                 res.end();
                 return;
             }
-            // var dataObject = querystring.parse(data)
-            // console.log(`post: ${dataObject.type}`)
-            // if (dataObject.type == "wake") {
-            //     console.log("Woke up in post")
-            //     res.end()
-            //     return
-            // }
             res.end();
         });
     }
