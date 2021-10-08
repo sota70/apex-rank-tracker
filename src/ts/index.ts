@@ -7,9 +7,12 @@ import * as displayrank from './displayrank'
 import * as databaseLoader from './databaseloader'
 import * as commandChannelSetter from './commandchannelsetter'
 import * as sqlDataEditor from './sqldataeditor'
+import { PlayerDataLoader } from './jsonplayerdatagetter'
+import { JsonFileManager } from './jsonfilemanager'
 import { CommandHandler } from './commandhandler'
 import { Intents, Client, ClientApplication } from 'discord.js'
 
+const jsonFileManager = new JsonFileManager()
 const guildId = "814796519131185156"
 const config = env.config()
 const client = new Client({
@@ -29,7 +32,6 @@ client.on('ready',async () => {
     client.application = new ClientApplication(client, {})
     await client.application.fetch()
     await registerCommands()
-    displayrank.startTimer(client)
 })
 
 /* ボットを動かしているサーバーに送られてきたメソッドメソッドを受け取り、処理するメソッド*/
@@ -37,7 +39,7 @@ http.createServer(function (req, res) {
     if (req.method == "POST") {
         var data = ''
         req.on("data", function (chunk) { data += chunk })
-        req.on("end", function () {
+        req.on("end", async function () {
             if (!data) {
                 res.end("No Post Data")
                 return
@@ -49,6 +51,12 @@ http.createServer(function (req, res) {
                 res.end()
                 return
             }
+            if (dataObject.get('type') == 'update_rank') {
+                console.log(`Updated player's rank`)
+                await setDiscordUsersRole(client)
+                res.end()
+                return
+            }
             res.end()
         })
     } else if (req.method == "GET") {
@@ -56,6 +64,18 @@ http.createServer(function (req, res) {
         res.end()
     }
 }).listen(process.env.PORT || 5000)
+
+async function setDiscordUsersRole(client: Client) {
+    (await jsonFileManager.getPlayerDatas()).forEach(async function (data) {
+        let playerDataLoader = new PlayerDataLoader()
+        let serverId = '814796519131185156'
+        let guild = await client.guilds.fetch(serverId)
+        let discordUser = await guild.members.fetch(data.discordUserId)
+        let username = data.username
+        let platform = data.platform
+        playerDataLoader.setPlayerRankRole(discordUser, username, platform, client)
+    })
+}
 
 /*
  * コマンドを登録するメソッド

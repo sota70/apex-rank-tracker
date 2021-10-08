@@ -59,10 +59,12 @@ var env = __importStar(require("dotenv"));
 var Discord = __importStar(require("discord.js"));
 var http = __importStar(require("http"));
 var command = __importStar(require("./commandtype"));
-var displayrank = __importStar(require("./displayrank"));
 var commandChannelSetter = __importStar(require("./commandchannelsetter"));
+var jsonplayerdatagetter_1 = require("./jsonplayerdatagetter");
+var jsonfilemanager_1 = require("./jsonfilemanager");
 var commandhandler_1 = require("./commandhandler");
 var discord_js_1 = require("discord.js");
+var jsonFileManager = new jsonfilemanager_1.JsonFileManager();
 var guildId = "814796519131185156";
 var config = env.config();
 var client = new discord_js_1.Client({
@@ -88,7 +90,6 @@ client.on('ready', function () { return __awaiter(void 0, void 0, void 0, functi
                 return [4 /*yield*/, registerCommands()];
             case 2:
                 _b.sent();
-                displayrank.startTimer(client);
                 return [2 /*return*/];
         }
     });
@@ -99,18 +100,35 @@ http.createServer(function (req, res) {
         var data = '';
         req.on("data", function (chunk) { data += chunk; });
         req.on("end", function () {
-            if (!data) {
-                res.end("No Post Data");
-                return;
-            }
-            var dataObject = new URLSearchParams(data);
-            console.log("post: " + dataObject.get('type'));
-            if (dataObject.get('type') == 'wake') {
-                console.log('Woke up in post');
-                res.end();
-                return;
-            }
-            res.end();
+            return __awaiter(this, void 0, void 0, function () {
+                var dataObject;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!data) {
+                                res.end("No Post Data");
+                                return [2 /*return*/];
+                            }
+                            dataObject = new URLSearchParams(data);
+                            console.log("post: " + dataObject.get('type'));
+                            if (dataObject.get('type') == 'wake') {
+                                console.log('Woke up in post');
+                                res.end();
+                                return [2 /*return*/];
+                            }
+                            if (!(dataObject.get('type') == 'update_rank')) return [3 /*break*/, 2];
+                            console.log("Updated player's rank");
+                            return [4 /*yield*/, setDiscordUsersRole(client)];
+                        case 1:
+                            _a.sent();
+                            res.end();
+                            return [2 /*return*/];
+                        case 2:
+                            res.end();
+                            return [2 /*return*/];
+                    }
+                });
+            });
         });
     }
     else if (req.method == "GET") {
@@ -118,6 +136,39 @@ http.createServer(function (req, res) {
         res.end();
     }
 }).listen(process.env.PORT || 5000);
+function setDiscordUsersRole(client) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, jsonFileManager.getPlayerDatas()];
+                case 1:
+                    (_a.sent()).forEach(function (data) {
+                        return __awaiter(this, void 0, void 0, function () {
+                            var playerDataLoader, serverId, guild, discordUser, username, platform;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        playerDataLoader = new jsonplayerdatagetter_1.PlayerDataLoader();
+                                        serverId = '814796519131185156';
+                                        return [4 /*yield*/, client.guilds.fetch(serverId)];
+                                    case 1:
+                                        guild = _a.sent();
+                                        return [4 /*yield*/, guild.members.fetch(data.discordUserId)];
+                                    case 2:
+                                        discordUser = _a.sent();
+                                        username = data.username;
+                                        platform = data.platform;
+                                        playerDataLoader.setPlayerRankRole(discordUser, username, platform, client);
+                                        return [2 /*return*/];
+                                }
+                            });
+                        });
+                    });
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 /*
  * コマンドを登録するメソッド
  */
