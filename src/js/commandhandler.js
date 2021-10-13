@@ -137,11 +137,11 @@ var CommandHandler = /** @class */ (function () {
         });
     };
     CommandHandler.prototype.handleSetUsernameCommand = function () {
-        var _a = this.interaction, options = _a.options, user = _a.user;
+        var _a = this.interaction, options = _a.options, user = _a.user, guildId = _a.guildId;
         var username = options.getString("username", true);
         var platform = options.getString("platform", true);
         var jsonFileManager = new jsonfilemanager_1.JsonFileManager();
-        jsonFileManager.writeData(user, username, platform);
+        jsonFileManager.writeData(user, username, platform, guildId);
         this.interaction.reply({
             content: "\u30E6\u30FC\u30B6\u30FC\u30CD\u30FC\u30E0\u3092" + username + "\u306B\u3001\u30D7\u30E9\u30C3\u30C8\u30D5\u30A9\u30FC\u30E0\u3092" + platform + "\u306B\u8A2D\u5B9A\u3057\u307E\u3057\u305F",
             ephemeral: true

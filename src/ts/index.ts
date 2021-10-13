@@ -1,12 +1,12 @@
 import * as env from 'dotenv'
 import * as Discord from 'discord.js'
 import * as http from 'http'
-import * as querystring from 'querystring'
 import * as command from './commandtype'
-import * as displayrank from './displayrank'
-import * as databaseLoader from './databaseloader'
 import * as commandChannelSetter from './commandchannelsetter'
+import * as pg from 'pg'
 import * as sqlDataEditor from './sqldataeditor'
+import { REST } from '@discordjs/rest'
+import { Routes } from 'discord-api-types/v9'
 import { PlayerDataLoader } from './jsonplayerdatagetter'
 import { JsonFileManager } from './jsonfilemanager'
 import { CommandHandler } from './commandhandler'
@@ -29,9 +29,9 @@ loginToClient()
 client.on('ready',async () => {
     console.log(`${client.user?.tag}でログインしています`)
     console.log('準備完了')
+    await registerCommands()
     client.application = new ClientApplication(client, {})
     await client.application.fetch()
-    await registerCommands()
 })
 
 /* ボットを動かしているサーバーに送られてきたメソッドメソッドを受け取り、処理するメソッド*/
@@ -68,12 +68,11 @@ http.createServer(function (req, res) {
 async function setDiscordUsersRole(client: Client) {
     (await jsonFileManager.getPlayerDatas()).forEach(async function (data) {
         let playerDataLoader = new PlayerDataLoader()
-        let serverId = '814796519131185156'
-        let guild = await client.guilds.fetch(serverId)
+        let guild = await client.guilds.fetch(data.guildId)
         let discordUser = await guild.members.fetch(data.discordUserId)
         let username = data.username
         let platform = data.platform
-        playerDataLoader.setPlayerRankRole(discordUser, username, platform, client)
+        playerDataLoader.setPlayerRankRole(discordUser, username, platform, guild)
     })
 }
 
@@ -81,18 +80,24 @@ async function setDiscordUsersRole(client: Client) {
  * コマンドを登録するメソッド
  */
 async function registerCommands() {
-    let guild = await client.guilds.fetch(guildId)
-    let commands = [
+    const commands = [
         command.apexCommand,
         command.apexAliaseCommand,
         command.setCommandChannelCommand,
         command.setCommandChannelAliaseCommand,
         command.setUsernameCommand,
-        command.setUsernameAliaseCommand,
-        command.timerstartCommand,
-        command.timerstartAliaseCommand
-    ]
-    guild.commands.set(commands)
+        command.setUsernameAliaseCommand
+    ].map(command => command.toJSON())
+    console.log(commands)
+    const rest = new REST({ version: '9' }).setToken(process.env.TOKEN!)
+    const clientId = '821655399857127485'
+    try {
+        console.log('Started refreshing application (/) commands.')
+        await rest.put(Routes.applicationCommands(clientId), { body: commands })
+        console.log('Successfully reloaded application (/) commands.')
+    } catch (err) {
+        console.error(err)
+    }
 }
 
 /* 
@@ -101,7 +106,7 @@ async function registerCommands() {
 client.on('interactionCreate', async function (interaction) {
     let serverId = interaction.guildId
     let channelId = interaction.channelId
-    let commandChannelId = await commandChannelSetter.getCommandChannelId(serverId!)
+    let commandChannelId = await commandChannelSetter.getCommandChannelId(serverId!, client)
     if (!interaction.isCommand()) return
     if (channelId !== commandChannelId) {
         interaction.reply({ content: "This is not the command channel", ephemeral: true })

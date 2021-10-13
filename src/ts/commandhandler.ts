@@ -1,4 +1,4 @@
-import { CommandInteraction, Interaction } from 'discord.js'
+import { CommandInteraction } from 'discord.js'
 import { PlayerDataLoader } from './jsonplayerdatagetter'
 import { commandNames } from './commandtype'
 import { JsonFileManager } from './jsonfilemanager'
@@ -72,16 +72,16 @@ export class CommandHandler {
         commandChannelSetter.setCommandChannel(guild?.id!, newCommandChannel?.id!)
         this.interaction.reply({ 
             content: `The command channel has been set to ${newCommandChannel?.name}`,
-            ephemeral: true 
+            ephemeral: true
         })
     }
 
     private handleSetUsernameCommand() {
-        const { options, user } = this.interaction
+        const { options, user, guildId } = this.interaction
         let username = options.getString("username", true)
         let platform = options.getString("platform", true)
         let jsonFileManager = new JsonFileManager()
-        jsonFileManager.writeData(user, username, platform)
+        jsonFileManager.writeData(user, username, platform, guildId!)
         this.interaction.reply({
             content: `ユーザーネームを${username}に、プラットフォームを${platform}に設定しました`,
             ephemeral: true

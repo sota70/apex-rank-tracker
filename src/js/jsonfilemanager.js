@@ -57,23 +57,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JsonFileManager = void 0;
 var sqlDataEditor = __importStar(require("./sqldataeditor"));
-var pg_1 = require("pg");
 var userdata_1 = require("./userdata");
 var JsonFileManager = /** @class */ (function () {
     function JsonFileManager() {
     }
-    JsonFileManager.prototype.getPlayerData = function (discordUserId) {
+    JsonFileManager.prototype.getPlayerData = function (discordUserId, guildId) {
         return __awaiter(this, void 0, void 0, function () {
             var playerData, playerDatas, i;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        playerData = new userdata_1.User("NULL", "NULL", "NULL");
+                        playerData = new userdata_1.User("NULL", "NULL", "NULL", "NULL");
                         return [4 /*yield*/, this.getPlayerDatas()];
                     case 1:
                         playerDatas = _a.sent();
                         for (i = 0; i < playerDatas.length; i++) {
                             if (playerDatas[i].discordUserId !== discordUserId)
+                                continue;
+                            if (playerDatas[i].guildId !== guildId)
                                 continue;
                             playerData = playerDatas[i];
                         }
@@ -96,7 +97,8 @@ var JsonFileManager = /** @class */ (function () {
                             var discordUserId = JSON.parse(JSON.stringify(row.discorduserid));
                             var username = JSON.parse(JSON.stringify(row.username));
                             var platform = JSON.parse(JSON.stringify(row.platform));
-                            users.push(new userdata_1.User(discordUserId, username, platform));
+                            var guildId = JSON.parse(JSON.stringify(row.guildid));
+                            users.push(new userdata_1.User(discordUserId, username, platform, guildId));
                         });
                         return [2 /*return*/, users];
                 }
@@ -104,18 +106,9 @@ var JsonFileManager = /** @class */ (function () {
         });
     };
     JsonFileManager.prototype.removeAllData = function () {
-        var client = new pg_1.Client({
-            connectionString: process.env.DATABASE_URL,
-            ssl: { rejectUnauthorized: false }
-        });
-        client.connect();
-        client.query("DROP TABLE username;", function (err, res) {
-            if (err)
-                throw err;
-            client.end();
-        });
+        sqlDataEditor.deleteRows("username");
     };
-    JsonFileManager.prototype.isDataExists = function (discordUserId) {
+    JsonFileManager.prototype.isDataExists = function (discordUserId, guildId) {
         return __awaiter(this, void 0, void 0, function () {
             var playerData;
             return __generator(this, function (_a) {
@@ -123,12 +116,12 @@ var JsonFileManager = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.getPlayerDatas()];
                     case 1:
                         playerData = _a.sent();
-                        return [2 /*return*/, playerData.some(function (data) { return data.discordUserId === discordUserId; })];
+                        return [2 /*return*/, playerData.some(function (data) { return data.discordUserId === discordUserId && data.guildId === guildId; })];
                 }
             });
         });
     };
-    JsonFileManager.prototype.writeData = function (discordUser, username, platform) {
+    JsonFileManager.prototype.writeData = function (discordUser, username, platform, guildId) {
         return __awaiter(this, void 0, void 0, function () {
             var rows;
             return __generator(this, function (_a) {
@@ -137,15 +130,16 @@ var JsonFileManager = /** @class */ (function () {
                         rows = new Map([
                             ["discordUserId", discordUser.id],
                             ["username", username],
-                            ["platform", platform]
+                            ["platform", platform],
+                            ["guildId", guildId]
                         ]);
-                        return [4 /*yield*/, this.isDataExists(discordUser.id)];
+                        return [4 /*yield*/, this.isDataExists(discordUser.id, guildId)];
                     case 1:
                         if (!(_a.sent())) {
                             sqlDataEditor.insert("username", rows);
                             return [2 /*return*/];
                         }
-                        sqlDataEditor.update("username", rows);
+                        sqlDataEditor.update("username", rows, "guildId", guildId);
                         return [2 /*return*/];
                 }
             });

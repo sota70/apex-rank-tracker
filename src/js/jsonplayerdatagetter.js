@@ -92,7 +92,7 @@ var PlayerDataLoader = /** @class */ (function () {
             });
         });
     };
-    PlayerDataLoader.prototype.setPlayerRankRole = function (discordUser, username, platform, client) {
+    PlayerDataLoader.prototype.setPlayerRankRole = function (discordUser, username, platform, guild) {
         var _this = this;
         var url = "https://public-api.tracker.gg/apex/v1/standard/profile/" + this.checkPlatform(platform) + "/" + username;
         request.get({
@@ -102,7 +102,7 @@ var PlayerDataLoader = /** @class */ (function () {
             var jsonData = JSON.parse(body);
             var playerRank = jsonData.data.metadata.rankName;
             var playerRanking = _this.getPlayerRanking(jsonData.data.stats);
-            _this.setPlayerRole(discordUser, playerRank, playerRanking, client);
+            _this.setPlayerRole(discordUser, playerRank, playerRanking, guild);
         });
     };
     PlayerDataLoader.prototype.delay = function (sec) {
@@ -110,18 +110,14 @@ var PlayerDataLoader = /** @class */ (function () {
             setTimeout(resolve, sec * 1000);
         });
     };
-    PlayerDataLoader.prototype.setPlayerRole = function (discordUser, rankName, ranking, client) {
+    PlayerDataLoader.prototype.setPlayerRole = function (discordUser, rankName, ranking, guild) {
         return __awaiter(this, void 0, void 0, function () {
-            var role, awaitedDiscordUser, serverId, guild, _a;
+            var role, awaitedDiscordUser, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4 /*yield*/, discordUser];
                     case 1:
                         awaitedDiscordUser = _b.sent();
-                        serverId = '814796519131185156';
-                        return [4 /*yield*/, client.guilds.fetch(serverId)];
-                    case 2:
-                        guild = _b.sent();
                         if (this.isPlayerRankPredator(ranking)) {
                             role = guild.roles.cache.find(function (r) { return r.name === "Predator"; });
                             this.resetPlayerRankRole(discordUser, guild);
@@ -130,114 +126,114 @@ var PlayerDataLoader = /** @class */ (function () {
                         }
                         _a = rankName;
                         switch (_a) {
-                            case "Gold 4": return [3 /*break*/, 3];
-                            case "Gold 3": return [3 /*break*/, 5];
-                            case "Gold 2": return [3 /*break*/, 7];
-                            case "Gold 1": return [3 /*break*/, 9];
-                            case "Platinum 4": return [3 /*break*/, 11];
-                            case "Platinum 3": return [3 /*break*/, 13];
-                            case "Platinum 2": return [3 /*break*/, 15];
-                            case "Platinum 1": return [3 /*break*/, 17];
-                            case "Diamond 4": return [3 /*break*/, 19];
-                            case "Diamond 3": return [3 /*break*/, 21];
-                            case "Diamond 2": return [3 /*break*/, 23];
-                            case "Diamond 1": return [3 /*break*/, 25];
-                            case "Master": return [3 /*break*/, 27];
+                            case "Gold 4": return [3 /*break*/, 2];
+                            case "Gold 3": return [3 /*break*/, 4];
+                            case "Gold 2": return [3 /*break*/, 6];
+                            case "Gold 1": return [3 /*break*/, 8];
+                            case "Platinum 4": return [3 /*break*/, 10];
+                            case "Platinum 3": return [3 /*break*/, 12];
+                            case "Platinum 2": return [3 /*break*/, 14];
+                            case "Platinum 1": return [3 /*break*/, 16];
+                            case "Diamond 4": return [3 /*break*/, 18];
+                            case "Diamond 3": return [3 /*break*/, 20];
+                            case "Diamond 2": return [3 /*break*/, 22];
+                            case "Diamond 1": return [3 /*break*/, 24];
+                            case "Master": return [3 /*break*/, 26];
                         }
-                        return [3 /*break*/, 29];
-                    case 3:
+                        return [3 /*break*/, 28];
+                    case 2:
                         role = guild.roles.cache.find(function (r) { return r.name === "Gold 4"; });
                         this.resetPlayerRankRole(awaitedDiscordUser, guild);
                         return [4 /*yield*/, discordUser.roles.add(role).catch(console.error)];
-                    case 4:
+                    case 3:
                         _b.sent();
-                        return [3 /*break*/, 30];
-                    case 5:
+                        return [3 /*break*/, 29];
+                    case 4:
                         role = guild.roles.cache.find(function (r) { return r.name === "Gold 3"; });
                         this.resetPlayerRankRole(awaitedDiscordUser, guild);
                         return [4 /*yield*/, discordUser.roles.add(role).catch(console.error)];
-                    case 6:
+                    case 5:
                         _b.sent();
-                        return [3 /*break*/, 30];
-                    case 7:
+                        return [3 /*break*/, 29];
+                    case 6:
                         role = guild.roles.cache.find(function (r) { return r.name === "Gold 2"; });
                         this.resetPlayerRankRole(awaitedDiscordUser, guild);
                         return [4 /*yield*/, discordUser.roles.add(role).catch(console.error)];
-                    case 8:
+                    case 7:
                         _b.sent();
-                        return [3 /*break*/, 30];
-                    case 9:
+                        return [3 /*break*/, 29];
+                    case 8:
                         role = guild.roles.cache.find(function (r) { return r.name === "Gold 1"; });
                         this.resetPlayerRankRole(awaitedDiscordUser, guild);
                         return [4 /*yield*/, discordUser.roles.add(role).catch(console.error)];
-                    case 10:
+                    case 9:
                         _b.sent();
-                        return [3 /*break*/, 30];
-                    case 11:
+                        return [3 /*break*/, 29];
+                    case 10:
                         role = guild.roles.cache.find(function (r) { return r.name === "Platinum 4"; });
                         this.resetPlayerRankRole(awaitedDiscordUser, guild);
                         return [4 /*yield*/, discordUser.roles.add(role).catch(console.error)];
-                    case 12:
+                    case 11:
                         _b.sent();
-                        return [3 /*break*/, 30];
-                    case 13:
+                        return [3 /*break*/, 29];
+                    case 12:
                         role = guild.roles.cache.find(function (r) { return r.name === "Platinum 3"; });
                         this.resetPlayerRankRole(awaitedDiscordUser, guild);
                         return [4 /*yield*/, discordUser.roles.add(role).catch(console.error)];
-                    case 14:
+                    case 13:
                         _b.sent();
-                        return [3 /*break*/, 30];
-                    case 15:
+                        return [3 /*break*/, 29];
+                    case 14:
                         role = guild.roles.cache.find(function (r) { return r.name === "Platinum 2"; });
                         this.resetPlayerRankRole(awaitedDiscordUser, guild);
                         return [4 /*yield*/, discordUser.roles.add(role).catch(console.error)];
-                    case 16:
+                    case 15:
                         _b.sent();
-                        return [3 /*break*/, 30];
-                    case 17:
+                        return [3 /*break*/, 29];
+                    case 16:
                         role = guild.roles.cache.find(function (r) { return r.name === "Platinum 1"; });
                         this.resetPlayerRankRole(awaitedDiscordUser, guild);
                         return [4 /*yield*/, discordUser.roles.add(role).catch(console.error)];
-                    case 18:
+                    case 17:
                         _b.sent();
-                        return [3 /*break*/, 30];
-                    case 19:
+                        return [3 /*break*/, 29];
+                    case 18:
                         role = guild.roles.cache.find(function (r) { return r.name === "Diamond 4"; });
                         this.resetPlayerRankRole(awaitedDiscordUser, guild);
                         return [4 /*yield*/, discordUser.roles.add(role).catch(console.error)];
-                    case 20:
+                    case 19:
                         _b.sent();
-                        return [3 /*break*/, 30];
-                    case 21:
+                        return [3 /*break*/, 29];
+                    case 20:
                         role = guild.roles.cache.find(function (r) { return r.name === "Diamond 3"; });
                         this.resetPlayerRankRole(awaitedDiscordUser, guild);
                         return [4 /*yield*/, discordUser.roles.add(role).catch(console.error)];
-                    case 22:
+                    case 21:
                         _b.sent();
-                        return [3 /*break*/, 30];
-                    case 23:
+                        return [3 /*break*/, 29];
+                    case 22:
                         role = guild.roles.cache.find(function (r) { return r.name === "Diamond 2"; });
                         this.resetPlayerRankRole(awaitedDiscordUser, guild);
                         return [4 /*yield*/, discordUser.roles.add(role).catch(console.error)];
-                    case 24:
+                    case 23:
                         _b.sent();
-                        return [3 /*break*/, 30];
-                    case 25:
+                        return [3 /*break*/, 29];
+                    case 24:
                         role = guild.roles.cache.find(function (r) { return r.name === "Diamond 1"; });
                         this.resetPlayerRankRole(awaitedDiscordUser, guild);
                         return [4 /*yield*/, discordUser.roles.add(role).catch(console.error)];
-                    case 26:
+                    case 25:
                         _b.sent();
-                        return [3 /*break*/, 30];
-                    case 27:
+                        return [3 /*break*/, 29];
+                    case 26:
                         role = guild.roles.cache.find(function (r) { return r.name === "Master"; });
                         this.resetPlayerRankRole(discordUser, guild);
                         return [4 /*yield*/, discordUser.roles.add(role).catch(console.error)];
-                    case 28:
+                    case 27:
                         _b.sent();
-                        return [3 /*break*/, 30];
-                    case 29: return [3 /*break*/, 30];
-                    case 30: return [2 /*return*/];
+                        return [3 /*break*/, 29];
+                    case 28: return [3 /*break*/, 29];
+                    case 29: return [2 /*return*/];
                 }
             });
         });

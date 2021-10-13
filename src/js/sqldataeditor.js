@@ -71,13 +71,14 @@ function insert(tableName, rows) {
     });
 }
 exports.insert = insert;
-function update(tableName, rows) {
+function update(tableName, rows, key, value) {
     var client = new pg_1.Client({
         connectionString: process.env.DATABASE_URL,
         ssl: { rejectUnauthorized: false }
     });
+    console.log("UPDATE " + tableName + " SET " + buildUpdateRows(rows) + " " + buildContext(key, value) + ";");
     client.connect();
-    client.query("UPDATE " + tableName + " SET " + buildUpdateRows(rows) + ";", function (err, res) {
+    client.query("UPDATE " + tableName + " SET " + buildUpdateRows(rows) + " " + buildContext(key, value) + ";", function (err, res) {
         if (err)
             throw err;
         console.log(res);
@@ -146,6 +147,9 @@ function buildUpdateRows(rows) {
         rowsString += key + " = '" + value + "',";
     });
     return rowsString.slice(0, -1);
+}
+function buildContext(key, value) {
+    return "WHERE " + key + " = '" + value + "'";
 }
 function buildCreateRows(rows) {
     var rowsString = '';

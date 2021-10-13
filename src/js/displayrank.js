@@ -55,13 +55,12 @@ function setDiscordUserRole(client) {
                 case 1:
                     (_a.sent()).forEach(function (data) {
                         return __awaiter(this, void 0, void 0, function () {
-                            var playerDataLoader, serverId, guild, discordUser, username, platform;
+                            var playerDataLoader, guild, discordUser, username, platform;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
                                         playerDataLoader = new jsonplayerdatagetter_1.PlayerDataLoader();
-                                        serverId = '814796519131185156';
-                                        return [4 /*yield*/, client.guilds.fetch(serverId)];
+                                        return [4 /*yield*/, client.guilds.fetch(data.guildId)];
                                     case 1:
                                         guild = _a.sent();
                                         return [4 /*yield*/, guild.members.fetch(data.discordUserId)];
@@ -69,7 +68,7 @@ function setDiscordUserRole(client) {
                                         discordUser = _a.sent();
                                         username = data.username;
                                         platform = data.platform;
-                                        playerDataLoader.setPlayerRankRole(discordUser, username, platform, client);
+                                        playerDataLoader.setPlayerRankRole(discordUser, username, platform, guild);
                                         return [2 /*return*/];
                                 }
                             });

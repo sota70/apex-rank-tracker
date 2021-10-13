@@ -60,6 +60,8 @@ var Discord = __importStar(require("discord.js"));
 var http = __importStar(require("http"));
 var command = __importStar(require("./commandtype"));
 var commandChannelSetter = __importStar(require("./commandchannelsetter"));
+var rest_1 = require("@discordjs/rest");
+var v9_1 = require("discord-api-types/v9");
 var jsonplayerdatagetter_1 = require("./jsonplayerdatagetter");
 var jsonfilemanager_1 = require("./jsonfilemanager");
 var commandhandler_1 = require("./commandhandler");
@@ -83,11 +85,11 @@ client.on('ready', function () { return __awaiter(void 0, void 0, void 0, functi
             case 0:
                 console.log(((_a = client.user) === null || _a === void 0 ? void 0 : _a.tag) + "\u3067\u30ED\u30B0\u30A4\u30F3\u3057\u3066\u3044\u307E\u3059");
                 console.log('準備完了');
-                client.application = new discord_js_1.ClientApplication(client, {});
-                return [4 /*yield*/, client.application.fetch()];
+                return [4 /*yield*/, registerCommands()];
             case 1:
                 _b.sent();
-                return [4 /*yield*/, registerCommands()];
+                client.application = new discord_js_1.ClientApplication(client, {});
+                return [4 /*yield*/, client.application.fetch()];
             case 2:
                 _b.sent();
                 return [2 /*return*/];
@@ -144,13 +146,12 @@ function setDiscordUsersRole(client) {
                 case 1:
                     (_a.sent()).forEach(function (data) {
                         return __awaiter(this, void 0, void 0, function () {
-                            var playerDataLoader, serverId, guild, discordUser, username, platform;
+                            var playerDataLoader, guild, discordUser, username, platform;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
                                         playerDataLoader = new jsonplayerdatagetter_1.PlayerDataLoader();
-                                        serverId = '814796519131185156';
-                                        return [4 /*yield*/, client.guilds.fetch(serverId)];
+                                        return [4 /*yield*/, client.guilds.fetch(data.guildId)];
                                     case 1:
                                         guild = _a.sent();
                                         return [4 /*yield*/, guild.members.fetch(data.discordUserId)];
@@ -158,7 +159,7 @@ function setDiscordUsersRole(client) {
                                         discordUser = _a.sent();
                                         username = data.username;
                                         platform = data.platform;
-                                        playerDataLoader.setPlayerRankRole(discordUser, username, platform, client);
+                                        playerDataLoader.setPlayerRankRole(discordUser, username, platform, guild);
                                         return [2 /*return*/];
                                 }
                             });
@@ -174,24 +175,35 @@ function setDiscordUsersRole(client) {
  */
 function registerCommands() {
     return __awaiter(this, void 0, void 0, function () {
-        var guild, commands;
+        var commands, rest, clientId, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, client.guilds.fetch(guildId)];
-                case 1:
-                    guild = _a.sent();
+                case 0:
                     commands = [
                         command.apexCommand,
                         command.apexAliaseCommand,
                         command.setCommandChannelCommand,
                         command.setCommandChannelAliaseCommand,
                         command.setUsernameCommand,
-                        command.setUsernameAliaseCommand,
-                        command.timerstartCommand,
-                        command.timerstartAliaseCommand
-                    ];
-                    guild.commands.set(commands);
-                    return [2 /*return*/];
+                        command.setUsernameAliaseCommand
+                    ].map(function (command) { return command.toJSON(); });
+                    console.log(commands);
+                    rest = new rest_1.REST({ version: '9' }).setToken(process.env.TOKEN);
+                    clientId = '821655399857127485';
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    console.log('Started refreshing application (/) commands.');
+                    return [4 /*yield*/, rest.put(v9_1.Routes.applicationCommands(clientId), { body: commands })];
+                case 2:
+                    _a.sent();
+                    console.log('Successfully reloaded application (/) commands.');
+                    return [3 /*break*/, 4];
+                case 3:
+                    err_1 = _a.sent();
+                    console.error(err_1);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });
@@ -207,7 +219,7 @@ client.on('interactionCreate', function (interaction) {
                 case 0:
                     serverId = interaction.guildId;
                     channelId = interaction.channelId;
-                    return [4 /*yield*/, commandChannelSetter.getCommandChannelId(serverId)];
+                    return [4 /*yield*/, commandChannelSetter.getCommandChannelId(serverId, client)];
                 case 1:
                     commandChannelId = _a.sent();
                     if (!interaction.isCommand())

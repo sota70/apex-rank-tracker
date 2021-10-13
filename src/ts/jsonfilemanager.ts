@@ -1,15 +1,15 @@
 import * as Discord from 'discord.js'
 import * as sqlDataEditor from './sqldataeditor'
-import { Client } from 'pg'
 import { User } from './userdata'
 
 export class JsonFileManager {
 
-    public async getPlayerData(discordUserId: String): Promise<User> {
-        let playerData = new User("NULL", "NULL", "NULL")
+    public async getPlayerData(discordUserId: string, guildId: string): Promise<User> {
+        let playerData = new User("NULL", "NULL", "NULL", "NULL")
         let playerDatas = await this.getPlayerDatas()
         for (let i = 0; i < playerDatas.length; i++) {
             if (playerDatas[i].discordUserId !== discordUserId) continue
+            if (playerDatas[i].guildId !== guildId) continue
             playerData = playerDatas[i]
         }
         return playerData
@@ -22,43 +22,38 @@ export class JsonFileManager {
             let discordUserId = JSON.parse(JSON.stringify(row.discorduserid))
             let username = JSON.parse(JSON.stringify(row.username))
             let platform = JSON.parse(JSON.stringify(row.platform))
-            users.push(new User(discordUserId, username, platform))
+            let guildId = JSON.parse(JSON.stringify(row.guildid))
+            users.push(new User(discordUserId, username, platform, guildId))
         })
         return users
     }
 
     public removeAllData() {
-        let client = new Client({
-            connectionString: process.env.DATABASE_URL,
-            ssl: { rejectUnauthorized: false }
-        })
-        client.connect()
-        client.query("DROP TABLE username;", (err, res) => {
-            if (err) throw err
-            client.end()
-        })
+        sqlDataEditor.deleteRows("username")
     }
 
-    public async isDataExists(discordUserId: String): Promise<Boolean> {
+    public async isDataExists(discordUserId: string, guildId: string): Promise<Boolean> {
         let playerData = await this.getPlayerDatas()
-        return playerData.some(data => data.discordUserId === discordUserId)
+        return playerData.some(data => data.discordUserId === discordUserId && data.guildId === guildId)
     }
 
     public async writeData(
         discordUser: Discord.User,
         username: string,
-        platform: string
+        platform: string,
+        guildId: string
     ) {
         let rows = new Map<string, any>([
             ["discordUserId", discordUser.id],
             ["username", username],
-            ["platform", platform]
+            ["platform", platform],
+            ["guildId", guildId]
         ])
-        if (!await this.isDataExists(discordUser.id)) {
+        if (!await this.isDataExists(discordUser.id, guildId)) {
             sqlDataEditor.insert("username", rows)
             return
         }
-        sqlDataEditor.update("username", rows)
+        sqlDataEditor.update("username", rows, "guildId", guildId)
     }
 
     private delay(sec: number) {

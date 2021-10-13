@@ -1,3 +1,4 @@
+import { Client, Guild } from 'discord.js'
 import { CommandChannel } from './commandchannel'
 import * as sqlDataEditor from './sqldataeditor'
 
@@ -11,14 +12,23 @@ export async function setCommandChannel(serverId: string, channelId: string) {
         console.log(`${channelId} has been set to ${serverId}`)
         return
     }
-    sqlDataEditor.update("command_channel", rows)
+    sqlDataEditor.update("command_channel", rows, "serverId", serverId)
     console.log(`${channelId} has been set to ${serverId}`)
 }
 
-export async function getCommandChannelId(serverId: string): Promise<string> {
+export async function getCommandChannelId(serverId: string, client: Client): Promise<string> {
     let commandChannel = await getCommandChannel(serverId)
-    if (commandChannel === undefined) return process.env.DEFAULT_RANK_CHANNEL!
+    if (commandChannel === undefined) {
+        let guild = await client.guilds.fetch(serverId)
+        return getDefaultCommandChannelId(guild)
+    }
     return commandChannel.channelId
+}
+
+function getDefaultCommandChannelId(guild: Guild): string {
+    let defaultCommandChannel = guild.channels.cache.find(ch => ch.name === process.env.DEFAULT_RANK_CHANNEL)
+    if (defaultCommandChannel === undefined) throw console.error("The guild must have command channel.");
+    return defaultCommandChannel.id   
 }
 
 async function getCommandChannel(serverId: string): Promise<CommandChannel | undefined> {

@@ -14,11 +14,10 @@ export function startTimer(client: Client) {
 async function setDiscordUserRole(client: Client) {
     (await jsonFileManager.getPlayerDatas()).forEach(async function (data) {
         let playerDataLoader = new PlayerDataLoader()
-        let serverId = '814796519131185156'
-        let guild = await client.guilds.fetch(serverId)
+        let guild = await client.guilds.fetch(data.guildId)
         let discordUser = await guild.members.fetch(data.discordUserId)
         let username = data.username
         let platform = data.platform
-        playerDataLoader.setPlayerRankRole(discordUser, username, platform, client)
+        playerDataLoader.setPlayerRankRole(discordUser, username, platform, guild)
     })
 }

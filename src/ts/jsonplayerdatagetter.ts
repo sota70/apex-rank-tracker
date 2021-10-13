@@ -28,7 +28,7 @@ export class PlayerDataLoader {
         discordUser: discord.GuildMember,
         username: string,
         platform: string,
-        client: discord.Client
+        guild: discord.Guild
     ) {
         let url = `https://public-api.tracker.gg/apex/v1/standard/profile/${this.checkPlatform(platform)}/${username}`
         request.get({
@@ -38,7 +38,7 @@ export class PlayerDataLoader {
             let jsonData = JSON.parse(body)
             let playerRank = jsonData.data.metadata.rankName
             let playerRanking = this.getPlayerRanking(jsonData.data.stats)
-            this.setPlayerRole(discordUser, playerRank, playerRanking, client)
+            this.setPlayerRole(discordUser, playerRank, playerRanking, guild)
         })
     }
 
@@ -52,12 +52,10 @@ export class PlayerDataLoader {
         discordUser: discord.GuildMember,
         rankName: string,
         ranking: number,
-        client: discord.Client
+        guild: discord.Guild
     ) {
         let role
         let awaitedDiscordUser = await discordUser
-        let serverId = '814796519131185156'
-        let guild = await client.guilds.fetch(serverId)
         if (this.isPlayerRankPredator(ranking)) {
             role = guild.roles.cache.find(r => r.name === "Predator")
             this.resetPlayerRankRole(discordUser, guild)

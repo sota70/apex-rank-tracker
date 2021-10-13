@@ -75,7 +75,7 @@ function setCommandChannel(serverId, channelId) {
                         console.log(channelId + " has been set to " + serverId);
                         return [2 /*return*/];
                     }
-                    sqlDataEditor.update("command_channel", rows);
+                    sqlDataEditor.update("command_channel", rows, "serverId", serverId);
                     console.log(channelId + " has been set to " + serverId);
                     return [2 /*return*/];
             }
@@ -83,22 +83,31 @@ function setCommandChannel(serverId, channelId) {
     });
 }
 exports.setCommandChannel = setCommandChannel;
-function getCommandChannelId(serverId) {
+function getCommandChannelId(serverId, client) {
     return __awaiter(this, void 0, void 0, function () {
-        var commandChannel;
+        var commandChannel, guild;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, getCommandChannel(serverId)];
                 case 1:
                     commandChannel = _a.sent();
-                    if (commandChannel === undefined)
-                        return [2 /*return*/, process.env.DEFAULT_RANK_CHANNEL];
-                    return [2 /*return*/, commandChannel.channelId];
+                    if (!(commandChannel === undefined)) return [3 /*break*/, 3];
+                    return [4 /*yield*/, client.guilds.fetch(serverId)];
+                case 2:
+                    guild = _a.sent();
+                    return [2 /*return*/, getDefaultCommandChannelId(guild)];
+                case 3: return [2 /*return*/, commandChannel.channelId];
             }
         });
     });
 }
 exports.getCommandChannelId = getCommandChannelId;
+function getDefaultCommandChannelId(guild) {
+    var defaultCommandChannel = guild.channels.cache.find(function (ch) { return ch.name === process.env.DEFAULT_RANK_CHANNEL; });
+    if (defaultCommandChannel === undefined)
+        throw console.error("The guild must have command channel.");
+    return defaultCommandChannel.id;
+}
 function getCommandChannel(serverId) {
     return __awaiter(this, void 0, void 0, function () {
         var commandChannels, i;
