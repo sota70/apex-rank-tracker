@@ -151,7 +151,7 @@ export class PlayerDataLoader {
             guild.roles.cache.find(r => r.name === "Predator")
         ]
         for (let i = 0; i < rankRoles.length; i++) {
-            if (!discordUser.roles.cache.has(rankRoles[i]!.id)) continue
+            if (!discordUser.roles.cache.has(rankRoles[i]?.id!)) continue
             await discordUser.roles.remove(rankRoles[i]!)
         }
     }

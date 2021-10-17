@@ -59,6 +59,7 @@ exports.CommandHandler = void 0;
 var jsonplayerdatagetter_1 = require("./jsonplayerdatagetter");
 var commandtype_1 = require("./commandtype");
 var jsonfilemanager_1 = require("./jsonfilemanager");
+var playerstatusembedbuilder_1 = require("./playerstatusembedbuilder");
 var displayrank = __importStar(require("./displayrank"));
 var commandChannelSetter = __importStar(require("./commandchannelsetter"));
 var CommandHandler = /** @class */ (function () {
@@ -116,7 +117,7 @@ var CommandHandler = /** @class */ (function () {
                         playerRankImage = apexUserData.playerRankImage;
                         playerRankRP = apexUserData.playerRankRP;
                         playerRanking = apexUserData.playerRanking;
-                        embedMessage = apexUserData.createMessageEmbed(playerName, playerLevel, playerRank, playerRankRP, playerRanking, playerRankImage);
+                        embedMessage = new playerstatusembedbuilder_1.PlayerStatusEmbedBuilder(playerName, playerLevel, playerRank, playerRankImage, playerRankRP, playerRanking).build();
                         this.interaction.reply({ ephemeral: true, embeds: [embedMessage] });
                         return [2 /*return*/];
                 }

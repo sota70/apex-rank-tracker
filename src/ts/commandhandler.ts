@@ -2,6 +2,7 @@ import { CommandInteraction } from 'discord.js'
 import { PlayerDataLoader } from './jsonplayerdatagetter'
 import { commandNames } from './commandtype'
 import { JsonFileManager } from './jsonfilemanager'
+import { PlayerStatusEmbedBuilder } from './playerstatusembedbuilder'
 import * as displayrank from './displayrank'
 import * as commandChannelSetter from './commandchannelsetter'
 
@@ -58,7 +59,7 @@ export class CommandHandler {
         let playerRankRP = apexUserData.playerRankRP
         let playerRanking = apexUserData.playerRanking
         let embedMessage = 
-            apexUserData.createMessageEmbed(playerName, playerLevel, playerRank, playerRankRP, playerRanking, playerRankImage)
+            new PlayerStatusEmbedBuilder(playerName, playerLevel, playerRank, playerRankImage, playerRankRP, playerRanking).build()
         this.interaction.reply({ ephemeral: true, embeds: [embedMessage] })
     }
 

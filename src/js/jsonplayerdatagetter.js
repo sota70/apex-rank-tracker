@@ -239,10 +239,11 @@ var PlayerDataLoader = /** @class */ (function () {
         });
     };
     PlayerDataLoader.prototype.resetPlayerRankRole = function (discordUser, guild) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
             var rankRoles, i;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         rankRoles = [
                             guild.roles.cache.find(function (r) { return r.name === "Gold 4"; }),
@@ -261,15 +262,15 @@ var PlayerDataLoader = /** @class */ (function () {
                             guild.roles.cache.find(function (r) { return r.name === "Predator"; })
                         ];
                         i = 0;
-                        _a.label = 1;
+                        _b.label = 1;
                     case 1:
                         if (!(i < rankRoles.length)) return [3 /*break*/, 4];
-                        if (!discordUser.roles.cache.has(rankRoles[i].id))
+                        if (!discordUser.roles.cache.has((_a = rankRoles[i]) === null || _a === void 0 ? void 0 : _a.id))
                             return [3 /*break*/, 3];
                         return [4 /*yield*/, discordUser.roles.remove(rankRoles[i])];
                     case 2:
-                        _a.sent();
-                        _a.label = 3;
+                        _b.sent();
+                        _b.label = 3;
                     case 3:
                         i++;
                         return [3 /*break*/, 1];
