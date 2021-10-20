@@ -123,7 +123,7 @@ var JsonFileManager = /** @class */ (function () {
     };
     JsonFileManager.prototype.writeData = function (discordUser, username, platform, guildId) {
         return __awaiter(this, void 0, void 0, function () {
-            var rows;
+            var rows, keys;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -133,13 +133,17 @@ var JsonFileManager = /** @class */ (function () {
                             ["platform", platform],
                             ["guildId", guildId]
                         ]);
+                        keys = new Map([
+                            ["discordUserId", discordUser.id],
+                            ["guildId", guildId]
+                        ]);
                         return [4 /*yield*/, this.isDataExists(discordUser.id, guildId)];
                     case 1:
                         if (!(_a.sent())) {
                             sqlDataEditor.insert("username", rows);
                             return [2 /*return*/];
                         }
-                        sqlDataEditor.update("username", rows, "guildId", guildId);
+                        sqlDataEditor.update("username", rows, keys);
                         return [2 /*return*/];
                 }
             });

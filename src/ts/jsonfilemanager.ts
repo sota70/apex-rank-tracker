@@ -49,11 +49,15 @@ export class JsonFileManager {
             ["platform", platform],
             ["guildId", guildId]
         ])
+        let keys = new Map<string, any>([
+            ["discordUserId", discordUser.id],
+            ["guildId", guildId]
+        ])
         if (!await this.isDataExists(discordUser.id, guildId)) {
             sqlDataEditor.insert("username", rows)
             return
         }
-        sqlDataEditor.update("username", rows, "guildId", guildId)
+        sqlDataEditor.update("username", rows, keys)
     }
 
     private delay(sec: number) {

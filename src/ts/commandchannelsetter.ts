@@ -7,12 +7,15 @@ export async function setCommandChannel(serverId: string, channelId: string) {
         ["serverId", serverId],
         ["channelId", channelId]
     ])
+    let keys = new Map<string, any>([
+        ["serverId", serverId]
+    ])
     if (!await isCommandChannelSet(serverId)) {
         sqlDataEditor.insert("command_channel", sqlRows)
         console.log(`${channelId} has been set to ${serverId}`)
         return
     }
-    sqlDataEditor.update("command_channel", sqlRows, "serverId", serverId)
+    sqlDataEditor.update("command_channel", sqlRows, keys)
     console.log(`${channelId} has been set to ${serverId}`)
 }
 

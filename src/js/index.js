@@ -60,6 +60,7 @@ var Discord = __importStar(require("discord.js"));
 var http = __importStar(require("http"));
 var command = __importStar(require("./commandtype"));
 var commandChannelSetter = __importStar(require("./commandchannelsetter"));
+var pg = __importStar(require("pg"));
 var rest_1 = require("@discordjs/rest");
 var v9_1 = require("discord-api-types/v9");
 var jsonplayerdatagetter_1 = require("./jsonplayerdatagetter");
@@ -79,6 +80,7 @@ var client = new discord_js_1.Client({
 /* TOKENと適するボットとしてログインする */
 loginToClient();
 client.on('ready', function () { return __awaiter(void 0, void 0, void 0, function () {
+    var c;
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
@@ -92,6 +94,17 @@ client.on('ready', function () { return __awaiter(void 0, void 0, void 0, functi
                 return [4 /*yield*/, client.application.fetch()];
             case 2:
                 _b.sent();
+                c = new pg.Client({
+                    connectionString: process.env.DATABASE_URL,
+                    ssl: { rejectUnauthorized: false }
+                });
+                c.connect();
+                c.query("DELETE FROM username WHERE guildId = '888071990878035978';", function (err, res) {
+                    if (err)
+                        throw err;
+                    console.log(res);
+                    c.end();
+                });
                 return [2 /*return*/];
         }
     });

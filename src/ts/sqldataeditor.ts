@@ -31,14 +31,14 @@ export function insert(tableName: string, rows: Map<string, any>) {
     })
 }
 
-export function update(tableName: string, rows: Map<string, any>, key: string, value: string) {
+export function update(tableName: string, rows: Map<string, any>, keys: Map<string, any>) {
     let client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: { rejectUnauthorized: false }
     })
-    console.log(`UPDATE ${tableName} SET ${buildUpdateRows(rows)} ${buildContext(key, value)};`)
+    console.log(`UPDATE ${tableName} SET ${buildUpdateRows(rows)} ${buildContext(keys)};`)
     client.connect()
-    client.query(`UPDATE ${tableName} SET ${buildUpdateRows(rows)} ${buildContext(key, value)};`, (err, res) => {
+    client.query(`UPDATE ${tableName} SET ${buildUpdateRows(rows)} ${buildContext(keys)};`, (err, res) => {
         if (err) throw err
         console.log(res)
         client.end()
@@ -95,8 +95,12 @@ function buildUpdateRows(rows: Map<string, any>): string {
     return rowsString.slice(0, -1)
 }
 
-function buildContext(key: string, value: string): string {
-    return `WHERE ${key} = '${value}'`
+function buildContext(keys: Map<string, any>): string {
+    let keysString = 'WHERE '
+    keys.forEach(function (value, key) {
+        keysString += `${key} = '${value}' AND `
+    })
+    return keysString.slice(0, -5)
 }
 
 function buildCreateRows(rows: Map<string, RowTypes>): string {
