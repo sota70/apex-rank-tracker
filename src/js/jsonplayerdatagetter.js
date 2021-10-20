@@ -102,6 +102,10 @@ var PlayerDataLoader = /** @class */ (function () {
             headers: { "TRN-Api-Key": process.env.APEX_TRACKER_API_KEY }
         }, function (err, res, body) {
             var jsonData = JSON.parse(body);
+            if (jsonData.data === undefined) {
+                console.log('Successed with avoding the error');
+                return;
+            }
             var playerRank = jsonData.data.metadata.rankName;
             var playerRanking = _this.getPlayerRanking(jsonData.data.stats);
             _this.setPlayerRole(discordUser, playerRank, playerRanking, guild);

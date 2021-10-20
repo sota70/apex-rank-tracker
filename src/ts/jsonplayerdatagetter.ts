@@ -37,6 +37,10 @@ export class PlayerDataLoader {
             headers: { "TRN-Api-Key": process.env.APEX_TRACKER_API_KEY }
         }, (err, res, body) => {
             let jsonData = JSON.parse(body)
+            if (jsonData.data === undefined) {
+                console.log('Successed with avoding the error')
+                return
+            }
             let playerRank = jsonData.data.metadata.rankName
             let playerRanking = this.getPlayerRanking(jsonData.data.stats)
             this.setPlayerRole(discordUser, playerRank, playerRanking, guild)
