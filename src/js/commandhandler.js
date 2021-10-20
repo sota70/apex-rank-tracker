@@ -117,6 +117,10 @@ var CommandHandler = /** @class */ (function () {
                         playerRankImage = apexUserData.playerRankImage;
                         playerRankRP = apexUserData.playerRankRP;
                         playerRanking = apexUserData.playerRanking;
+                        if (playerName === "None") {
+                            this.interaction.reply({ ephemeral: true, content: "Couldn't find the player" });
+                            return [2 /*return*/];
+                        }
                         embedMessage = new playerstatusembedbuilder_1.PlayerStatusEmbedBuilder(playerName, playerLevel, playerRank, playerRankImage, playerRankRP, playerRanking).build();
                         this.interaction.reply({ ephemeral: true, embeds: [embedMessage] });
                         return [2 /*return*/];
@@ -130,6 +134,7 @@ var CommandHandler = /** @class */ (function () {
         var newCommandChannel = guild === null || guild === void 0 ? void 0 : guild.channels.cache.find(function (ch) { return ch.name === commandChannelName; });
         if (newCommandChannel === undefined) {
             this.interaction.reply({ content: "Couldn't find the channel", ephemeral: true });
+            return;
         }
         commandChannelSetter.setCommandChannel(guild === null || guild === void 0 ? void 0 : guild.id, newCommandChannel === null || newCommandChannel === void 0 ? void 0 : newCommandChannel.id);
         this.interaction.reply({

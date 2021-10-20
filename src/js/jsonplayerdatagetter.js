@@ -76,6 +76,8 @@ var PlayerDataLoader = /** @class */ (function () {
                             headers: { "TRN-Api-Key": process.env.APEX_TRACKER_API_KEY }
                         }, function (err, res, body) {
                             var jsonData = JSON.parse(body);
+                            if (jsonData.data === undefined)
+                                return apexUserData;
                             var playerName = jsonData.data.metadata.platformUserHandle;
                             var playerLevel = jsonData.data.metadata.level;
                             var playerRank = jsonData.data.metadata.rankName;

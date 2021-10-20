@@ -12,6 +12,7 @@ export class PlayerDataLoader {
             headers: { "TRN-Api-Key": process.env.APEX_TRACKER_API_KEY }
         }, (err, res, body) => {
             let jsonData = JSON.parse(body)
+            if (jsonData.data === undefined) return apexUserData
             let playerName = jsonData.data.metadata.platformUserHandle
             let playerLevel = jsonData.data.metadata.level
             let playerRank = jsonData.data.metadata.rankName

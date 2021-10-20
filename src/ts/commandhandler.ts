@@ -58,6 +58,10 @@ export class CommandHandler {
         let playerRankImage = apexUserData.playerRankImage
         let playerRankRP = apexUserData.playerRankRP
         let playerRanking = apexUserData.playerRanking
+        if (playerName === "None") {
+            this.interaction.reply({ ephemeral: true, content: `Couldn't find the player` })
+            return
+        }
         let embedMessage = 
             new PlayerStatusEmbedBuilder(playerName, playerLevel, playerRank, playerRankImage, playerRankRP, playerRanking).build()
         this.interaction.reply({ ephemeral: true, embeds: [embedMessage] })
@@ -69,6 +73,7 @@ export class CommandHandler {
         let newCommandChannel = guild?.channels.cache.find(ch => ch.name === commandChannelName) 
         if (newCommandChannel === undefined) {
             this.interaction.reply({ content: "Couldn't find the channel", ephemeral: true })
+            return
         }
         commandChannelSetter.setCommandChannel(guild?.id!, newCommandChannel?.id!)
         this.interaction.reply({ 

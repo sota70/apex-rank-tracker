@@ -3,16 +3,16 @@ import { CommandChannel } from './commandchannel'
 import * as sqlDataEditor from './sqldataeditor'
 
 export async function setCommandChannel(serverId: string, channelId: string) {
-    let rows = new Map<string, any>([
+    let sqlRows = new Map<string, any>([
         ["serverId", serverId],
         ["channelId", channelId]
     ])
     if (!await isCommandChannelSet(serverId)) {
-        sqlDataEditor.insert("command_channel", rows)
+        sqlDataEditor.insert("command_channel", sqlRows)
         console.log(`${channelId} has been set to ${serverId}`)
         return
     }
-    sqlDataEditor.update("command_channel", rows, "serverId", serverId)
+    sqlDataEditor.update("command_channel", sqlRows, "serverId", serverId)
     console.log(`${channelId} has been set to ${serverId}`)
 }
 
@@ -28,7 +28,7 @@ export async function getCommandChannelId(serverId: string, client: Client): Pro
 function getDefaultCommandChannelId(guild: Guild): string {
     let defaultCommandChannel = guild.channels.cache.find(ch => ch.name === process.env.DEFAULT_RANK_CHANNEL)
     if (defaultCommandChannel === undefined) throw console.error("The guild must have command channel.");
-    return defaultCommandChannel.id   
+    return defaultCommandChannel.id
 }
 
 async function getCommandChannel(serverId: string): Promise<CommandChannel | undefined> {

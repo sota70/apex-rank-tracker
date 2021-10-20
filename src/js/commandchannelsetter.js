@@ -60,22 +60,22 @@ var commandchannel_1 = require("./commandchannel");
 var sqlDataEditor = __importStar(require("./sqldataeditor"));
 function setCommandChannel(serverId, channelId) {
     return __awaiter(this, void 0, void 0, function () {
-        var rows;
+        var sqlRows;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    rows = new Map([
+                    sqlRows = new Map([
                         ["serverId", serverId],
                         ["channelId", channelId]
                     ]);
                     return [4 /*yield*/, isCommandChannelSet(serverId)];
                 case 1:
                     if (!(_a.sent())) {
-                        sqlDataEditor.insert("command_channel", rows);
+                        sqlDataEditor.insert("command_channel", sqlRows);
                         console.log(channelId + " has been set to " + serverId);
                         return [2 /*return*/];
                     }
-                    sqlDataEditor.update("command_channel", rows, "serverId", serverId);
+                    sqlDataEditor.update("command_channel", sqlRows, "serverId", serverId);
                     console.log(channelId + " has been set to " + serverId);
                     return [2 /*return*/];
             }
