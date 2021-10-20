@@ -59,13 +59,13 @@ var env = __importStar(require("dotenv"));
 var Discord = __importStar(require("discord.js"));
 var http = __importStar(require("http"));
 var command = __importStar(require("./commandtype"));
-var commandChannelSetter = __importStar(require("./commandchannelsetter"));
 var rest_1 = require("@discordjs/rest");
 var v9_1 = require("discord-api-types/v9");
 var jsonplayerdatagetter_1 = require("./jsonplayerdatagetter");
 var jsonfilemanager_1 = require("./jsonfilemanager");
 var commandhandler_1 = require("./commandhandler");
 var discord_js_1 = require("discord.js");
+var commandchannelloader_1 = require("./commandchannelloader");
 var jsonFileManager = new jsonfilemanager_1.JsonFileManager();
 var guildId = "814796519131185156";
 var config = env.config();
@@ -213,13 +213,14 @@ function registerCommands() {
  */
 client.on('interactionCreate', function (interaction) {
     return __awaiter(this, void 0, void 0, function () {
-        var serverId, channelId, commandChannelId;
+        var serverId, channelId, commandChannelLoader, commandChannelId;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     serverId = interaction.guildId;
                     channelId = interaction.channelId;
-                    return [4 /*yield*/, commandChannelSetter.getCommandChannelId(serverId, client)];
+                    commandChannelLoader = new commandchannelloader_1.CommandChannelLoader(serverId);
+                    return [4 /*yield*/, commandChannelLoader.getCommandChannelId(client)];
                 case 1:
                     commandChannelId = _a.sent();
                     if (!interaction.isCommand())

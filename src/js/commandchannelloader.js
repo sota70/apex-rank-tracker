@@ -55,43 +55,87 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CommandChannelSetter = void 0;
-var commandchannelloader_1 = require("./commandchannelloader");
+exports.CommandChannelLoader = void 0;
+var commandchannel_1 = require("./commandchannel");
 var sqlDataEditor = __importStar(require("./sqldataeditor"));
-var CommandChannelSetter = /** @class */ (function () {
-    function CommandChannelSetter(serverId, channelId) {
+var CommandChannelLoader = /** @class */ (function () {
+    function CommandChannelLoader(serverId) {
         this.serverId = serverId;
-        this.channelId = channelId;
-        this.commandChannelLoader = new commandchannelloader_1.CommandChannelLoader(serverId);
     }
-    CommandChannelSetter.prototype.setCommandChannel = function () {
+    CommandChannelLoader.prototype.getAllCommandChannels = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var rows, conditions, isCommandChannelSet;
+            var commandChannels, commandChannelsData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        rows = new Map([
-                            ["serverId", this.serverId],
-                            ["channelId", this.channelId]
-                        ]);
-                        conditions = new Map([
-                            ["serverId", this.serverId]
-                        ]);
-                        return [4 /*yield*/, this.commandChannelLoader.isCommandChannelSet()];
+                        commandChannels = [];
+                        return [4 /*yield*/, sqlDataEditor.select("command_channel")];
                     case 1:
-                        isCommandChannelSet = _a.sent();
-                        if (!isCommandChannelSet) {
-                            sqlDataEditor.insert("command_channel", rows);
-                            console.log(this.channelId + " has been set to " + this.serverId);
-                            return [2 /*return*/];
+                        commandChannelsData = _a.sent();
+                        commandChannelsData.forEach(function (data) {
+                            commandChannels.push(new commandchannel_1.CommandChannel(data.serverid, data.channelid));
+                        });
+                        return [2 /*return*/, commandChannels];
+                }
+            });
+        });
+    };
+    CommandChannelLoader.prototype.getCommandChannel = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var commandChannels, i;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getAllCommandChannels()];
+                    case 1:
+                        commandChannels = _a.sent();
+                        for (i = 0; i < commandChannels.length; i++) {
+                            if (commandChannels[i].serverId !== this.serverId)
+                                continue;
+                            return [2 /*return*/, commandChannels[i]];
                         }
-                        sqlDataEditor.update("command_channel", rows, conditions);
-                        console.log(this.channelId + " has been set to " + this.serverId);
                         return [2 /*return*/];
                 }
             });
         });
     };
-    return CommandChannelSetter;
+    CommandChannelLoader.prototype.getCommandChannelId = function (client) {
+        return __awaiter(this, void 0, void 0, function () {
+            var commandChannel, guild;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getCommandChannel()];
+                    case 1:
+                        commandChannel = _a.sent();
+                        if (!(commandChannel === undefined)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, client.guilds.fetch(this.serverId)];
+                    case 2:
+                        guild = _a.sent();
+                        return [2 /*return*/, this.getDefaultCommandChannelId(guild)];
+                    case 3: return [2 /*return*/, commandChannel.channelId];
+                }
+            });
+        });
+    };
+    CommandChannelLoader.prototype.isCommandChannelSet = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var commandChannels;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getAllCommandChannels()];
+                    case 1:
+                        commandChannels = _a.sent();
+                        return [2 /*return*/, commandChannels.some(function (ch) { return ch.serverId === _this.serverId; })];
+                }
+            });
+        });
+    };
+    CommandChannelLoader.prototype.getDefaultCommandChannelId = function (guild) {
+        var defaultCommandChannel = guild.channels.cache.find(function (ch) { return ch.name === process.env.DEFAULT_RANK_CHANNEL; });
+        if (defaultCommandChannel === undefined)
+            throw console.error("The guild must have command channel.");
+        return defaultCommandChannel.id;
+    };
+    return CommandChannelLoader;
 }());
-exports.CommandChannelSetter = CommandChannelSetter;
+exports.CommandChannelLoader = CommandChannelLoader;

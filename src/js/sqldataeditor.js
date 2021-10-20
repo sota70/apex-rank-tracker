@@ -71,14 +71,14 @@ function insert(tableName, rows) {
     });
 }
 exports.insert = insert;
-function update(tableName, rows, keys) {
+function update(tableName, rows, conditions) {
     var client = new pg_1.Client({
         connectionString: process.env.DATABASE_URL,
         ssl: { rejectUnauthorized: false }
     });
-    console.log("UPDATE " + tableName + " SET " + buildUpdateRows(rows) + " " + buildContext(keys) + ";");
+    console.log("UPDATE " + tableName + " SET " + buildUpdateRows(rows) + " " + buildContext(conditions) + ";");
     client.connect();
-    client.query("UPDATE " + tableName + " SET " + buildUpdateRows(rows) + " " + buildContext(keys) + ";", function (err, res) {
+    client.query("UPDATE " + tableName + " SET " + buildUpdateRows(rows) + " " + buildContext(conditions) + ";", function (err, res) {
         if (err)
             throw err;
         console.log(res);
@@ -148,9 +148,9 @@ function buildUpdateRows(rows) {
     });
     return rowsString.slice(0, -1);
 }
-function buildContext(keys) {
+function buildContext(conditions) {
     var keysString = 'WHERE ';
-    keys.forEach(function (value, key) {
+    conditions.forEach(function (value, key) {
         keysString += key + " = '" + value + "' AND ";
     });
     return keysString.slice(0, -5);

@@ -11,6 +11,7 @@ import { PlayerDataLoader } from './jsonplayerdatagetter'
 import { JsonFileManager } from './jsonfilemanager'
 import { CommandHandler } from './commandhandler'
 import { Intents, Client, ClientApplication } from 'discord.js'
+import { CommandChannelLoader } from './commandchannelloader'
 
 const jsonFileManager = new JsonFileManager()
 const guildId = "814796519131185156"
@@ -106,7 +107,8 @@ async function registerCommands() {
 client.on('interactionCreate', async function (interaction) {
     let serverId = interaction.guildId
     let channelId = interaction.channelId
-    let commandChannelId = await commandChannelSetter.getCommandChannelId(serverId!, client)
+    let commandChannelLoader = new CommandChannelLoader(serverId!)
+    let commandChannelId = await commandChannelLoader.getCommandChannelId(client)
     if (!interaction.isCommand()) return
     if (channelId !== commandChannelId) {
         interaction.reply({ content: "This is not the command channel", ephemeral: true })

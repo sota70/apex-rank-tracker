@@ -60,8 +60,8 @@ var jsonplayerdatagetter_1 = require("./jsonplayerdatagetter");
 var commandtype_1 = require("./commandtype");
 var jsonfilemanager_1 = require("./jsonfilemanager");
 var playerstatusembedbuilder_1 = require("./playerstatusembedbuilder");
+var commandchannelsetter_1 = require("./commandchannelsetter");
 var displayrank = __importStar(require("./displayrank"));
-var commandChannelSetter = __importStar(require("./commandchannelsetter"));
 var CommandHandler = /** @class */ (function () {
     function CommandHandler(interaction) {
         this.interaction = interaction;
@@ -136,7 +136,7 @@ var CommandHandler = /** @class */ (function () {
             this.interaction.reply({ content: "Couldn't find the channel", ephemeral: true });
             return;
         }
-        commandChannelSetter.setCommandChannel(guild === null || guild === void 0 ? void 0 : guild.id, newCommandChannel === null || newCommandChannel === void 0 ? void 0 : newCommandChannel.id);
+        new commandchannelsetter_1.CommandChannelSetter(guild === null || guild === void 0 ? void 0 : guild.id, newCommandChannel === null || newCommandChannel === void 0 ? void 0 : newCommandChannel.id).setCommandChannel();
         this.interaction.reply({
             content: "The command channel has been set to " + (newCommandChannel === null || newCommandChannel === void 0 ? void 0 : newCommandChannel.name),
             ephemeral: true

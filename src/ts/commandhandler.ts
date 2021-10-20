@@ -3,8 +3,8 @@ import { PlayerDataLoader } from './jsonplayerdatagetter'
 import { commandNames } from './commandtype'
 import { JsonFileManager } from './jsonfilemanager'
 import { PlayerStatusEmbedBuilder } from './playerstatusembedbuilder'
+import { CommandChannelSetter } from './commandchannelsetter'
 import * as displayrank from './displayrank'
-import * as commandChannelSetter from './commandchannelsetter'
 
 export class CommandHandler {
 
@@ -70,12 +70,12 @@ export class CommandHandler {
     private handleSetCommandChannelCommand() {
         const { options, guild } = this.interaction
         let commandChannelName = options.getString("channel")
-        let newCommandChannel = guild?.channels.cache.find(ch => ch.name === commandChannelName) 
+        let newCommandChannel = guild?.channels.cache.find(ch => ch.name === commandChannelName)
         if (newCommandChannel === undefined) {
             this.interaction.reply({ content: "Couldn't find the channel", ephemeral: true })
             return
         }
-        commandChannelSetter.setCommandChannel(guild?.id!, newCommandChannel?.id!)
+        new CommandChannelSetter(guild?.id!, newCommandChannel?.id!).setCommandChannel()
         this.interaction.reply({ 
             content: `The command channel has been set to ${newCommandChannel?.name}`,
             ephemeral: true
