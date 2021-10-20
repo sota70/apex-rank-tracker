@@ -32,16 +32,6 @@ client.on('ready',async () => {
     await registerCommands()
     client.application = new ClientApplication(client, {})
     await client.application.fetch()
-    let c = new pg.Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false }
-    })
-    c.connect()
-    c.query(`DELETE FROM username WHERE guildId = '888071990878035978';`, (err, res) => {
-        if (err) throw err
-        console.log(res)
-        c.end()
-    })
 })
 
 /* ボットを動かしているサーバーに送られてきたメソッドメソッドを受け取り、処理するメソッド*/
