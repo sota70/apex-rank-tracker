@@ -57,7 +57,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var env = __importStar(require("dotenv"));
 var http = __importStar(require("http"));
-var command = __importStar(require("./commandtype"));
+var command = __importStar(require("./command/command"));
 var rest_1 = require("@discordjs/rest");
 var v9_1 = require("discord-api-types/v9");
 var jsonplayerdatagetter_1 = require("./jsonplayerdatagetter");
@@ -185,7 +185,7 @@ function registerCommands() {
                         command.setCommandChannelAliaseCommand,
                         command.setUsernameCommand,
                         command.setUsernameAliaseCommand
-                    ].map(function (command) { return command.toJSON(); });
+                    ].map(function (c) { return c.toJSON(); });
                     console.log(commands);
                     rest = new rest_1.REST({ version: '9' }).setToken(process.env.TOKEN);
                     clientId = '821655399857127485';

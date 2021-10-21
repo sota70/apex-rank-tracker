@@ -1,6 +1,6 @@
 import { CommandExecuteEvent } from "../event/commandexecuteevent";
 import { EventListener } from "./eventlistener";
-import { commandNames } from "../commandtype";
+import { commandNames } from "../command/commandname";
 import { PlayerDataLoader } from "../jsonplayerdatagetter";
 import { PlayerStatusEmbedBuilder } from "../playerstatusembedbuilder";
 import { CommandChannelSetter } from "../commandchannelsetter";

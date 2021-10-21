@@ -1,6 +1,6 @@
 import * as env from 'dotenv'
 import * as http from 'http'
-import * as command from './commandtype'
+import * as command from './command/command'
 import * as commandChannelSetter from './commandchannelsetter'
 import * as pg from 'pg'
 import * as sqlDataEditor from './sqldataeditor'
@@ -88,7 +88,7 @@ async function registerCommands() {
         command.setCommandChannelAliaseCommand,
         command.setUsernameCommand,
         command.setUsernameAliaseCommand
-    ].map(command => command.toJSON())
+    ].map(c => c.toJSON())
     console.log(commands)
     const rest = new REST({ version: '9' }).setToken(process.env.TOKEN!)
     const clientId = '821655399857127485'

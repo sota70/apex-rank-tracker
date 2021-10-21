@@ -56,7 +56,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommandExecuteListener = void 0;
-var commandtype_1 = require("../commandtype");
+var commandname_1 = require("../command/commandname");
 var jsonplayerdatagetter_1 = require("../jsonplayerdatagetter");
 var playerstatusembedbuilder_1 = require("../playerstatusembedbuilder");
 var commandchannelsetter_1 = require("../commandchannelsetter");
@@ -69,28 +69,28 @@ var CommandExecuteListener = /** @class */ (function () {
         if (!event.interaction.isCommand())
             return;
         switch (event.interaction.commandName) {
-            case commandtype_1.commandNames.APEX:
+            case commandname_1.commandNames.APEX:
                 this.handleApexCommand(event);
                 break;
-            case commandtype_1.commandNames.APEXALIASE:
+            case commandname_1.commandNames.APEXALIASE:
                 this.handleApexCommand(event);
                 break;
-            case commandtype_1.commandNames.SETCOMMANDCHANNEL:
+            case commandname_1.commandNames.SETCOMMANDCHANNEL:
                 this.handleSetCommandChannelCommand(event);
                 break;
-            case commandtype_1.commandNames.SETCOMMANDCHANNELALIASE:
+            case commandname_1.commandNames.SETCOMMANDCHANNELALIASE:
                 this.handleSetCommandChannelCommand(event);
                 break;
-            case commandtype_1.commandNames.SETUSERNAME:
+            case commandname_1.commandNames.SETUSERNAME:
                 this.handleSetUsernameCommand(event);
                 break;
-            case commandtype_1.commandNames.SETUSERNAMEALIASE:
+            case commandname_1.commandNames.SETUSERNAMEALIASE:
                 this.handleSetUsernameCommand(event);
                 break;
-            case commandtype_1.commandNames.TIMERSTART:
+            case commandname_1.commandNames.TIMERSTART:
                 this.handleTimerStartCommand(event);
                 break;
-            case commandtype_1.commandNames.TIMERSTARTALIASE:
+            case commandname_1.commandNames.TIMERSTARTALIASE:
                 this.handleTimerStartCommand(event);
                 break;
         }
