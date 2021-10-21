@@ -12,6 +12,7 @@ import { Intents, Client, ClientApplication } from 'discord.js'
 import { CommandChannelLoader } from './commandchannelloader'
 import { CommandExecuteEvent } from './event/commandexecuteevent'
 import { Event } from './event/event'
+import { CommandRegister } from './register/commandregister'
 
 const jsonFileManager = new JsonFileManager()
 const guildId = "814796519131185156"
@@ -30,7 +31,7 @@ loginToClient()
 client.on('ready',async () => {
     console.log(`${client.user?.tag}でログインしています`)
     console.log('準備完了')
-    await registerCommands()
+    await new CommandRegister().register()
     client.application = new ClientApplication(client, {})
     await client.application.fetch()
 })
@@ -75,30 +76,6 @@ async function setDiscordUsersRole(client: Client) {
         let platform = data.platform
         playerDataLoader.setPlayerRankRole(discordUser, username, platform, guild)
     })
-}
-
-/*
- * コマンドを登録するメソッド
- */
-async function registerCommands() {
-    const commands = [
-        command.apexCommand,
-        command.apexAliaseCommand,
-        command.setCommandChannelCommand,
-        command.setCommandChannelAliaseCommand,
-        command.setUsernameCommand,
-        command.setUsernameAliaseCommand
-    ].map(c => c.toJSON())
-    console.log(commands)
-    const rest = new REST({ version: '9' }).setToken(process.env.TOKEN!)
-    const clientId = '821655399857127485'
-    try {
-        console.log('Started refreshing application (/) commands.')
-        await rest.put(Routes.applicationCommands(clientId), { body: commands })
-        console.log('Successfully reloaded application (/) commands.')
-    } catch (err) {
-        console.error(err)
-    }
 }
 
 /* 

@@ -65,6 +65,7 @@ var jsonfilemanager_1 = require("./jsonfilemanager");
 var discord_js_1 = require("discord.js");
 var commandchannelloader_1 = require("./commandchannelloader");
 var commandexecuteevent_1 = require("./event/commandexecuteevent");
+var commandregister_1 = require("./register/commandregister");
 var jsonFileManager = new jsonfilemanager_1.JsonFileManager();
 var guildId = "814796519131185156";
 var config = env.config();
@@ -84,7 +85,7 @@ client.on('ready', function () { return __awaiter(void 0, void 0, void 0, functi
             case 0:
                 console.log(((_a = client.user) === null || _a === void 0 ? void 0 : _a.tag) + "\u3067\u30ED\u30B0\u30A4\u30F3\u3057\u3066\u3044\u307E\u3059");
                 console.log('準備完了');
-                return [4 /*yield*/, registerCommands()];
+                return [4 /*yield*/, new commandregister_1.CommandRegister().register()];
             case 1:
                 _b.sent();
                 client.application = new discord_js_1.ClientApplication(client, {});
