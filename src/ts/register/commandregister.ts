@@ -7,8 +7,8 @@ export class CommandRegister implements Register {
 
     public async register() {
         const commands = [
-            command.apexCommand,
-            command.apexAliaseCommand,
+            command.showApexStatusCommand,
+            command.showApexStatusAliaseCommand,
             command.setCommandChannelCommand,
             command.setCommandChannelAliaseCommand,
             command.setUsernameCommand,

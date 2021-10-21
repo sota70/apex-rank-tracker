@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { commandNames } from './commandname'
 
-export const apexCommand = new SlashCommandBuilder()
-    .setName(commandNames.APEX)
+export const showApexStatusCommand = new SlashCommandBuilder()
+    .setName(commandNames.SHOWAPEXSTATUS)
     .setDescription("Print specific player's data in apex")
     .setDefaultPermission(true)
     .addStringOption(option =>
@@ -16,8 +16,8 @@ export const apexCommand = new SlashCommandBuilder()
             .setRequired(true)
     )
 
-export const apexAliaseCommand = new SlashCommandBuilder()
-    .setName(commandNames.APEXALIASE)
+export const showApexStatusAliaseCommand = new SlashCommandBuilder()
+    .setName(commandNames.SHOWAPEXSTATUSALIASE)
     .setDescription("Print specific player's data in apex")
     .setDefaultPermission(true)
     .addStringOption(option =>

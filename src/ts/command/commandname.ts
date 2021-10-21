@@ -1,6 +1,6 @@
 export const commandNames = {
-    APEX: "showapexstatus",
-    APEXALIASE: "sas",
+    SHOWAPEXSTATUS: "showapexstatus",
+    SHOWAPEXSTATUSALIASE: "sas",
     SETCOMMANDCHANNEL: "setcommandchannel",
     SETCOMMANDCHANNELALIASE: "scc",
     SETUSERNAME: "setusername",

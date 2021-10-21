@@ -49,10 +49,10 @@ var CommandExecuteListener = /** @class */ (function () {
         if (!event.interaction.isCommand())
             return;
         switch (event.interaction.commandName) {
-            case commandname_1.commandNames.APEX:
+            case commandname_1.commandNames.SHOWAPEXSTATUS:
                 this.handleApexCommand(event);
                 break;
-            case commandname_1.commandNames.APEXALIASE:
+            case commandname_1.commandNames.SHOWAPEXSTATUSALIASE:
                 this.handleApexCommand(event);
                 break;
             case commandname_1.commandNames.SETCOMMANDCHANNEL:

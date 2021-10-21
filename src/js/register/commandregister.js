@@ -69,8 +69,8 @@ var CommandRegister = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         commands = [
-                            command.apexCommand,
-                            command.apexAliaseCommand,
+                            command.showApexStatusCommand,
+                            command.showApexStatusAliaseCommand,
                             command.setCommandChannelCommand,
                             command.setCommandChannelAliaseCommand,
                             command.setUsernameCommand,

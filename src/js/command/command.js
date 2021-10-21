@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setUsernameAliaseCommand = exports.setUsernameCommand = exports.setCommandChannelAliaseCommand = exports.setCommandChannelCommand = exports.apexAliaseCommand = exports.apexCommand = void 0;
+exports.setUsernameAliaseCommand = exports.setUsernameCommand = exports.setCommandChannelAliaseCommand = exports.setCommandChannelCommand = exports.showApexStatusAliaseCommand = exports.showApexStatusCommand = void 0;
 var builders_1 = require("@discordjs/builders");
 var commandname_1 = require("./commandname");
-exports.apexCommand = new builders_1.SlashCommandBuilder()
-    .setName(commandname_1.commandNames.APEX)
+exports.showApexStatusCommand = new builders_1.SlashCommandBuilder()
+    .setName(commandname_1.commandNames.SHOWAPEXSTATUS)
     .setDescription("Print specific player's data in apex")
     .setDefaultPermission(true)
     .addStringOption(function (option) {
@@ -17,8 +17,8 @@ exports.apexCommand = new builders_1.SlashCommandBuilder()
         .setDescription("Platform your account is on")
         .setRequired(true);
 });
-exports.apexAliaseCommand = new builders_1.SlashCommandBuilder()
-    .setName(commandname_1.commandNames.APEXALIASE)
+exports.showApexStatusAliaseCommand = new builders_1.SlashCommandBuilder()
+    .setName(commandname_1.commandNames.SHOWAPEXSTATUSALIASE)
     .setDescription("Print specific player's data in apex")
     .setDefaultPermission(true)
     .addStringOption(function (option) {

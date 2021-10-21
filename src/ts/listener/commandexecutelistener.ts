@@ -11,10 +11,10 @@ export class CommandExecuteListener implements EventListener {
     public handle(event: CommandExecuteEvent) {
         if (!event.interaction.isCommand()) return
         switch (event.interaction.commandName) {
-            case commandNames.APEX:
+            case commandNames.SHOWAPEXSTATUS:
                 this.handleApexCommand(event)
                 break
-            case commandNames.APEXALIASE:
+            case commandNames.SHOWAPEXSTATUSALIASE:
                 this.handleApexCommand(event)
                 break
             case commandNames.SETCOMMANDCHANNEL:
