@@ -5,7 +5,6 @@ import { PlayerDataLoader } from "../jsonplayerdatagetter";
 import { PlayerStatusEmbedBuilder } from "../playerstatusembedbuilder";
 import { CommandChannelSetter } from "../commandchannelsetter";
 import { JsonFileManager } from "../jsonfilemanager";
-import * as displayrank from '../displayrank'
 
 export class CommandExecuteListener implements EventListener {
 
@@ -29,12 +28,6 @@ export class CommandExecuteListener implements EventListener {
                 break
             case commandNames.SETUSERNAMEALIASE:
                 this.handleSetUsernameCommand(event)
-                break
-            case commandNames.TIMERSTART:
-                this.handleTimerStartCommand(event)
-                break
-            case commandNames.TIMERSTARTALIASE:
-                this.handleTimerStartCommand(event)
                 break
         }
     }
@@ -83,15 +76,6 @@ export class CommandExecuteListener implements EventListener {
         jsonFileManager.writeData(user, username, platform, guildId!)
         event.interaction.reply({
             content: `ユーザーネームを${username}に、プラットフォームを${platform}に設定しました`,
-            ephemeral: true
-        })
-    }
-
-    private handleTimerStartCommand(event: CommandExecuteEvent) {
-        const { client } = event.interaction
-        displayrank.startTimer(client)
-        event.interaction.reply({
-            content: "タイマーがスタートしました",
             ephemeral: true
         })
     }

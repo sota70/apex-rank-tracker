@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -61,7 +42,6 @@ var jsonplayerdatagetter_1 = require("../jsonplayerdatagetter");
 var playerstatusembedbuilder_1 = require("../playerstatusembedbuilder");
 var commandchannelsetter_1 = require("../commandchannelsetter");
 var jsonfilemanager_1 = require("../jsonfilemanager");
-var displayrank = __importStar(require("../displayrank"));
 var CommandExecuteListener = /** @class */ (function () {
     function CommandExecuteListener() {
     }
@@ -86,12 +66,6 @@ var CommandExecuteListener = /** @class */ (function () {
                 break;
             case commandname_1.commandNames.SETUSERNAMEALIASE:
                 this.handleSetUsernameCommand(event);
-                break;
-            case commandname_1.commandNames.TIMERSTART:
-                this.handleTimerStartCommand(event);
-                break;
-            case commandname_1.commandNames.TIMERSTARTALIASE:
-                this.handleTimerStartCommand(event);
                 break;
         }
     };
@@ -147,14 +121,6 @@ var CommandExecuteListener = /** @class */ (function () {
         jsonFileManager.writeData(user, username, platform, guildId);
         event.interaction.reply({
             content: "\u30E6\u30FC\u30B6\u30FC\u30CD\u30FC\u30E0\u3092" + username + "\u306B\u3001\u30D7\u30E9\u30C3\u30C8\u30D5\u30A9\u30FC\u30E0\u3092" + platform + "\u306B\u8A2D\u5B9A\u3057\u307E\u3057\u305F",
-            ephemeral: true
-        });
-    };
-    CommandExecuteListener.prototype.handleTimerStartCommand = function (event) {
-        var client = event.interaction.client;
-        displayrank.startTimer(client);
-        event.interaction.reply({
-            content: "タイマーがスタートしました",
             ephemeral: true
         });
     };
