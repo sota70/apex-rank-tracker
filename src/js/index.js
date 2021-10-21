@@ -56,16 +56,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var env = __importStar(require("dotenv"));
-var Discord = __importStar(require("discord.js"));
 var http = __importStar(require("http"));
 var command = __importStar(require("./commandtype"));
 var rest_1 = require("@discordjs/rest");
 var v9_1 = require("discord-api-types/v9");
 var jsonplayerdatagetter_1 = require("./jsonplayerdatagetter");
 var jsonfilemanager_1 = require("./jsonfilemanager");
-var commandhandler_1 = require("./commandhandler");
 var discord_js_1 = require("discord.js");
 var commandchannelloader_1 = require("./commandchannelloader");
+var commandexecuteevent_1 = require("./event/commandexecuteevent");
 var jsonFileManager = new jsonfilemanager_1.JsonFileManager();
 var guildId = "814796519131185156";
 var config = env.config();
@@ -229,7 +228,7 @@ client.on('interactionCreate', function (interaction) {
                         interaction.reply({ content: "This is not the command channel", ephemeral: true });
                         return [2 /*return*/];
                     }
-                    new commandhandler_1.CommandHandler(interaction).handle();
+                    callEvent(new commandexecuteevent_1.CommandExecuteEvent(interaction));
                     return [2 /*return*/];
             }
         });
@@ -242,49 +241,6 @@ function loginToClient() {
     }
     client.login(process.env.TOKEN);
 }
-function createMessageEmbed(playerName, playerLevel, playerRank, playerRankRP, playerRanking, playerRankImageUrl) {
-    var embed;
-    if (isPlayerRankPredator(playerRanking)) {
-        embed = createPredatorPlayerDataEmbed(playerName, playerLevel, playerRank, playerRankRP, playerRanking);
-    }
-    else {
-        embed = createPlayerDataEmbed(playerName, playerLevel, playerRank, playerRankRP, playerRankImageUrl);
-    }
-    return embed;
-}
-function isPlayerRankPredator(playerRanking) {
-    if (playerRanking === undefined)
-        return false;
-    return playerRanking <= 750;
-}
-function createPlayerDataEmbed(playerName, playerLevel, playerRank, playerRankRP, playerRankImageUrl) {
-    var blank = '\u200b';
-    return new Discord.MessageEmbed()
-        .setTitle("PlayerStatus")
-        .addField("PlayerName", playerName)
-        .addField(blank, blank)
-        .addField("PlayerLevel", playerLevel.toString())
-        .addField(blank, blank)
-        .addField("PlayerRank", playerRank)
-        .addField(blank, blank)
-        .addField("PlayerRankRP", playerRankRP.toString())
-        .addField(blank, blank)
-        .setImage(playerRankImageUrl);
-}
-function createPredatorPlayerDataEmbed(playerName, playerLevel, playerRank, playerRankRP, playerRanking) {
-    var blank = '\u200b';
-    var predatorIconImage = "https://images-ext-1.discordapp.net/external/0lGvCP8CmGd-HUqpem-120A-dVpNVbN_srCvpE6D-84/https/trackercdn.com/cdn/apex.tracker.gg/ranks/apex.png?width=108&height=108";
-    return new Discord.MessageEmbed()
-        .setTitle("PlayerStatus")
-        .addField("PlayerName", playerName)
-        .addField(blank, blank)
-        .addField("PlayerLevel", playerLevel.toString())
-        .addField(blank, blank)
-        .addField("PlayerRank", playerRank)
-        .addField(blank, blank)
-        .addField("PlayerRankRP", playerRankRP.toString())
-        .addField(blank, blank)
-        .addField("PlayerRanking", playerRanking.toString())
-        .addField(blank, blank)
-        .setImage(predatorIconImage);
+function callEvent(event) {
+    event.eventListener.handle(event);
 }

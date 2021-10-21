@@ -1,5 +1,4 @@
 import * as env from 'dotenv'
-import * as Discord from 'discord.js'
 import * as http from 'http'
 import * as command from './commandtype'
 import * as commandChannelSetter from './commandchannelsetter'
@@ -9,9 +8,10 @@ import { REST } from '@discordjs/rest'
 import { Routes } from 'discord-api-types/v9'
 import { PlayerDataLoader } from './jsonplayerdatagetter'
 import { JsonFileManager } from './jsonfilemanager'
-import { CommandHandler } from './commandhandler'
 import { Intents, Client, ClientApplication } from 'discord.js'
 import { CommandChannelLoader } from './commandchannelloader'
+import { CommandExecuteEvent } from './event/commandexecuteevent'
+import { Event } from './event/event'
 
 const jsonFileManager = new JsonFileManager()
 const guildId = "814796519131185156"
@@ -114,7 +114,7 @@ client.on('interactionCreate', async function (interaction) {
         interaction.reply({ content: "This is not the command channel", ephemeral: true })
         return
     }
-    new CommandHandler(interaction).handle()
+    callEvent(new CommandExecuteEvent(interaction))
 })
 
 function loginToClient() {
@@ -125,70 +125,6 @@ function loginToClient() {
     client.login(process.env.TOKEN)
 }
 
-function createMessageEmbed(
-    playerName: string,
-    playerLevel: number,
-    playerRank: string,
-    playerRankRP: number,
-    playerRanking: number,
-    playerRankImageUrl: string 
-) {
-    let embed
-    if (isPlayerRankPredator(playerRanking)) {
-        embed = createPredatorPlayerDataEmbed(playerName, playerLevel, playerRank, playerRankRP, playerRanking)
-    } else {
-        embed = createPlayerDataEmbed(playerName, playerLevel, playerRank, playerRankRP, playerRankImageUrl)
-    }
-    return embed
-}
-
-function isPlayerRankPredator(playerRanking: number): Boolean {
-    if (playerRanking === undefined) return false
-    return playerRanking <= 750
-}
-
-function createPlayerDataEmbed(
-    playerName: string,
-    playerLevel: number,
-    playerRank: string,
-    playerRankRP: number,
-    playerRankImageUrl: string
-): Discord.MessageEmbed {
-    let blank = '\u200b'
-    return new Discord.MessageEmbed()
-        .setTitle("PlayerStatus")
-        .addField("PlayerName", playerName)
-        .addField(blank, blank)
-        .addField("PlayerLevel", playerLevel.toString())
-        .addField(blank, blank)
-        .addField("PlayerRank", playerRank)
-        .addField(blank, blank)
-        .addField("PlayerRankRP", playerRankRP.toString())
-        .addField(blank, blank)
-        .setImage(playerRankImageUrl)
-}
-
-function createPredatorPlayerDataEmbed(
-    playerName: string,
-    playerLevel: number,
-    playerRank: string,
-    playerRankRP: number,
-    playerRanking: number
-): Discord.MessageEmbed {
-    let blank = '\u200b'
-    let predatorIconImage = 
-        `https://images-ext-1.discordapp.net/external/0lGvCP8CmGd-HUqpem-120A-dVpNVbN_srCvpE6D-84/https/trackercdn.com/cdn/apex.tracker.gg/ranks/apex.png?width=108&height=108`
-    return new Discord.MessageEmbed()
-        .setTitle("PlayerStatus")
-        .addField("PlayerName", playerName)
-        .addField(blank, blank)
-        .addField("PlayerLevel", playerLevel.toString())
-        .addField(blank, blank)
-        .addField("PlayerRank", playerRank)
-        .addField(blank, blank)
-        .addField("PlayerRankRP", playerRankRP.toString())
-        .addField(blank, blank)
-        .addField("PlayerRanking", playerRanking.toString())
-        .addField(blank, blank)
-        .setImage(predatorIconImage)
+function callEvent(event: Event) {
+    event.eventListener.handle(event)
 }
