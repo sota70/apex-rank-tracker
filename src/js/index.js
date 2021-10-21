@@ -57,16 +57,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var env = __importStar(require("dotenv"));
 var http = __importStar(require("http"));
-var command = __importStar(require("./command/command"));
-var rest_1 = require("@discordjs/rest");
-var v9_1 = require("discord-api-types/v9");
 var jsonplayerdatagetter_1 = require("./jsonplayerdatagetter");
-var jsonfilemanager_1 = require("./jsonfilemanager");
+var userinforeader_1 = require("./userinfo/userinforeader");
 var discord_js_1 = require("discord.js");
-var commandchannelloader_1 = require("./commandchannelloader");
+var commandchannelreader_1 = require("./commandchannel/commandchannelreader");
 var commandexecuteevent_1 = require("./event/commandexecuteevent");
 var commandregister_1 = require("./register/commandregister");
-var jsonFileManager = new jsonfilemanager_1.JsonFileManager();
 var guildId = "814796519131185156";
 var config = env.config();
 var client = new discord_js_1.Client({
@@ -142,7 +138,7 @@ function setDiscordUsersRole(client) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, jsonFileManager.getPlayerDatas()];
+                case 0: return [4 /*yield*/, userinforeader_1.UserInfoReader.getPlayerDatas()];
                 case 1:
                     (_a.sent()).forEach(function (data) {
                         return __awaiter(this, void 0, void 0, function () {
@@ -171,44 +167,6 @@ function setDiscordUsersRole(client) {
     });
 }
 /*
- * コマンドを登録するメソッド
- */
-function registerCommands() {
-    return __awaiter(this, void 0, void 0, function () {
-        var commands, rest, clientId, err_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    commands = [
-                        command.apexCommand,
-                        command.apexAliaseCommand,
-                        command.setCommandChannelCommand,
-                        command.setCommandChannelAliaseCommand,
-                        command.setUsernameCommand,
-                        command.setUsernameAliaseCommand
-                    ].map(function (c) { return c.toJSON(); });
-                    console.log(commands);
-                    rest = new rest_1.REST({ version: '9' }).setToken(process.env.TOKEN);
-                    clientId = '821655399857127485';
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 3, , 4]);
-                    console.log('Started refreshing application (/) commands.');
-                    return [4 /*yield*/, rest.put(v9_1.Routes.applicationCommands(clientId), { body: commands })];
-                case 2:
-                    _a.sent();
-                    console.log('Successfully reloaded application (/) commands.');
-                    return [3 /*break*/, 4];
-                case 3:
-                    err_1 = _a.sent();
-                    console.error(err_1);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
-            }
-        });
-    });
-}
-/*
  * プレイヤーが打ったメッセージからコマンドを検知して、それぞれのコマンドに適応した処理をするメソッド
  */
 client.on('interactionCreate', function (interaction) {
@@ -219,7 +177,7 @@ client.on('interactionCreate', function (interaction) {
                 case 0:
                     serverId = interaction.guildId;
                     channelId = interaction.channelId;
-                    commandChannelLoader = new commandchannelloader_1.CommandChannelLoader(serverId);
+                    commandChannelLoader = new commandchannelreader_1.CommandChannelLoader(serverId);
                     return [4 /*yield*/, commandChannelLoader.getCommandChannelId(client)];
                 case 1:
                     commandChannelId = _a.sent();

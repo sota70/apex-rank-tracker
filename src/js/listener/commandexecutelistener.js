@@ -40,8 +40,8 @@ exports.CommandExecuteListener = void 0;
 var commandname_1 = require("../command/commandname");
 var jsonplayerdatagetter_1 = require("../jsonplayerdatagetter");
 var playerstatusembedbuilder_1 = require("../playerstatusembedbuilder");
-var commandchannelsetter_1 = require("../commandchannelsetter");
-var jsonfilemanager_1 = require("../jsonfilemanager");
+var commandchannelwriter_1 = require("../commandchannel/commandchannelwriter");
+var userinfowriter_1 = require("../userinfo/userinfowriter");
 var CommandExecuteListener = /** @class */ (function () {
     function CommandExecuteListener() {
     }
@@ -107,7 +107,7 @@ var CommandExecuteListener = /** @class */ (function () {
             event.interaction.reply({ content: "Couldn't find the channel", ephemeral: true });
             return;
         }
-        new commandchannelsetter_1.CommandChannelSetter(guild === null || guild === void 0 ? void 0 : guild.id, newCommandChannel === null || newCommandChannel === void 0 ? void 0 : newCommandChannel.id).setCommandChannel();
+        new commandchannelwriter_1.CommandChannelSetter(guild === null || guild === void 0 ? void 0 : guild.id, newCommandChannel === null || newCommandChannel === void 0 ? void 0 : newCommandChannel.id).setCommandChannel();
         event.interaction.reply({
             content: "The command channel has been set to " + (newCommandChannel === null || newCommandChannel === void 0 ? void 0 : newCommandChannel.name),
             ephemeral: true
@@ -117,8 +117,8 @@ var CommandExecuteListener = /** @class */ (function () {
         var _a = event.interaction, options = _a.options, user = _a.user, guildId = _a.guildId;
         var username = options.getString("username", true);
         var platform = options.getString("platform", true);
-        var jsonFileManager = new jsonfilemanager_1.JsonFileManager();
-        jsonFileManager.writeData(user, username, platform, guildId);
+        var userInfoWriter = new userinfowriter_1.UserInfoWriter(user.id, username, platform, guildId);
+        userInfoWriter.writeData();
         event.interaction.reply({
             content: "\u30E6\u30FC\u30B6\u30FC\u30CD\u30FC\u30E0\u3092" + username + "\u306B\u3001\u30D7\u30E9\u30C3\u30C8\u30D5\u30A9\u30FC\u30E0\u3092" + platform + "\u306B\u8A2D\u5B9A\u3057\u307E\u3057\u305F",
             ephemeral: true

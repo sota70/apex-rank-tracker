@@ -3,8 +3,8 @@ import { EventListener } from "./eventlistener";
 import { commandNames } from "../command/commandname";
 import { PlayerDataLoader } from "../jsonplayerdatagetter";
 import { PlayerStatusEmbedBuilder } from "../playerstatusembedbuilder";
-import { CommandChannelSetter } from "../commandchannelsetter";
-import { JsonFileManager } from "../jsonfilemanager";
+import { CommandChannelSetter } from "../commandchannel/commandchannelwriter";
+import { UserInfoWriter } from "../userinfo/userinfowriter";
 
 export class CommandExecuteListener implements EventListener {
 
@@ -72,8 +72,8 @@ export class CommandExecuteListener implements EventListener {
         const { options, user, guildId } = event.interaction
         let username = options.getString("username", true)
         let platform = options.getString("platform", true)
-        let jsonFileManager = new JsonFileManager()
-        jsonFileManager.writeData(user, username, platform, guildId!)
+        let userInfoWriter = new UserInfoWriter(user.id, username, platform, guildId!)
+        userInfoWriter.writeData()
         event.interaction.reply({
             content: `ユーザーネームを${username}に、プラットフォームを${platform}に設定しました`,
             ephemeral: true

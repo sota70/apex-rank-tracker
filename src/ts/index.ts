@@ -1,20 +1,19 @@
 import * as env from 'dotenv'
 import * as http from 'http'
 import * as command from './command/command'
-import * as commandChannelSetter from './commandchannelsetter'
+import * as commandChannelSetter from './commandchannel/commandchannelwriter'
 import * as pg from 'pg'
 import * as sqlDataEditor from './sqldataeditor'
 import { REST } from '@discordjs/rest'
 import { Routes } from 'discord-api-types/v9'
 import { PlayerDataLoader } from './jsonplayerdatagetter'
-import { JsonFileManager } from './jsonfilemanager'
+import { UserInfoReader } from './userinfo/userinforeader'
 import { Intents, Client, ClientApplication } from 'discord.js'
-import { CommandChannelLoader } from './commandchannelloader'
+import { CommandChannelLoader } from './commandchannel/commandchannelreader'
 import { CommandExecuteEvent } from './event/commandexecuteevent'
 import { Event } from './event/event'
 import { CommandRegister } from './register/commandregister'
 
-const jsonFileManager = new JsonFileManager()
 const guildId = "814796519131185156"
 const config = env.config()
 const client = new Client({
@@ -68,7 +67,7 @@ http.createServer(function (req, res) {
 }).listen(process.env.PORT || 5000)
 
 async function setDiscordUsersRole(client: Client) {
-    (await jsonFileManager.getPlayerDatas()).forEach(async function (data) {
+    (await UserInfoReader.getPlayerDatas()).forEach(async function (data) {
         let playerDataLoader = new PlayerDataLoader()
         let guild = await client.guilds.fetch(data.guildId)
         let discordUser = await guild.members.fetch(data.discordUserId)
