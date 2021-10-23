@@ -57,7 +57,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var env = __importStar(require("dotenv"));
 var http = __importStar(require("http"));
-var jsonplayerdatagetter_1 = require("./jsonplayerdatagetter");
+var jsonplayerdatagetter_1 = require("./apexuser/jsonplayerdatagetter");
 var userinforeader_1 = require("./userinfo/userinforeader");
 var discord_js_1 = require("discord.js");
 var commandchannelreader_1 = require("./commandchannel/commandchannelreader");
@@ -201,5 +201,7 @@ function loginToClient() {
     client.login(process.env.TOKEN);
 }
 function callEvent(event) {
-    event.eventListener.handle(event);
+    event.eventListeners.forEach(function (listener) {
+        return listener.handle(event);
+    });
 }

@@ -2,11 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Event = void 0;
 var Event = /** @class */ (function () {
-    function Event(name, type, eventListener) {
+    function Event(name, type, eventListeners) {
         this.name = name;
         this.type = type;
-        this.eventListener = eventListener;
+        this.eventListeners = eventListeners;
     }
+    Event.prototype.addEventListener = function (eventListener) {
+        this.eventListeners.push(eventListener);
+    };
     return Event;
 }());
 exports.Event = Event;

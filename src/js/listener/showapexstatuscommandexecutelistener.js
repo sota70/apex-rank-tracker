@@ -36,48 +36,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CommandExecuteListener = void 0;
-var commandname_1 = require("../command/commandname");
+exports.ShowApexStatusCommandExecuteListener = void 0;
 var jsonplayerdatagetter_1 = require("../apexuser/jsonplayerdatagetter");
 var playerstatusembedbuilder_1 = require("../playerstatusembedbuilder");
-var commandchannelwriter_1 = require("../commandchannel/commandchannelwriter");
-var userinfowriter_1 = require("../userinfo/userinfowriter");
-var CommandExecuteListener = /** @class */ (function () {
-    function CommandExecuteListener() {
+var ShowApexStatusCommandExecuteListener = /** @class */ (function () {
+    function ShowApexStatusCommandExecuteListener() {
     }
-    CommandExecuteListener.prototype.handle = function (event) {
-        if (!event.interaction.isCommand())
-            return;
-        switch (event.interaction.commandName) {
-            case commandname_1.commandNames.SHOWAPEXSTATUS:
-                this.handleApexCommand(event);
-                break;
-            case commandname_1.commandNames.SHOWAPEXSTATUSALIASE:
-                this.handleApexCommand(event);
-                break;
-            case commandname_1.commandNames.SETCOMMANDCHANNEL:
-                this.handleSetCommandChannelCommand(event);
-                break;
-            case commandname_1.commandNames.SETCOMMANDCHANNELALIASE:
-                this.handleSetCommandChannelCommand(event);
-                break;
-            case commandname_1.commandNames.SETUSERNAME:
-                this.handleSetUsernameCommand(event);
-                break;
-            case commandname_1.commandNames.SETUSERNAMEALIASE:
-                this.handleSetUsernameCommand(event);
-                break;
-        }
-    };
-    CommandExecuteListener.prototype.handleApexCommand = function (event) {
+    ShowApexStatusCommandExecuteListener.prototype.handle = function (event) {
         return __awaiter(this, void 0, void 0, function () {
             var options, username, platform, playerDataLoader, apexUserData, playerName, playerLevel, playerRank, playerRankImage, playerRankRP, playerRanking, embedMessage;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        if (event.commandName !== 'showapexstatus' && event.commandName !== 'sas')
+                            return [2 /*return*/];
                         options = event.interaction.options;
-                        username = options.getString("username", true);
-                        platform = options.getString("platform", true);
+                        username = options.getString('username', true);
+                        platform = options.getString('platform', true);
                         playerDataLoader = new jsonplayerdatagetter_1.PlayerDataLoader();
                         return [4 /*yield*/, playerDataLoader.obtainPlayerData(username, platform)];
                     case 1:
@@ -88,7 +63,7 @@ var CommandExecuteListener = /** @class */ (function () {
                         playerRankImage = apexUserData.playerRankImage;
                         playerRankRP = apexUserData.playerRankRP;
                         playerRanking = apexUserData.playerRanking;
-                        if (playerName === "None") {
+                        if (playerName === 'None') {
                             event.interaction.reply({ ephemeral: true, content: "Couldn't find the player" });
                             return [2 /*return*/];
                         }
@@ -99,31 +74,6 @@ var CommandExecuteListener = /** @class */ (function () {
             });
         });
     };
-    CommandExecuteListener.prototype.handleSetCommandChannelCommand = function (event) {
-        var _a = event.interaction, options = _a.options, guild = _a.guild;
-        var commandChannelName = options.getString("channel");
-        var newCommandChannel = guild === null || guild === void 0 ? void 0 : guild.channels.cache.find(function (ch) { return ch.name === commandChannelName; });
-        if (newCommandChannel === undefined) {
-            event.interaction.reply({ content: "Couldn't find the channel", ephemeral: true });
-            return;
-        }
-        new commandchannelwriter_1.CommandChannelSetter(guild === null || guild === void 0 ? void 0 : guild.id, newCommandChannel === null || newCommandChannel === void 0 ? void 0 : newCommandChannel.id).setCommandChannel();
-        event.interaction.reply({
-            content: "The command channel has been set to " + (newCommandChannel === null || newCommandChannel === void 0 ? void 0 : newCommandChannel.name),
-            ephemeral: true
-        });
-    };
-    CommandExecuteListener.prototype.handleSetUsernameCommand = function (event) {
-        var _a = event.interaction, options = _a.options, user = _a.user, guildId = _a.guildId;
-        var username = options.getString("username", true);
-        var platform = options.getString("platform", true);
-        var userInfoWriter = new userinfowriter_1.UserInfoWriter(user.id, username, platform, guildId);
-        userInfoWriter.writeData();
-        event.interaction.reply({
-            content: "\u30E6\u30FC\u30B6\u30FC\u30CD\u30FC\u30E0\u3092" + username + "\u306B\u3001\u30D7\u30E9\u30C3\u30C8\u30D5\u30A9\u30FC\u30E0\u3092" + platform + "\u306B\u8A2D\u5B9A\u3057\u307E\u3057\u305F",
-            ephemeral: true
-        });
-    };
-    return CommandExecuteListener;
+    return ShowApexStatusCommandExecuteListener;
 }());
-exports.CommandExecuteListener = CommandExecuteListener;
+exports.ShowApexStatusCommandExecuteListener = ShowApexStatusCommandExecuteListener;

@@ -6,7 +6,7 @@ import * as pg from 'pg'
 import * as sqlDataEditor from './sqldataeditor'
 import { REST } from '@discordjs/rest'
 import { Routes } from 'discord-api-types/v9'
-import { PlayerDataLoader } from './jsonplayerdatagetter'
+import { PlayerDataLoader } from './apexuser/jsonplayerdatagetter'
 import { UserInfoReader } from './userinfo/userinforeader'
 import { Intents, Client, ClientApplication } from 'discord.js'
 import { CommandChannelLoader } from './commandchannel/commandchannelreader'
@@ -102,5 +102,7 @@ function loginToClient() {
 }
 
 function callEvent(event: Event) {
-    event.eventListener.handle(event)
+    event.eventListeners.forEach(listener =>
+        listener.handle(event)
+    )
 }

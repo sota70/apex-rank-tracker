@@ -16,16 +16,25 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommandExecuteEvent = void 0;
-var commandexecutelistener_1 = require("../listener/commandexecutelistener");
+var setcommandchannelcommandexecutelistener_1 = require("../listener/setcommandchannelcommandexecutelistener");
+var setusernamecommandexecutelistener_1 = require("../listener/setusernamecommandexecutelistener");
+var showapexstatuscommandexecutelistener_1 = require("../listener/showapexstatuscommandexecutelistener");
 var event_1 = require("./event");
 var eventtype_1 = require("./eventtype");
 var CommandExecuteEvent = /** @class */ (function (_super) {
     __extends(CommandExecuteEvent, _super);
     function CommandExecuteEvent(interaction) {
-        var _this = _super.call(this, 'commandexecute', eventtype_1.EventType.COMMAND, new commandexecutelistener_1.CommandExecuteListener()) || this;
+        var _this = _super.call(this, 'commandexecuteevent', eventtype_1.EventType.COMMAND, []) || this;
         _this.interaction = interaction;
+        _this.commandName = interaction.commandName;
+        _this.registerEventListeners();
         return _this;
     }
+    CommandExecuteEvent.prototype.registerEventListeners = function () {
+        this.addEventListener(new showapexstatuscommandexecutelistener_1.ShowApexStatusCommandExecuteListener());
+        this.addEventListener(new setcommandchannelcommandexecutelistener_1.SetCommandChannelCommandExecuteListener());
+        this.addEventListener(new setusernamecommandexecutelistener_1.SetUsernameCommandExecuteListener());
+    };
     return CommandExecuteEvent;
 }(event_1.Event));
 exports.CommandExecuteEvent = CommandExecuteEvent;
