@@ -6,13 +6,14 @@ import * as pg from 'pg'
 import * as sqlDataEditor from './sqldataeditor'
 import { REST } from '@discordjs/rest'
 import { Routes } from 'discord-api-types/v9'
-import { PlayerDataLoader } from './apexuser/jsonplayerdatagetter'
+import { ApexUserDataLoader } from './apexuser/apexuserdatareader'
 import { UserInfoReader } from './userinfo/userinforeader'
 import { Intents, Client, ClientApplication } from 'discord.js'
 import { CommandChannelLoader } from './commandchannel/commandchannelreader'
 import { CommandExecuteEvent } from './event/commandexecuteevent'
 import { Event } from './event/event'
 import { CommandRegister } from './register/commandregister'
+import { ApexUserRoleSetter } from './apexuser/apexuserrolesetter'
 
 const guildId = "814796519131185156"
 const config = env.config()
@@ -68,12 +69,12 @@ http.createServer(function (req, res) {
 
 async function setDiscordUsersRole(client: Client) {
     (await UserInfoReader.getPlayerDatas()).forEach(async function (data) {
-        let playerDataLoader = new PlayerDataLoader()
         let guild = await client.guilds.fetch(data.guildId)
         let discordUser = await guild.members.fetch(data.discordUserId)
         let username = data.username
         let platform = data.platform
-        playerDataLoader.setPlayerRankRole(discordUser, username, platform, guild)
+        let apexUserRoleSetter = new ApexUserRoleSetter(discordUser, username, platform, guild)
+        apexUserRoleSetter.setPlayerRankRole()
     })
 }
 

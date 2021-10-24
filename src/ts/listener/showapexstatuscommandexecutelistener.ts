@@ -1,4 +1,4 @@
-import { PlayerDataLoader } from "../apexuser/jsonplayerdatagetter";
+import { ApexUserDataLoader } from '../apexuser/apexuserdatareader'
 import { CommandExecuteEvent } from "../event/commandexecuteevent";
 import { PlayerStatusEmbedBuilder } from "../playerstatusembedbuilder";
 import { EventListener } from "./eventlistener";
@@ -10,8 +10,8 @@ export class ShowApexStatusCommandExecuteListener implements EventListener {
         const { options } = event.interaction
         let username = options.getString('username', true)
         let platform = options.getString('platform', true)
-        let playerDataLoader = new PlayerDataLoader()
-        let apexUserData = await playerDataLoader.obtainPlayerData(username, platform)
+        let playerDataLoader = new ApexUserDataLoader(username, platform)
+        let apexUserData = await playerDataLoader.getPlayerData()
         let playerName = apexUserData.playerName
         let playerLevel = apexUserData.playerLevel
         let playerRank = apexUserData.playerRank

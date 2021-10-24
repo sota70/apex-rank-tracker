@@ -57,12 +57,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var env = __importStar(require("dotenv"));
 var http = __importStar(require("http"));
-var jsonplayerdatagetter_1 = require("./apexuser/jsonplayerdatagetter");
 var userinforeader_1 = require("./userinfo/userinforeader");
 var discord_js_1 = require("discord.js");
 var commandchannelreader_1 = require("./commandchannel/commandchannelreader");
 var commandexecuteevent_1 = require("./event/commandexecuteevent");
 var commandregister_1 = require("./register/commandregister");
+var apexuserrolesetter_1 = require("./apexuser/apexuserrolesetter");
 var guildId = "814796519131185156";
 var config = env.config();
 var client = new discord_js_1.Client({
@@ -142,12 +142,10 @@ function setDiscordUsersRole(client) {
                 case 1:
                     (_a.sent()).forEach(function (data) {
                         return __awaiter(this, void 0, void 0, function () {
-                            var playerDataLoader, guild, discordUser, username, platform;
+                            var guild, discordUser, username, platform, apexUserRoleSetter;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0:
-                                        playerDataLoader = new jsonplayerdatagetter_1.PlayerDataLoader();
-                                        return [4 /*yield*/, client.guilds.fetch(data.guildId)];
+                                    case 0: return [4 /*yield*/, client.guilds.fetch(data.guildId)];
                                     case 1:
                                         guild = _a.sent();
                                         return [4 /*yield*/, guild.members.fetch(data.discordUserId)];
@@ -155,7 +153,8 @@ function setDiscordUsersRole(client) {
                                         discordUser = _a.sent();
                                         username = data.username;
                                         platform = data.platform;
-                                        playerDataLoader.setPlayerRankRole(discordUser, username, platform, guild);
+                                        apexUserRoleSetter = new apexuserrolesetter_1.ApexUserRoleSetter(discordUser, username, platform, guild);
+                                        apexUserRoleSetter.setPlayerRankRole();
                                         return [2 /*return*/];
                                 }
                             });

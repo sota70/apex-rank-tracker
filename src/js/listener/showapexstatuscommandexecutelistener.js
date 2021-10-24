@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ShowApexStatusCommandExecuteListener = void 0;
-var jsonplayerdatagetter_1 = require("../apexuser/jsonplayerdatagetter");
+var apexuserdatareader_1 = require("../apexuser/apexuserdatareader");
 var playerstatusembedbuilder_1 = require("../playerstatusembedbuilder");
 var ShowApexStatusCommandExecuteListener = /** @class */ (function () {
     function ShowApexStatusCommandExecuteListener() {
@@ -53,8 +53,8 @@ var ShowApexStatusCommandExecuteListener = /** @class */ (function () {
                         options = event.interaction.options;
                         username = options.getString('username', true);
                         platform = options.getString('platform', true);
-                        playerDataLoader = new jsonplayerdatagetter_1.PlayerDataLoader();
-                        return [4 /*yield*/, playerDataLoader.obtainPlayerData(username, platform)];
+                        playerDataLoader = new apexuserdatareader_1.ApexUserDataLoader(username, platform);
+                        return [4 /*yield*/, playerDataLoader.getPlayerData()];
                     case 1:
                         apexUserData = _a.sent();
                         playerName = apexUserData.playerName;
