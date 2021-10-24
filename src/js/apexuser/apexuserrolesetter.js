@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ApexUserRoleSetter = void 0;
 var request_1 = __importDefault(require("request"));
+var rankrolebuilder_1 = require("../util/rankrolebuilder");
 var apexuserdatareader_1 = require("./apexuserdatareader");
 var ApexUserRoleSetter = /** @class */ (function () {
     function ApexUserRoleSetter(discordUser, username, platform, guild) {
@@ -67,128 +68,20 @@ var ApexUserRoleSetter = /** @class */ (function () {
     };
     ApexUserRoleSetter.prototype.setPlayerRole = function (rankName, ranking) {
         return __awaiter(this, void 0, void 0, function () {
-            var role, isPlayerRankPredator, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        isPlayerRankPredator = ranking <= 750;
-                        if (isPlayerRankPredator) {
-                            role = this.guild.roles.cache.find(function (r) { return r.name === "Predator"; });
-                            this.resetPlayerRankRole();
-                            this.discordUser.roles.add(role);
-                            return [2 /*return*/];
-                        }
-                        _a = rankName;
-                        switch (_a) {
-                            case "Gold 4": return [3 /*break*/, 1];
-                            case "Gold 3": return [3 /*break*/, 3];
-                            case "Gold 2": return [3 /*break*/, 5];
-                            case "Gold 1": return [3 /*break*/, 7];
-                            case "Platinum 4": return [3 /*break*/, 9];
-                            case "Platinum 3": return [3 /*break*/, 11];
-                            case "Platinum 2": return [3 /*break*/, 13];
-                            case "Platinum 1": return [3 /*break*/, 15];
-                            case "Diamond 4": return [3 /*break*/, 17];
-                            case "Diamond 3": return [3 /*break*/, 19];
-                            case "Diamond 2": return [3 /*break*/, 21];
-                            case "Diamond 1": return [3 /*break*/, 23];
-                            case "Master": return [3 /*break*/, 25];
-                        }
-                        return [3 /*break*/, 27];
-                    case 1:
-                        role = this.guild.roles.cache.find(function (r) { return r.name === "Gold 4"; });
-                        this.resetPlayerRankRole();
-                        return [4 /*yield*/, this.discordUser.roles.add(role).catch(console.error)];
-                    case 2:
-                        _b.sent();
-                        return [3 /*break*/, 28];
-                    case 3:
-                        role = this.guild.roles.cache.find(function (r) { return r.name === "Gold 3"; });
-                        this.resetPlayerRankRole();
-                        return [4 /*yield*/, this.discordUser.roles.add(role).catch(console.error)];
-                    case 4:
-                        _b.sent();
-                        return [3 /*break*/, 28];
-                    case 5:
-                        role = this.guild.roles.cache.find(function (r) { return r.name === "Gold 2"; });
-                        this.resetPlayerRankRole();
-                        return [4 /*yield*/, this.discordUser.roles.add(role).catch(console.error)];
-                    case 6:
-                        _b.sent();
-                        return [3 /*break*/, 28];
-                    case 7:
-                        role = this.guild.roles.cache.find(function (r) { return r.name === "Gold 1"; });
-                        this.resetPlayerRankRole();
-                        return [4 /*yield*/, this.discordUser.roles.add(role).catch(console.error)];
-                    case 8:
-                        _b.sent();
-                        return [3 /*break*/, 28];
-                    case 9:
-                        role = this.guild.roles.cache.find(function (r) { return r.name === "Platinum 4"; });
-                        this.resetPlayerRankRole();
-                        return [4 /*yield*/, this.discordUser.roles.add(role).catch(console.error)];
-                    case 10:
-                        _b.sent();
-                        return [3 /*break*/, 28];
-                    case 11:
-                        role = this.guild.roles.cache.find(function (r) { return r.name === "Platinum 3"; });
-                        this.resetPlayerRankRole();
-                        return [4 /*yield*/, this.discordUser.roles.add(role).catch(console.error)];
-                    case 12:
-                        _b.sent();
-                        return [3 /*break*/, 28];
-                    case 13:
-                        role = this.guild.roles.cache.find(function (r) { return r.name === "Platinum 2"; });
-                        this.resetPlayerRankRole();
-                        return [4 /*yield*/, this.discordUser.roles.add(role).catch(console.error)];
-                    case 14:
-                        _b.sent();
-                        return [3 /*break*/, 28];
-                    case 15:
-                        role = this.guild.roles.cache.find(function (r) { return r.name === "Platinum 1"; });
-                        this.resetPlayerRankRole();
-                        return [4 /*yield*/, this.discordUser.roles.add(role).catch(console.error)];
-                    case 16:
-                        _b.sent();
-                        return [3 /*break*/, 28];
-                    case 17:
-                        role = this.guild.roles.cache.find(function (r) { return r.name === "Diamond 4"; });
-                        this.resetPlayerRankRole();
-                        return [4 /*yield*/, this.discordUser.roles.add(role).catch(console.error)];
-                    case 18:
-                        _b.sent();
-                        return [3 /*break*/, 28];
-                    case 19:
-                        role = this.guild.roles.cache.find(function (r) { return r.name === "Diamond 3"; });
-                        this.resetPlayerRankRole();
-                        return [4 /*yield*/, this.discordUser.roles.add(role).catch(console.error)];
-                    case 20:
-                        _b.sent();
-                        return [3 /*break*/, 28];
-                    case 21:
-                        role = this.guild.roles.cache.find(function (r) { return r.name === "Diamond 2"; });
-                        this.resetPlayerRankRole();
-                        return [4 /*yield*/, this.discordUser.roles.add(role).catch(console.error)];
-                    case 22:
-                        _b.sent();
-                        return [3 /*break*/, 28];
-                    case 23:
-                        role = this.guild.roles.cache.find(function (r) { return r.name === "Diamond 1"; });
-                        this.resetPlayerRankRole();
-                        return [4 /*yield*/, this.discordUser.roles.add(role).catch(console.error)];
-                    case 24:
-                        _b.sent();
-                        return [3 /*break*/, 28];
-                    case 25:
-                        role = this.guild.roles.cache.find(function (r) { return r.name === "Master"; });
-                        this.resetPlayerRankRole();
-                        return [4 /*yield*/, this.discordUser.roles.add(role).catch(console.error)];
-                    case 26:
-                        _b.sent();
-                        return [3 /*break*/, 28];
-                    case 27: return [3 /*break*/, 28];
-                    case 28: return [2 /*return*/];
+            var role, isPlayerRankPredator, rankRoleBuilder;
+            return __generator(this, function (_a) {
+                isPlayerRankPredator = ranking <= 750;
+                rankRoleBuilder = new rankrolebuilder_1.RankRoleBuilder(rankName, this.guild);
+                if (isPlayerRankPredator) {
+                    role = rankRoleBuilder.buildPredatorRole();
+                    this.resetPlayerRankRole();
+                    this.discordUser.roles.add(role);
+                    return [2 /*return*/];
                 }
+                role = rankRoleBuilder.build();
+                this.resetPlayerRankRole();
+                this.discordUser.roles.add(role);
+                return [2 /*return*/];
             });
         });
     };

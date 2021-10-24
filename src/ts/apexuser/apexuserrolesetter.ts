@@ -1,5 +1,6 @@
 import { Guild, GuildMember } from "discord.js"
 import request from "request"
+import { RankRoleBuilder } from "../util/rankrolebuilder"
 import { ApexUserDataLoader } from "./apexuserdatareader"
 
 export class ApexUserRoleSetter {
@@ -39,81 +40,16 @@ export class ApexUserRoleSetter {
     private async setPlayerRole(rankName: string, ranking: number) {
         let role
         let isPlayerRankPredator = ranking <= 750
+        let rankRoleBuilder = new RankRoleBuilder(rankName, this.guild)
         if (isPlayerRankPredator) {
-            role = this.guild.roles.cache.find(r => r.name === "Predator")
+            role = rankRoleBuilder.buildPredatorRole()
             this.resetPlayerRankRole()
-            this.discordUser.roles.add(role!)
+            this.discordUser.roles.add(role)
             return
         }
-        switch (rankName) {
-            case "Gold 4":
-                role = this.guild.roles.cache.find(r => r.name === "Gold 4")
-                this.resetPlayerRankRole()
-                await this.discordUser.roles.add(role!).catch(console.error)
-                break
-            case "Gold 3":
-                role = this.guild.roles.cache.find(r => r.name === "Gold 3")
-                this.resetPlayerRankRole()
-                await this.discordUser.roles.add(role!).catch(console.error)
-                break
-            case "Gold 2":
-                role = this.guild.roles.cache.find(r => r.name === "Gold 2")
-                this.resetPlayerRankRole()
-                await this.discordUser.roles.add(role!).catch(console.error)
-                break
-            case "Gold 1":
-                role = this.guild.roles.cache.find(r => r.name === "Gold 1")
-                this.resetPlayerRankRole()
-                await this.discordUser.roles.add(role!).catch(console.error)
-                break
-            case "Platinum 4":
-                role = this.guild.roles.cache.find(r => r.name === "Platinum 4")
-                this.resetPlayerRankRole()
-                await this.discordUser.roles.add(role!).catch(console.error)
-                break
-            case "Platinum 3":
-                role = this.guild.roles.cache.find(r => r.name === "Platinum 3")
-                this.resetPlayerRankRole()
-                await this.discordUser.roles.add(role!).catch(console.error)
-                break
-            case "Platinum 2":
-                role = this.guild.roles.cache.find(r => r.name === "Platinum 2")
-                this.resetPlayerRankRole()
-                await this.discordUser.roles.add(role!).catch(console.error)
-                break
-            case "Platinum 1":
-                role = this.guild.roles.cache.find(r => r.name === "Platinum 1")
-                this.resetPlayerRankRole()
-                await this.discordUser.roles.add(role!).catch(console.error)
-                break
-            case "Diamond 4":
-                role = this.guild.roles.cache.find(r => r.name === "Diamond 4")
-                this.resetPlayerRankRole()
-                await this.discordUser.roles.add(role!).catch(console.error)
-                break
-            case "Diamond 3":
-                role = this.guild.roles.cache.find(r => r.name === "Diamond 3")
-                this.resetPlayerRankRole()
-                await this.discordUser.roles.add(role!).catch(console.error)
-                break
-            case "Diamond 2":
-                role = this.guild.roles.cache.find(r => r.name === "Diamond 2")
-                this.resetPlayerRankRole()
-                await this.discordUser.roles.add(role!).catch(console.error)
-                break
-            case "Diamond 1":
-                role = this.guild.roles.cache.find(r => r.name === "Diamond 1")
-                this.resetPlayerRankRole()
-                await this.discordUser.roles.add(role!).catch(console.error)
-                break
-            case "Master":
-                role = this.guild.roles.cache.find(r => r.name === "Master")
-                this.resetPlayerRankRole()
-                await this.discordUser.roles.add(role!).catch(console.error)
-                break
-            default:
-                break
-        }
+        role = rankRoleBuilder.build()
+        this.resetPlayerRankRole()
+        this.discordUser.roles.add(role)
     }
 
     private async resetPlayerRankRole() {
