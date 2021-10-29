@@ -1,6 +1,6 @@
 import { Client, Guild } from 'discord.js'
+import { SqlDataManager } from '../sql/sqldatamanager'
 import { CommandChannel } from './commandchannel'
-import * as sqlDataEditor from '../sqldataeditor'
 
 export class CommandChannelLoader {
 
@@ -12,7 +12,7 @@ export class CommandChannelLoader {
 
     public async getAllCommandChannels(): Promise<Array<CommandChannel>> {
         let commandChannels: Array<CommandChannel> = []
-        let commandChannelsData = await sqlDataEditor.select("command_channel")
+        let commandChannelsData = await new SqlDataManager("command_channel").select()
         commandChannelsData.forEach(function (data) {
             commandChannels.push(new CommandChannel(data.serverid, data.channelid))
         })

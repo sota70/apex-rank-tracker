@@ -1,5 +1,5 @@
+import { SqlDataManager } from "../sql/sqldatamanager"
 import { CommandChannelLoader } from "./commandchannelreader"
-import * as sqlDataEditor from '../sqldataeditor'
 
 export class CommandChannelSetter {
 
@@ -14,7 +14,7 @@ export class CommandChannelSetter {
     }
     
     public async setCommandChannel() {
-        let rows = new Map<string, any>([
+        let data = new Map<string, any>([
             ["serverId", this.serverId],
             ["channelId", this.channelId]
         ])
@@ -22,12 +22,13 @@ export class CommandChannelSetter {
             ["serverId", this.serverId]
         ])
         let isCommandChannelSet = await this.commandChannelLoader.isCommandChannelSet()
+        let sqlDataManager = new SqlDataManager("command_channel")
         if (!isCommandChannelSet) {
-            sqlDataEditor.insert("command_channel", rows)
+            sqlDataManager.insert(data)
             console.log(`${this.channelId} has been set to ${this.serverId}`)
             return
         }
-        sqlDataEditor.update("command_channel", rows, conditions)
+        sqlDataManager.update(data, conditions)
         console.log(`${this.channelId} has been set to ${this.serverId}`)
     }
 }

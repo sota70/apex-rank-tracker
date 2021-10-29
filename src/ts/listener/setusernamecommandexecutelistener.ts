@@ -2,7 +2,7 @@ import { CommandExecuteEvent } from "../event/commandexecuteevent";
 import { UserInfoWriter } from "../userinfo/userinfowriter";
 import { EventListener } from "./eventlistener";
 
-export class SetUsernameCommandExecuteListener implements EventListener {
+export class SetUsernameCommandExecuteListener implements EventListener{
 
     public handle(event: CommandExecuteEvent) {
         if (event.commandName !== 'setusername' && event.commandName !== 'sun') return

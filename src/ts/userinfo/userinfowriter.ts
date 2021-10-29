@@ -1,5 +1,5 @@
+import { SqlDataManager } from '../sql/sqldatamanager'
 import { UserInfoReader } from './userinforeader'
-import * as sqlDataEditor from '../sqldataeditor'
 
 export class UserInfoWriter {
 
@@ -33,10 +33,11 @@ export class UserInfoWriter {
             ["discordUserId", this.discordUserId],
             ["guildId", this.guildId]
         ])
+        let sqlDataManager = new SqlDataManager("username")
         if (!await this.userInfoReader.isDataExists()) {
-            sqlDataEditor.insert("username", data)
+            sqlDataManager.insert(data)
             return
         }
-        sqlDataEditor.update("username", data, conditions)
+        sqlDataManager.update(data, conditions)
     }
 }

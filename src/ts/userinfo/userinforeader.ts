@@ -1,5 +1,5 @@
+import { SqlDataManager } from '../sql/sqldatamanager'
 import { UserInfo } from './userinfo'
-import * as sqlDataEditor from '../sqldataeditor'
 
 export class UserInfoReader {
 
@@ -13,7 +13,7 @@ export class UserInfoReader {
 
     public static async getPlayerDatas(): Promise<Array<UserInfo>> {
         let users: Array<UserInfo> = []
-        let datas = await sqlDataEditor.select("username")
+        let datas = await new SqlDataManager("username").select()
         datas.forEach(function (data) {
             users.push(new UserInfo(data.discorduserid, data.username, data.platform, data.guildid))
         })
