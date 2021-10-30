@@ -1,6 +1,6 @@
 import { Client } from 'pg'
 import { SqlColumnType } from './sqlcolumntype'
-import { SqlCommandConverter } from './sqlcommandconverter'
+import { SqlCommandBuilder } from './sqlcommandbuilder'
 
 export class SqlDataManager {
 
@@ -16,7 +16,7 @@ export class SqlDataManager {
     }
 
     public createTable(columns: Map<string, SqlColumnType>) {
-        let columnsCommand = SqlCommandConverter.convertColumnIntoCommand(columns)
+        let columnsCommand = SqlCommandBuilder.buildColumnsCommand(columns)
         let command = `CREATE TABLE ${this.tableName} (${columnsCommand});`
         this.client.connect()
         this.client.query(command, (err, res) => {
@@ -27,7 +27,7 @@ export class SqlDataManager {
     }
 
     public insert(data: Map<string, any>) {
-        let dataCommand = new SqlCommandConverter(data).convertIntoInsertCommand()
+        let dataCommand = new SqlCommandBuilder(data).buildInsertCommand()
         let command = `INSERT INTO ${this.tableName} ${dataCommand};`
         this.client.connect()
         this.client.query(command, (err, res) => {
@@ -38,8 +38,8 @@ export class SqlDataManager {
     }
 
     public update(data: Map<string, any>, conditions: Map<string, any>) {
-        let dataCommand = new SqlCommandConverter(data).convertIntoUpdateCommand()
-        let conditionsCommand = SqlCommandConverter.convertConditionIntoCommand(conditions)
+        let dataCommand = new SqlCommandBuilder(data).buildUpdateCommand()
+        let conditionsCommand = SqlCommandBuilder.buildConditionCommand(conditions)
         let command = `UPDATE ${this.tableName} SET ${dataCommand} ${conditionsCommand};`
         this.client.connect()
         this.client.query(command, (err, res) => {

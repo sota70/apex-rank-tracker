@@ -1,6 +1,6 @@
 import { SqlColumnType } from "./sqlcolumntype"
 
-export class SqlCommandConverter {
+export class SqlCommandBuilder {
 
     private data: Map<string, any>
 
@@ -8,7 +8,7 @@ export class SqlCommandConverter {
         this.data = data
     }
 
-    public convertIntoInsertCommand(): string {
+    public buildInsertCommand(): string {
         let columnStrings = ''
         let inputStrings = ''
         this.data.forEach(function (value, key) {
@@ -20,7 +20,7 @@ export class SqlCommandConverter {
         return `(${adjustedColumnStrings}) VALUES (${adjustedInputStrings})`
     }
 
-    public convertIntoUpdateCommand(): string {
+    public buildUpdateCommand(): string {
         let rowStrings = ''
         this.data.forEach(function (value, key) {
             rowStrings += `${key} = '${value}',`
@@ -28,7 +28,7 @@ export class SqlCommandConverter {
         return rowStrings.slice(0, -1)
     }
 
-    public static convertConditionIntoCommand(conditions: Map<string, any>): string {
+    public static buildConditionCommand(conditions: Map<string, any>): string {
         let keyStrings = 'WHERE '
         conditions.forEach(function (value, key) {
             keyStrings += `${key} = '${value}' AND `
@@ -36,7 +36,7 @@ export class SqlCommandConverter {
         return keyStrings.slice(0, -5)
     }
 
-    public static convertColumnIntoCommand(columns: Map<string, SqlColumnType>): string {
+    public static buildColumnsCommand(columns: Map<string, SqlColumnType>): string {
         let rowStrings = ''
         columns.forEach(function (value, key) {
             rowStrings += `${key} ${value},`

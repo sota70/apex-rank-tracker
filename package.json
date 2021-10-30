@@ -1,7 +1,6 @@
 {
   "name": "discordbot",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node src/js/index.js",
@@ -36,5 +35,14 @@
     "postgres": "^1.0.2",
     "psql": "^0.0.1",
     "typescript": "^4.4.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sota70/apex-rank-tracker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sota70/apex-rank-tracker/issues"
+  },
+  "homepage": "https://github.com/sota70/apex-rank-tracker#readme",
+  "description": ""
 }
