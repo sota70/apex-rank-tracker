@@ -15,6 +15,7 @@ import { Event } from './event/event'
 import { CommandRegister } from './register/commandregister'
 import { ApexUserRoleSetter } from './apexuser/apexuserrolesetter'
 import { ServerReceivePostEvent } from './event/serverreceivepostevent'
+import { ServerReceiveMethodEvent } from './event/serverreceivemethodevent'
 
 const guildId = "814796519131185156"
 const config = env.config()
@@ -39,22 +40,28 @@ client.on('ready',async () => {
 
 /* ボットを動かしているサーバーに送られてきたメソッドメソッドを受け取り、処理するメソッド*/
 http.createServer(function (req, res) {
-    if (req.method == 'GET') {
-        res.writeHead(200, { 'Content-Type': 'text/plain' })
+    if (req.method === undefined) {
         res.end()
-    } else if (req.method == 'POST') {
-        var data = ''
-        req.on('data', function (chunk) { data += chunk })
-        req.on('end', async function () {
-            if (!data) {
-                res.end('No Post Data')
-                return
-            }
-            var dataObject = new URLSearchParams(data)
-            callServerReceivePostEvent(new ServerReceivePostEvent(res, client, dataObject.get('type')!))
-            res.end()
-        })
+        return
     }
+    callServerReceiveMethodEvent(new ServerReceiveMethodEvent(req.method, req, res, client))
+    
+    // if (req.method == 'GET') {
+    //     res.writeHead(200, { 'Content-Type': 'text/plain' })
+    //     res.end()
+    // } else if (req.method == 'POST') {
+    //     var data = ''
+    //     req.on('data', function (chunk) { data += chunk })
+    //     req.on('end', async function () {
+    //         if (!data) {
+    //             res.end('No Post Data')
+    //             return
+    //         }
+    //         var dataObject = new URLSearchParams(data)
+    //         callServerReceivePostEvent(new ServerReceivePostEvent(res, client, dataObject.get('type')!))
+    //         res.end()
+    //     })
+    // }
 
     // if (req.method == "POST") {
     //     var data = ''
@@ -84,6 +91,12 @@ http.createServer(function (req, res) {
     //     res.end()
     // }
 }).listen(process.env.PORT || 5000)
+
+function callServerReceiveMethodEvent(event: ServerReceiveMethodEvent) {
+    event.eventListeners.forEach(listener => {
+        listener.handle(event)
+    })
+}
 
 function callServerReceivePostEvent(event: ServerReceivePostEvent) {
     event.eventListeners.forEach(listener => {
