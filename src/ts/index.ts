@@ -45,60 +45,9 @@ http.createServer(function (req, res) {
         return
     }
     callServerReceiveMethodEvent(new ServerReceiveMethodEvent(req.method, req, res, client))
-    
-    // if (req.method == 'GET') {
-    //     res.writeHead(200, { 'Content-Type': 'text/plain' })
-    //     res.end()
-    // } else if (req.method == 'POST') {
-    //     var data = ''
-    //     req.on('data', function (chunk) { data += chunk })
-    //     req.on('end', async function () {
-    //         if (!data) {
-    //             res.end('No Post Data')
-    //             return
-    //         }
-    //         var dataObject = new URLSearchParams(data)
-    //         callServerReceivePostEvent(new ServerReceivePostEvent(res, client, dataObject.get('type')!))
-    //         res.end()
-    //     })
-    // }
-
-    // if (req.method == "POST") {
-    //     var data = ''
-    //     req.on("data", function (chunk) { data += chunk })
-    //     req.on("end", async function () {
-    //         if (!data) {
-    //             res.end("No Post Data")
-    //             return
-    //         }
-    //         var dataObject = new URLSearchParams(data)
-    //         console.log(`post: ${dataObject.get('type')}`)
-    //         if (dataObject.get('type') == 'wake') {
-    //             console.log('Woke up in post')
-    //             res.end()
-    //             return
-    //         }
-    //         if (dataObject.get('type') == 'update_rank') {
-    //             console.log(`Updated player's rank`)
-    //             await setDiscordUsersRole(client)
-    //             res.end()
-    //             return
-    //         }
-    //         res.end()
-    //     })
-    // } else if (req.method == "GET") {
-    //     res.writeHead(200, { "Content-Type": "text/plain" })
-    //     res.end()
-    // }
 }).listen(process.env.PORT || 5000)
 
 function callServerReceiveMethodEvent(event: ServerReceiveMethodEvent) {
-    event.eventListeners.forEach(listener => {
-        listener.handle(event)
-    })
-}
-
-function callServerReceivePostEvent(event: ServerReceivePostEvent) {
     event.eventListeners.forEach(listener => {
         listener.handle(event)
     })
