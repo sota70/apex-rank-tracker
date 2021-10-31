@@ -62,7 +62,6 @@ var commandchannelreader_1 = require("./commandchannel/commandchannelreader");
 var commandexecuteevent_1 = require("./event/commandexecuteevent");
 var commandregister_1 = require("./register/commandregister");
 var serverreceivemethodevent_1 = require("./event/serverreceivemethodevent");
-var guildId = "814796519131185156";
 var config = env.config();
 var client = new discord_js_1.Client({
     intents: [
@@ -71,8 +70,14 @@ var client = new discord_js_1.Client({
         discord_js_1.Intents.FLAGS.GUILD_MESSAGES,
     ]
 });
-/* TOKENと適するボットとしてログインする */
+/**
+ * TOKENと適するボットとしてログインする
+ */
 loginToClient();
+/**
+ * ディスコードクライアントの準備完了時の処理
+ * ClientApplicationの定義、SlashCommandの登録を行う
+ */
 client.on('ready', function () { return __awaiter(void 0, void 0, void 0, function () {
     var _a;
     return __generator(this, function (_b) {
@@ -91,21 +96,20 @@ client.on('ready', function () { return __awaiter(void 0, void 0, void 0, functi
         }
     });
 }); });
-/* ボットを動かしているサーバーに送られてきたメソッドメソッドを受け取り、処理するメソッド*/
+/**
+ * ボットを動かしているサーバーに送られてきたメソッドメソッドを受け取り、処理するメソッド
+ * * 送られてきたメッセージはすべてListenerクラスで処理している
+ */
 http.createServer(function (req, res) {
     if (req.method === undefined) {
         res.end();
         return;
     }
-    callServerReceiveMethodEvent(new serverreceivemethodevent_1.ServerReceiveMethodEvent(req.method, req, res, client));
+    callEvent(new serverreceivemethodevent_1.ServerReceiveMethodEvent(req.method, req, res, client));
 }).listen(process.env.PORT || 5000);
-function callServerReceiveMethodEvent(event) {
-    event.eventListeners.forEach(function (listener) {
-        listener.handle(event);
-    });
-}
-/*
+/**
  * プレイヤーが打ったメッセージからコマンドを検知して、それぞれのコマンドに適応した処理をするメソッド
+ * * コマンド処理はすべてListenerクラスで処理している
  */
 client.on('interactionCreate', function (interaction) {
     return __awaiter(this, void 0, void 0, function () {
@@ -131,6 +135,9 @@ client.on('interactionCreate', function (interaction) {
         });
     });
 });
+/**
+ * ディスコードクライアントにログインするメソッド
+ */
 function loginToClient() {
     if (process.env.TOKEN == undefined) {
         console.log("TOKENが設定されていません");
@@ -138,6 +145,11 @@ function loginToClient() {
     }
     client.login(process.env.TOKEN);
 }
+/**
+ * イベントを呼び出すメソッド
+ *
+ * @param event イベント
+ */
 function callEvent(event) {
     event.eventListeners.forEach(function (listener) {
         return listener.handle(event);
