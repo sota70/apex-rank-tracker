@@ -53,17 +53,6 @@ function callServerReceiveMethodEvent(event: ServerReceiveMethodEvent) {
     })
 }
 
-async function setDiscordUsersRole(client: Client) {
-    (await UserInfoReader.getPlayerDatas()).forEach(async function (data) {
-        let guild = await client.guilds.fetch(data.guildId)
-        let discordUser = await guild.members.fetch(data.discordUserId)
-        let username = data.username
-        let platform = data.platform
-        let apexUserRoleSetter = new ApexUserRoleSetter(discordUser, username, platform, guild)
-        apexUserRoleSetter.setPlayerRankRole()
-    })
-}
-
 /* 
  * プレイヤーが打ったメッセージからコマンドを検知して、それぞれのコマンドに適応した処理をするメソッド
  */
