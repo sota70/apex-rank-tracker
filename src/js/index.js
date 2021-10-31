@@ -57,12 +57,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var env = __importStar(require("dotenv"));
 var http = __importStar(require("http"));
-var userinforeader_1 = require("./userinfo/userinforeader");
 var discord_js_1 = require("discord.js");
 var commandchannelreader_1 = require("./commandchannel/commandchannelreader");
 var commandexecuteevent_1 = require("./event/commandexecuteevent");
 var commandregister_1 = require("./register/commandregister");
-var apexuserrolesetter_1 = require("./apexuser/apexuserrolesetter");
 var serverreceivemethodevent_1 = require("./event/serverreceivemethodevent");
 var guildId = "814796519131185156";
 var config = env.config();
@@ -100,89 +98,10 @@ http.createServer(function (req, res) {
         return;
     }
     callServerReceiveMethodEvent(new serverreceivemethodevent_1.ServerReceiveMethodEvent(req.method, req, res, client));
-    // if (req.method == 'GET') {
-    //     res.writeHead(200, { 'Content-Type': 'text/plain' })
-    //     res.end()
-    // } else if (req.method == 'POST') {
-    //     var data = ''
-    //     req.on('data', function (chunk) { data += chunk })
-    //     req.on('end', async function () {
-    //         if (!data) {
-    //             res.end('No Post Data')
-    //             return
-    //         }
-    //         var dataObject = new URLSearchParams(data)
-    //         callServerReceivePostEvent(new ServerReceivePostEvent(res, client, dataObject.get('type')!))
-    //         res.end()
-    //     })
-    // }
-    // if (req.method == "POST") {
-    //     var data = ''
-    //     req.on("data", function (chunk) { data += chunk })
-    //     req.on("end", async function () {
-    //         if (!data) {
-    //             res.end("No Post Data")
-    //             return
-    //         }
-    //         var dataObject = new URLSearchParams(data)
-    //         console.log(`post: ${dataObject.get('type')}`)
-    //         if (dataObject.get('type') == 'wake') {
-    //             console.log('Woke up in post')
-    //             res.end()
-    //             return
-    //         }
-    //         if (dataObject.get('type') == 'update_rank') {
-    //             console.log(`Updated player's rank`)
-    //             await setDiscordUsersRole(client)
-    //             res.end()
-    //             return
-    //         }
-    //         res.end()
-    //     })
-    // } else if (req.method == "GET") {
-    //     res.writeHead(200, { "Content-Type": "text/plain" })
-    //     res.end()
-    // }
 }).listen(process.env.PORT || 5000);
 function callServerReceiveMethodEvent(event) {
     event.eventListeners.forEach(function (listener) {
         listener.handle(event);
-    });
-}
-function callServerReceivePostEvent(event) {
-    event.eventListeners.forEach(function (listener) {
-        listener.handle(event);
-    });
-}
-function setDiscordUsersRole(client) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, userinforeader_1.UserInfoReader.getPlayerDatas()];
-                case 1:
-                    (_a.sent()).forEach(function (data) {
-                        return __awaiter(this, void 0, void 0, function () {
-                            var guild, discordUser, username, platform, apexUserRoleSetter;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, client.guilds.fetch(data.guildId)];
-                                    case 1:
-                                        guild = _a.sent();
-                                        return [4 /*yield*/, guild.members.fetch(data.discordUserId)];
-                                    case 2:
-                                        discordUser = _a.sent();
-                                        username = data.username;
-                                        platform = data.platform;
-                                        apexUserRoleSetter = new apexuserrolesetter_1.ApexUserRoleSetter(discordUser, username, platform, guild);
-                                        apexUserRoleSetter.setPlayerRankRole();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        });
-                    });
-                    return [2 /*return*/];
-            }
-        });
     });
 }
 /*
