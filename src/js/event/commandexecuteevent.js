@@ -24,13 +24,12 @@ var eventtype_1 = require("./eventtype");
 var CommandExecuteEvent = /** @class */ (function (_super) {
     __extends(CommandExecuteEvent, _super);
     function CommandExecuteEvent(interaction) {
-        var _this = _super.call(this, 'commandexecuteevent', eventtype_1.EventType.COMMAND, []) || this;
+        var _this = _super.call(this, 'commandexecuteevent', eventtype_1.EventType.COMMAND) || this;
         _this.interaction = interaction;
         _this.commandName = interaction.commandName;
-        _this.registerEventListeners();
         return _this;
     }
-    CommandExecuteEvent.prototype.registerEventListeners = function () {
+    CommandExecuteEvent.prototype.registerListeners = function () {
         this.addEventListener(new showapexstatuscommandexecutelistener_1.ShowApexStatusCommandExecuteListener());
         this.addEventListener(new setcommandchannelcommandexecutelistener_1.SetCommandChannelCommandExecuteListener());
         this.addEventListener(new setusernamecommandexecutelistener_1.SetUsernameCommandExecuteListener());

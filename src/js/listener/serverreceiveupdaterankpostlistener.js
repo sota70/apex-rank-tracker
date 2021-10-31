@@ -36,44 +36,64 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ShowApexStatusCommandExecuteListener = void 0;
-var apexuserdatareader_1 = require("../apexuser/apexuserdatareader");
-var playerstatusembedbuilder_1 = require("../util/playerstatusembedbuilder");
-var ShowApexStatusCommandExecuteListener = /** @class */ (function () {
-    function ShowApexStatusCommandExecuteListener() {
+exports.ServerReceiveUpdateRankPostListener = void 0;
+var apexuserrolesetter_1 = require("../apexuser/apexuserrolesetter");
+var userinforeader_1 = require("../userinfo/userinforeader");
+var ServerReceiveUpdateRankPostListener = /** @class */ (function () {
+    function ServerReceiveUpdateRankPostListener() {
     }
-    ShowApexStatusCommandExecuteListener.prototype.handle = function (event) {
+    ServerReceiveUpdateRankPostListener.prototype.handle = function (event) {
         return __awaiter(this, void 0, void 0, function () {
-            var options, username, platform, playerDataLoader, apexUserData, playerName, playerLevel, playerRank, playerRankImage, playerRankRP, playerRanking, embedMessage;
+            var res, client, methodType;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (event.commandName !== 'showapexstatus' && event.commandName !== 'sas')
-                            return [2 /*return*/];
-                        options = event.interaction.options;
-                        username = options.getString('username', true);
-                        platform = options.getString('platform', true);
-                        playerDataLoader = new apexuserdatareader_1.ApexUserDataLoader(username, platform);
-                        return [4 /*yield*/, playerDataLoader.getPlayerData()];
-                    case 1:
-                        apexUserData = _a.sent();
-                        playerName = apexUserData.playerName;
-                        playerLevel = apexUserData.playerLevel;
-                        playerRank = apexUserData.playerRank;
-                        playerRankImage = apexUserData.playerRankImage;
-                        playerRankRP = apexUserData.playerRankRP;
-                        playerRanking = apexUserData.playerRanking;
-                        if (playerName === 'None') {
-                            event.interaction.reply({ ephemeral: true, content: "Couldn't find the player" });
+                        res = event.res, client = event.client, methodType = event.methodType;
+                        if (methodType !== 'update_rank') {
+                            res.end();
                             return [2 /*return*/];
                         }
-                        embedMessage = new playerstatusembedbuilder_1.PlayerStatusEmbedBuilder(playerName, playerLevel, playerRank, playerRankImage, playerRankRP, playerRanking).build();
-                        event.interaction.reply({ ephemeral: true, embeds: [embedMessage] });
+                        console.log("post: " + methodType);
+                        console.log("Updated player's rank");
+                        return [4 /*yield*/, this.setDiscordUsersRole(client)];
+                    case 1:
+                        _a.sent();
                         return [2 /*return*/];
                 }
             });
         });
     };
-    return ShowApexStatusCommandExecuteListener;
+    ServerReceiveUpdateRankPostListener.prototype.setDiscordUsersRole = function (client) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, userinforeader_1.UserInfoReader.getPlayerDatas()];
+                    case 1:
+                        (_a.sent()).forEach(function (data) {
+                            return __awaiter(this, void 0, void 0, function () {
+                                var guild, discordUser, username, platform, apexUserRoleSetter;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4 /*yield*/, client.guilds.fetch(data.guildId)];
+                                        case 1:
+                                            guild = _a.sent();
+                                            return [4 /*yield*/, guild.members.fetch(data.discordUserId)];
+                                        case 2:
+                                            discordUser = _a.sent();
+                                            username = data.username;
+                                            platform = data.platform;
+                                            apexUserRoleSetter = new apexuserrolesetter_1.ApexUserRoleSetter(discordUser, username, platform, guild);
+                                            apexUserRoleSetter.setPlayerRankRole();
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            });
+                        });
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return ServerReceiveUpdateRankPostListener;
 }());
-exports.ShowApexStatusCommandExecuteListener = ShowApexStatusCommandExecuteListener;
+exports.ServerReceiveUpdateRankPostListener = ServerReceiveUpdateRankPostListener;

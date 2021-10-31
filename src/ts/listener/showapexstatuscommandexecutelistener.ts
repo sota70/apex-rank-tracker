@@ -1,6 +1,6 @@
 import { ApexUserDataLoader } from '../apexuser/apexuserdatareader'
 import { CommandExecuteEvent } from "../event/commandexecuteevent";
-import { PlayerStatusEmbedBuilder } from "../playerstatusembedbuilder";
+import { PlayerStatusEmbedBuilder } from "../util/playerstatusembedbuilder";
 import { EventListener } from "./eventlistener";
 
 export class ShowApexStatusCommandExecuteListener implements EventListener {

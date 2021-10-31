@@ -11,13 +11,12 @@ export class CommandExecuteEvent extends Event {
     public commandName: string
 
     constructor(interaction: CommandInteraction) {
-        super('commandexecuteevent', EventType.COMMAND, [])
+        super('commandexecuteevent', EventType.COMMAND)
         this.interaction = interaction
         this.commandName = interaction.commandName
-        this.registerEventListeners()
     }
 
-    private registerEventListeners() {
+    override registerListeners() {
         this.addEventListener(new ShowApexStatusCommandExecuteListener())
         this.addEventListener(new SetCommandChannelCommandExecuteListener())
         this.addEventListener(new SetUsernameCommandExecuteListener())

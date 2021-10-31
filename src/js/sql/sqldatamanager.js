@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SqlDataManager = void 0;
 var pg_1 = require("pg");
-var sqlcommandconverter_1 = require("./sqlcommandconverter");
+var sqlcommandbuilder_1 = require("./sqlcommandbuilder");
 var SqlDataManager = /** @class */ (function () {
     function SqlDataManager(tableName) {
         this.tableName = tableName;
@@ -49,7 +49,7 @@ var SqlDataManager = /** @class */ (function () {
     }
     SqlDataManager.prototype.createTable = function (columns) {
         var _this = this;
-        var columnsCommand = sqlcommandconverter_1.SqlCommandConverter.convertColumnIntoCommand(columns);
+        var columnsCommand = sqlcommandbuilder_1.SqlCommandBuilder.buildColumnsCommand(columns);
         var command = "CREATE TABLE " + this.tableName + " (" + columnsCommand + ");";
         this.client.connect();
         this.client.query(command, function (err, res) {
@@ -61,7 +61,7 @@ var SqlDataManager = /** @class */ (function () {
     };
     SqlDataManager.prototype.insert = function (data) {
         var _this = this;
-        var dataCommand = new sqlcommandconverter_1.SqlCommandConverter(data).convertIntoInsertCommand();
+        var dataCommand = new sqlcommandbuilder_1.SqlCommandBuilder(data).buildInsertCommand();
         var command = "INSERT INTO " + this.tableName + " " + dataCommand + ";";
         this.client.connect();
         this.client.query(command, function (err, res) {
@@ -73,8 +73,8 @@ var SqlDataManager = /** @class */ (function () {
     };
     SqlDataManager.prototype.update = function (data, conditions) {
         var _this = this;
-        var dataCommand = new sqlcommandconverter_1.SqlCommandConverter(data).convertIntoUpdateCommand();
-        var conditionsCommand = sqlcommandconverter_1.SqlCommandConverter.convertConditionIntoCommand(conditions);
+        var dataCommand = new sqlcommandbuilder_1.SqlCommandBuilder(data).buildUpdateCommand();
+        var conditionsCommand = sqlcommandbuilder_1.SqlCommandBuilder.buildConditionCommand(conditions);
         var command = "UPDATE " + this.tableName + " SET " + dataCommand + " " + conditionsCommand + ";";
         this.client.connect();
         this.client.query(command, function (err, res) {

@@ -7,11 +7,14 @@ export abstract class Event {
     public type: EventType
     public eventListeners: Array<EventListener>
 
-    constructor(name: String, type: EventType, eventListeners: Array<EventListener>) {
+    constructor(name: String, type: EventType) {
         this.name = name
         this.type = type
-        this.eventListeners = eventListeners
+        this.eventListeners = []
+        this.registerListeners()
     }
+
+    abstract registerListeners(): void
 
     public addEventListener(eventListener: EventListener) {
         this.eventListeners.push(eventListener)

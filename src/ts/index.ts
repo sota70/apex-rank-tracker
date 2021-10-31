@@ -14,6 +14,7 @@ import { CommandExecuteEvent } from './event/commandexecuteevent'
 import { Event } from './event/event'
 import { CommandRegister } from './register/commandregister'
 import { ApexUserRoleSetter } from './apexuser/apexuserrolesetter'
+import { ServerReceivePostEvent } from './event/serverreceivepostevent'
 
 const guildId = "814796519131185156"
 const config = env.config()
@@ -38,34 +39,57 @@ client.on('ready',async () => {
 
 /* ボットを動かしているサーバーに送られてきたメソッドメソッドを受け取り、処理するメソッド*/
 http.createServer(function (req, res) {
-    if (req.method == "POST") {
+    if (req.method == 'GET') {
+        res.writeHead(200, { 'Content-Type': 'text/plain' })
+        res.end()
+    } else if (req.method == 'POST') {
         var data = ''
-        req.on("data", function (chunk) { data += chunk })
-        req.on("end", async function () {
+        req.on('data', function (chunk) { data += chunk })
+        req.on('end', async function () {
             if (!data) {
-                res.end("No Post Data")
+                res.end('No Post Data')
                 return
             }
             var dataObject = new URLSearchParams(data)
-            console.log(`post: ${dataObject.get('type')}`)
-            if (dataObject.get('type') == 'wake') {
-                console.log('Woke up in post')
-                res.end()
-                return
-            }
-            if (dataObject.get('type') == 'update_rank') {
-                console.log(`Updated player's rank`)
-                await setDiscordUsersRole(client)
-                res.end()
-                return
-            }
+            callServerReceivePostEvent(new ServerReceivePostEvent(res, client, dataObject.get('type')!))
             res.end()
         })
-    } else if (req.method == "GET") {
-        res.writeHead(200, { "Content-Type": "text/plain" })
-        res.end()
     }
+
+    // if (req.method == "POST") {
+    //     var data = ''
+    //     req.on("data", function (chunk) { data += chunk })
+    //     req.on("end", async function () {
+    //         if (!data) {
+    //             res.end("No Post Data")
+    //             return
+    //         }
+    //         var dataObject = new URLSearchParams(data)
+    //         console.log(`post: ${dataObject.get('type')}`)
+    //         if (dataObject.get('type') == 'wake') {
+    //             console.log('Woke up in post')
+    //             res.end()
+    //             return
+    //         }
+    //         if (dataObject.get('type') == 'update_rank') {
+    //             console.log(`Updated player's rank`)
+    //             await setDiscordUsersRole(client)
+    //             res.end()
+    //             return
+    //         }
+    //         res.end()
+    //     })
+    // } else if (req.method == "GET") {
+    //     res.writeHead(200, { "Content-Type": "text/plain" })
+    //     res.end()
+    // }
 }).listen(process.env.PORT || 5000)
+
+function callServerReceivePostEvent(event: ServerReceivePostEvent) {
+    event.eventListeners.forEach(listener => {
+        listener.handle(event)
+    })
+}
 
 async function setDiscordUsersRole(client: Client) {
     (await UserInfoReader.getPlayerDatas()).forEach(async function (data) {

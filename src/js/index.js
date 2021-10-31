@@ -63,6 +63,7 @@ var commandchannelreader_1 = require("./commandchannel/commandchannelreader");
 var commandexecuteevent_1 = require("./event/commandexecuteevent");
 var commandregister_1 = require("./register/commandregister");
 var apexuserrolesetter_1 = require("./apexuser/apexuserrolesetter");
+var serverreceivepostevent_1 = require("./event/serverreceivepostevent");
 var guildId = "814796519131185156";
 var config = env.config();
 var client = new discord_js_1.Client({
@@ -94,46 +95,62 @@ client.on('ready', function () { return __awaiter(void 0, void 0, void 0, functi
 }); });
 /* ボットを動かしているサーバーに送られてきたメソッドメソッドを受け取り、処理するメソッド*/
 http.createServer(function (req, res) {
-    if (req.method == "POST") {
+    if (req.method == 'GET') {
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end();
+    }
+    else if (req.method == 'POST') {
         var data = '';
-        req.on("data", function (chunk) { data += chunk; });
-        req.on("end", function () {
+        req.on('data', function (chunk) { data += chunk; });
+        req.on('end', function () {
             return __awaiter(this, void 0, void 0, function () {
                 var dataObject;
                 return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            if (!data) {
-                                res.end("No Post Data");
-                                return [2 /*return*/];
-                            }
-                            dataObject = new URLSearchParams(data);
-                            console.log("post: " + dataObject.get('type'));
-                            if (dataObject.get('type') == 'wake') {
-                                console.log('Woke up in post');
-                                res.end();
-                                return [2 /*return*/];
-                            }
-                            if (!(dataObject.get('type') == 'update_rank')) return [3 /*break*/, 2];
-                            console.log("Updated player's rank");
-                            return [4 /*yield*/, setDiscordUsersRole(client)];
-                        case 1:
-                            _a.sent();
-                            res.end();
-                            return [2 /*return*/];
-                        case 2:
-                            res.end();
-                            return [2 /*return*/];
+                    if (!data) {
+                        res.end('No Post Data');
+                        return [2 /*return*/];
                     }
+                    dataObject = new URLSearchParams(data);
+                    callServerReceivePostEvent(new serverreceivepostevent_1.ServerReceivePostEvent(res, client, dataObject.get('type')));
+                    res.end();
+                    return [2 /*return*/];
                 });
             });
         });
     }
-    else if (req.method == "GET") {
-        res.writeHead(200, { "Content-Type": "text/plain" });
-        res.end();
-    }
+    // if (req.method == "POST") {
+    //     var data = ''
+    //     req.on("data", function (chunk) { data += chunk })
+    //     req.on("end", async function () {
+    //         if (!data) {
+    //             res.end("No Post Data")
+    //             return
+    //         }
+    //         var dataObject = new URLSearchParams(data)
+    //         console.log(`post: ${dataObject.get('type')}`)
+    //         if (dataObject.get('type') == 'wake') {
+    //             console.log('Woke up in post')
+    //             res.end()
+    //             return
+    //         }
+    //         if (dataObject.get('type') == 'update_rank') {
+    //             console.log(`Updated player's rank`)
+    //             await setDiscordUsersRole(client)
+    //             res.end()
+    //             return
+    //         }
+    //         res.end()
+    //     })
+    // } else if (req.method == "GET") {
+    //     res.writeHead(200, { "Content-Type": "text/plain" })
+    //     res.end()
+    // }
 }).listen(process.env.PORT || 5000);
+function callServerReceivePostEvent(event) {
+    event.eventListeners.forEach(function (listener) {
+        listener.handle(event);
+    });
+}
 function setDiscordUsersRole(client) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
