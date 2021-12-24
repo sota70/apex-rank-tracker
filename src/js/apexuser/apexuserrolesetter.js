@@ -43,6 +43,14 @@ exports.ApexUserRoleSetter = void 0;
 var request_1 = __importDefault(require("request"));
 var rankrolebuilder_1 = require("../util/rankrolebuilder");
 var apexuserdatareader_1 = require("./apexuserdatareader");
+/**
+ * ディスコードユーザーがセットしたapexユーザーのランクに適応したロールを付与するクラス
+ *
+ * @property {@link discordUser} ディスコードユーザー
+ * @property {@link username} apexプレイヤー名
+ * @property {@link platform} apexプレイヤーのプラットフォーム
+ * @property {@link guild} ディスコードサーバー
+ */
 var ApexUserRoleSetter = /** @class */ (function () {
     function ApexUserRoleSetter(discordUser, username, platform, guild) {
         this.discordUser = discordUser;
@@ -50,6 +58,11 @@ var ApexUserRoleSetter = /** @class */ (function () {
         this.platform = platform;
         this.guild = guild;
     }
+    /**
+     * ディスコードユーザーがセットしたapexユーザーのランクに適応したロールを付与するメソッド
+     * このランクロールは5分毎に更新される
+     * * ディスコードユーザーはあらかじめapexユーザーをセットしておく必要がある
+     */
     ApexUserRoleSetter.prototype.setPlayerRankRole = function () {
         var _this = this;
         var url = "https://public-api.tracker.gg/apex/v1/standard/profile/" + this.checkPlatform() + "/" + this.username;
@@ -66,6 +79,7 @@ var ApexUserRoleSetter = /** @class */ (function () {
             _this.setPlayerRole(playerRank, playerRanking);
         });
     };
+    // ディスコードユーザーがセットしたapexユーザーのランクに適応したロールを付与するメソッド
     ApexUserRoleSetter.prototype.setPlayerRole = function (rankName, ranking) {
         return __awaiter(this, void 0, void 0, function () {
             var role, isPlayerRankPredator, rankRoleBuilder;
@@ -85,6 +99,7 @@ var ApexUserRoleSetter = /** @class */ (function () {
             });
         });
     };
+    // ディスコードユーザーのランクをリセットするメソッド
     ApexUserRoleSetter.prototype.resetPlayerRankRole = function () {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
@@ -126,6 +141,7 @@ var ApexUserRoleSetter = /** @class */ (function () {
             });
         });
     };
+    // apiを使う用にプラットフォームを数字に変更するメソッド
     ApexUserRoleSetter.prototype.checkPlatform = function () {
         switch (this.platform) {
             case "pc": return 5;

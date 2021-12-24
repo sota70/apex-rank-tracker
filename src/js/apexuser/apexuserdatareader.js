@@ -58,11 +58,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ApexUserDataLoader = void 0;
 var apexuserdata_1 = require("./apexuserdata");
 var request = __importStar(require("request"));
+/**
+ * apexプレイヤーのデータを取得するクラス
+ *
+ * @property {@link username} プレイヤー名
+ * @property {@link platform} プレイヤーのプラットフォーム
+ */
 var ApexUserDataLoader = /** @class */ (function () {
     function ApexUserDataLoader(username, platform) {
         this.username = username;
         this.platform = platform;
     }
+    /**
+     * {@link username}からプレイヤーデータを取得するメソッド
+     * 外部のapiを使い、そこから返ってきたデータを{@link ApexUserData}に格納する
+     * もしプレイヤーが見つからなかった場合はnullを返す
+     * * データが返ってくるまで遅延が生じるので、それを解決するために約1秒の遅延を設けている
+     *
+     * @returns プレイヤーデータを{@link ApexUserData}型で返す
+     */
     ApexUserDataLoader.prototype.getPlayerData = function () {
         return __awaiter(this, void 0, void 0, function () {
             var apexUserData, url;
@@ -95,6 +109,12 @@ var ApexUserDataLoader = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 取得したプレイヤーのデータからランクポイントを取得するメソッド
+     *
+     * @param playerStatistics プレイヤーの統計データ
+     * @returns プレイヤーのランクポイントを返す
+     */
     ApexUserDataLoader.prototype.getPlayerRP = function (playerStatistics) {
         for (var i = 0; i < playerStatistics.length; i++) {
             if (playerStatistics[i].metadata.key !== "RankScore")
@@ -102,6 +122,12 @@ var ApexUserDataLoader = /** @class */ (function () {
             return playerStatistics[i].value;
         }
     };
+    /**
+     * 取得したプレイヤーのデータからランク順位を取得するメソッド
+     *
+     * @param playerStatistics プレイヤーの統計データ
+     * @returns プレイヤーのランク順位を返す
+     */
     ApexUserDataLoader.prototype.getPlayerRanking = function (playerStatistics) {
         for (var i = 0; i < playerStatistics.length; i++) {
             if (playerStatistics[i].metadata.key !== "RankScore")
@@ -109,6 +135,7 @@ var ApexUserDataLoader = /** @class */ (function () {
             return playerStatistics[i].rank;
         }
     };
+    // apiを使う用にプラットフォームを数字に変更するメソッド
     ApexUserDataLoader.prototype.checkPlatform = function () {
         switch (this.platform) {
             case "pc": return 5;
@@ -117,6 +144,7 @@ var ApexUserDataLoader = /** @class */ (function () {
             default: return 0;
         }
     };
+    // 1秒間の遅延を発生させるメソッド
     ApexUserDataLoader.prototype.delay = function () {
         return new Promise(function (resolve) {
             setTimeout(resolve, 1000);

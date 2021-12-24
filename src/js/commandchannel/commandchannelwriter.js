@@ -39,12 +39,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommandChannelSetter = void 0;
 var sqldatamanager_1 = require("../sql/sqldatamanager");
 var commandchannelreader_1 = require("./commandchannelreader");
+/**
+ * コマンド専用チャンネルをセットするために使うクラス
+ *
+ * @property {@link serverId} ディスコードサーバーのID
+ * @property {@link channelId} コマンド専用チャンネルにしたいチャンネルのID
+ * @property {@link commandChannelLoader} コマンド専用チャンネルのデータ取得用クラス
+ */
 var CommandChannelSetter = /** @class */ (function () {
     function CommandChannelSetter(serverId, channelId) {
         this.serverId = serverId;
         this.channelId = channelId;
         this.commandChannelLoader = new commandchannelreader_1.CommandChannelLoader(serverId);
     }
+    /**
+     * コマンド専用チャンネルをセットするメソッド
+     * {@link serverId}と{@link channelId}をセットでデータベースに保存する
+     *
+     * @returns
+     */
     CommandChannelSetter.prototype.setCommandChannel = function () {
         return __awaiter(this, void 0, void 0, function () {
             var data, conditions, isCommandChannelSet, sqlDataManager;

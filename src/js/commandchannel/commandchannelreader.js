@@ -96,10 +96,13 @@ var CommandChannelLoader = /** @class */ (function () {
         });
     };
     /**
+     * コマンド専用チャンネルのIDを取得するメソッド
+     * データベースからディスコードサーバーIDに適応したコマンドチャンネルを取得する処理だが
+     * *もしチャンネルが見つからなかった場合はデフォルトのコマンドチャンネル名と同じチャンネル名を持つチャンネルを
+     * *探して、そのチャンネルのIDを返す
      *
-     *
-     * @param client
-     * @returns
+     * @param client ディスコードのボットを管理するクラス
+     * @returns コマンド専用チャンネルのIDを返す
      */
     CommandChannelLoader.prototype.getCommandChannelId = function (client) {
         return __awaiter(this, void 0, void 0, function () {
@@ -119,6 +122,11 @@ var CommandChannelLoader = /** @class */ (function () {
             });
         });
     };
+    /**
+     * コマンド専用チャンネルがセットされているか確認するメソッド
+     *
+     * @returns セットされていたらtrue、されていなかったらfalseを返す
+     */
     CommandChannelLoader.prototype.isCommandChannelSet = function () {
         return __awaiter(this, void 0, void 0, function () {
             var commandChannels;
@@ -133,6 +141,7 @@ var CommandChannelLoader = /** @class */ (function () {
             });
         });
     };
+    // デフォルトのコマンドチャンネル名を持つチャンネルをディスコードサーバーから取得するメソッド
     CommandChannelLoader.prototype.getDefaultCommandChannelId = function (guild) {
         var defaultCommandChannel = guild.channels.cache.find(function (ch) { return ch.name === process.env.DEFAULT_RANK_CHANNEL; });
         if (defaultCommandChannel === undefined)
