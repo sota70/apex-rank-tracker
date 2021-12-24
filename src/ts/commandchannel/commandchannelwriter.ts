@@ -1,6 +1,13 @@
 import { SqlDataManager } from "../sql/sqldatamanager"
 import { CommandChannelLoader } from "./commandchannelreader"
 
+/**
+ * コマンド専用チャンネルをセットするために使うクラス
+ * 
+ * @property {@link serverId} ディスコードサーバーのID
+ * @property {@link channelId} コマンド専用チャンネルにしたいチャンネルのID
+ * @property {@link commandChannelLoader} コマンド専用チャンネルのデータ取得用クラス
+ */
 export class CommandChannelSetter {
 
     private serverId: string
@@ -13,6 +20,12 @@ export class CommandChannelSetter {
         this.commandChannelLoader = new CommandChannelLoader(serverId)
     }
     
+    /**
+     * コマンド専用チャンネルをセットするメソッド
+     * {@link serverId}と{@link channelId}をセットでデータベースに保存する
+     * 
+     * @returns 
+     */
     public async setCommandChannel() {
         let data = new Map<string, any>([
             ["serverId", this.serverId],

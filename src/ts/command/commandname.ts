@@ -1,3 +1,6 @@
+/**
+ * 登録するスラッシュコマンドの名前
+ */
 export const commandNames = {
     SHOWAPEXSTATUS: "showapexstatus",
     SHOWAPEXSTATUSALIASE: "sas",

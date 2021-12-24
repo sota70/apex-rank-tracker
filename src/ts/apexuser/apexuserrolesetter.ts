@@ -3,6 +3,14 @@ import request from "request"
 import { RankRoleBuilder } from "../util/rankrolebuilder"
 import { ApexUserDataLoader } from "./apexuserdatareader"
 
+/**
+ * ディスコードユーザーがセットしたapexユーザーのランクに適応したロールを付与するクラス
+ * 
+ * @property {@link discordUser} ディスコードユーザー
+ * @property {@link username} apexプレイヤー名
+ * @property {@link platform} apexプレイヤーのプラットフォーム
+ * @property {@link guild} ディスコードサーバー
+ */
 export class ApexUserRoleSetter {
 
     private discordUser: GuildMember
@@ -22,6 +30,11 @@ export class ApexUserRoleSetter {
         this.guild = guild
     }
 
+    /**
+     * ディスコードユーザーがセットしたapexユーザーのランクに適応したロールを付与するメソッド
+     * このランクロールは5分毎に更新される
+     * * ディスコードユーザーはあらかじめapexユーザーをセットしておく必要がある
+     */
     public setPlayerRankRole() {
         let url = `https://public-api.tracker.gg/apex/v1/standard/profile/${this.checkPlatform()}/${this.username}`
         request.get({
@@ -37,6 +50,7 @@ export class ApexUserRoleSetter {
         })
     }
 
+    // ディスコードユーザーがセットしたapexユーザーのランクに適応したロールを付与するメソッド
     private async setPlayerRole(rankName: string, ranking: number) {
         let role
         let isPlayerRankPredator = ranking <= 750
@@ -52,6 +66,7 @@ export class ApexUserRoleSetter {
         this.discordUser.roles.add(role)
     }
 
+    // ディスコードユーザーのランクをリセットするメソッド
     private async resetPlayerRankRole() {
         let rankRoles = [
             this.guild.roles.cache.find(r => r.name === "Gold 4"),
@@ -75,6 +90,7 @@ export class ApexUserRoleSetter {
         }
     }
 
+    // apiを使う用にプラットフォームを数字に変更するメソッド
     private checkPlatform(): number {
         switch (this.platform) {
             case "pc": return 5

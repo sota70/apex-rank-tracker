@@ -44,10 +44,13 @@ export class CommandChannelLoader {
     }
 
     /**
+     * コマンド専用チャンネルのIDを取得するメソッド
+     * データベースからディスコードサーバーIDに適応したコマンドチャンネルを取得する処理だが
+     * *もしチャンネルが見つからなかった場合はデフォルトのコマンドチャンネル名と同じチャンネル名を持つチャンネルを
+     * *探して、そのチャンネルのIDを返す
      * 
-     * 
-     * @param client 
-     * @returns 
+     * @param client ディスコードのボットを管理するクラス
+     * @returns コマンド専用チャンネルのIDを返す
      */
     public async getCommandChannelId(client: Client): Promise<string> {
         let commandChannel = await this.getCommandChannel()
@@ -58,11 +61,17 @@ export class CommandChannelLoader {
         return commandChannel.channelId
     }
 
+    /**
+     * コマンド専用チャンネルがセットされているか確認するメソッド
+     * 
+     * @returns セットされていたらtrue、されていなかったらfalseを返す
+     */
     public async isCommandChannelSet(): Promise<Boolean> {
         let commandChannels = await this.getAllCommandChannels()
         return commandChannels.some(ch => ch.serverId === this.serverId)
     }
 
+    // デフォルトのコマンドチャンネル名を持つチャンネルをディスコードサーバーから取得するメソッド
     private getDefaultCommandChannelId(guild: Guild): string {
         let defaultCommandChannel = guild.channels.cache.find(ch => ch.name === process.env.DEFAULT_RANK_CHANNEL)
         if (defaultCommandChannel === undefined) throw console.error("The guild must have command channel.")

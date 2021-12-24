@@ -1,6 +1,12 @@
 import { ApexUserData } from "./apexuserdata"
 import * as request from 'request'
 
+/**
+ * apexプレイヤーのデータを取得するクラス
+ * 
+ * @property {@link username} プレイヤー名
+ * @property {@link platform} プレイヤーのプラットフォーム
+ */
 export class ApexUserDataLoader {
 
     private username: string
@@ -11,6 +17,14 @@ export class ApexUserDataLoader {
         this.platform = platform
     }
 
+    /**
+     * {@link username}からプレイヤーデータを取得するメソッド
+     * 外部のapiを使い、そこから返ってきたデータを{@link ApexUserData}に格納する
+     * もしプレイヤーが見つからなかった場合はnullを返す
+     * * データが返ってくるまで遅延が生じるので、それを解決するために約1秒の遅延を設けている
+     * 
+     * @returns プレイヤーデータを{@link ApexUserData}型で返す
+     */
     public async getPlayerData(): Promise<ApexUserData> {
         let apexUserData = new ApexUserData("None", 0, "None", "None", -1, -1)
         let url = `https://public-api.tracker.gg/apex/v1/standard/profile/${this.checkPlatform()}/${this.username}`
@@ -32,6 +46,12 @@ export class ApexUserDataLoader {
         return apexUserData
     }
 
+    /**
+     * 取得したプレイヤーのデータからランクポイントを取得するメソッド
+     * 
+     * @param playerStatistics プレイヤーの統計データ
+     * @returns プレイヤーのランクポイントを返す
+     */
     public getPlayerRP(playerStatistics: Array<any>): any {
         for (let i = 0; i < playerStatistics.length; i++) {
             if (playerStatistics[i].metadata.key !== "RankScore") continue
@@ -39,6 +59,12 @@ export class ApexUserDataLoader {
         }
     }
 
+    /**
+     * 取得したプレイヤーのデータからランク順位を取得するメソッド
+     * 
+     * @param playerStatistics プレイヤーの統計データ
+     * @returns プレイヤーのランク順位を返す
+     */
     public getPlayerRanking(playerStatistics: Array<any>): any {
         for (let i = 0; i < playerStatistics.length; i++) {
             if (playerStatistics[i].metadata.key !== "RankScore") continue
@@ -46,6 +72,7 @@ export class ApexUserDataLoader {
         }
     }
 
+    // apiを使う用にプラットフォームを数字に変更するメソッド
     private checkPlatform(): number {
         switch (this.platform) {
             case "pc": return 5
@@ -55,6 +82,7 @@ export class ApexUserDataLoader {
         }
     }
 
+    // 1秒間の遅延を発生させるメソッド
     private delay() {
         return new Promise((resolve) => {
             setTimeout(resolve, 1000)
