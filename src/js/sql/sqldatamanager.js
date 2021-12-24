@@ -39,7 +39,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SqlDataManager = void 0;
 var pg_1 = require("pg");
 var sqlcommandbuilder_1 = require("./sqlcommandbuilder");
+/**
+ * データベースを管理するクラス
+ * データを入力したり、読み込んだりする
+ *
+ * @property {@link tableName} データベースにあるテーブルの名前
+ * @property {@link client} データベースにアクセスする用のクライアント
+ */
 var SqlDataManager = /** @class */ (function () {
+    /**
+     * 編集するテーブル名をセットし、{@link Client}を初期化する
+     *
+     * @param tableName 編集したいテーブル名
+     */
     function SqlDataManager(tableName) {
         this.tableName = tableName;
         this.client = new pg_1.Client({
@@ -47,6 +59,12 @@ var SqlDataManager = /** @class */ (function () {
             ssl: { rejectUnauthorized: false }
         });
     }
+    /**
+     * データベースに新たにテーブルを作るメソッド
+     * テーブル名は{@link tableName}を使う
+     *
+     * @param columns テーブルのコロン
+     */
     SqlDataManager.prototype.createTable = function (columns) {
         var _this = this;
         var columnsCommand = sqlcommandbuilder_1.SqlCommandBuilder.buildColumnsCommand(columns);
@@ -59,6 +77,11 @@ var SqlDataManager = /** @class */ (function () {
             _this.client.end();
         });
     };
+    /**
+     * テーブルにデータを書き込むメソッド
+     *
+     * @param data 書き込むデータ
+     */
     SqlDataManager.prototype.insert = function (data) {
         var _this = this;
         var dataCommand = new sqlcommandbuilder_1.SqlCommandBuilder(data).buildInsertCommand();
@@ -71,6 +94,13 @@ var SqlDataManager = /** @class */ (function () {
             _this.client.end();
         });
     };
+    /**
+     * テーブル内に存在するデータを上書きするメソッド
+     * * {@link conditions}で一致したデータを上書きする
+     *
+     * @param data 上書きするデータ
+     * @param conditions 上書きするデータの対象条件
+     */
     SqlDataManager.prototype.update = function (data, conditions) {
         var _this = this;
         var dataCommand = new sqlcommandbuilder_1.SqlCommandBuilder(data).buildUpdateCommand();
@@ -84,6 +114,9 @@ var SqlDataManager = /** @class */ (function () {
             _this.client.end();
         });
     };
+    /**
+     * テーブルごとデータベースから削除するメソッド
+     */
     SqlDataManager.prototype.dropTable = function () {
         var _this = this;
         var command = "DROP TABLE " + this.tableName + ";";
@@ -95,6 +128,9 @@ var SqlDataManager = /** @class */ (function () {
             _this.client.end();
         });
     };
+    /**
+     * テーブル内にあるデータを全て削除するメソッド
+     */
     SqlDataManager.prototype.deleteRows = function () {
         var _this = this;
         var command = "DELETE FROM " + this.tableName;
@@ -106,6 +142,12 @@ var SqlDataManager = /** @class */ (function () {
             _this.client.end();
         });
     };
+    /**
+     * テーブル内にある全てのデータを取得するメソッド
+     * データは全て{@link any}として扱い、それを配列に入れて返す
+     *
+     * @returns {@link any}型の配列に入れたデータを返す
+     */
     SqlDataManager.prototype.select = function () {
         return __awaiter(this, void 0, void 0, function () {
             var data, command;
@@ -133,6 +175,12 @@ var SqlDataManager = /** @class */ (function () {
     return SqlDataManager;
 }());
 exports.SqlDataManager = SqlDataManager;
+/**
+ * 約(1.3 * sec)秒間の遅延を与えるメソッド
+ *
+ * @param sec 遅延する秒数
+ * @notExported
+ */
 function delay(sec) {
     return new Promise(function (resolve) {
         setTimeout(resolve, sec * 1350);

@@ -4,8 +4,18 @@ import { ServerReceivePostEvent } from "../event/serverreceivepostevent";
 import { UserInfoReader } from "../userinfo/userinforeader";
 import { EventListener } from "./eventlistener";
 
+/**
+ * ボットサーバーがUpdateRankメソッドを受け取った時の処理をするリスナークラス
+ */
 export class ServerReceiveUpdateRankPostListener implements EventListener {
 
+    /**
+     * ボットサーバーがUpdateRankメソッドを受け取った時の処理をするメソッド
+     * データベースからユーザーの情報を取ってきて、それをもとに現在のランクを確認する
+     * そのランクに適応したロールをユーザーに付ける
+     * 
+     * @param event botサーバーが外部からPostを受け取った時の処理に使うイベント
+     */
     public async handle(event: ServerReceivePostEvent) {
         const { res, client, methodType } = event
         if (methodType !== 'update_rank') {

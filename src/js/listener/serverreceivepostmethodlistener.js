@@ -38,9 +38,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServerReceivePostMethodListener = void 0;
 var serverreceivepostevent_1 = require("../event/serverreceivepostevent");
+/**
+ * ボットサーバーがPostメソッドを受け取った時の処理をするリスナークラス
+ */
 var ServerReceivePostMethodListener = /** @class */ (function () {
     function ServerReceivePostMethodListener() {
     }
+    /**
+     * ボットサーバーがPostメソッドを受け取った時の処理をするメソッド
+     * もらったPostデータを、種類に対応したリスナーに渡して処理させる
+     * もらったデータが空の場合はそこで処理を止める
+     *
+     * @param event ボットサーバーにPostメソッドが届いたときに使うイベント
+     */
     ServerReceivePostMethodListener.prototype.handle = function (event) {
         var _this = this;
         var req = event.req, res = event.res, client = event.client;
@@ -63,6 +73,7 @@ var ServerReceivePostMethodListener = /** @class */ (function () {
             });
         }); });
     };
+    // もらったPostデータをPostデータ処理用リスナーに渡すメソッド
     ServerReceivePostMethodListener.prototype.callServerReceivePostEvent = function (event) {
         event.eventListeners.forEach(function (listener) {
             listener.handle(event);

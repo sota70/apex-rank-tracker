@@ -39,7 +39,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserInfoWriter = void 0;
 var sqldatamanager_1 = require("../sql/sqldatamanager");
 var userinforeader_1 = require("./userinforeader");
+/**
+ * ディスコードユーザーの情報をデータベースに書き込むクラス
+ * * ここで書き込む情報はすべて5分毎に起こるランクセットシステムに使われる
+ *
+ * @property {@link discordUserId} ディスコードのユーザーのID
+ * @property {@link username} ApexLegendsのユーザー名
+ * @property {@link platform} ApexLegendsをプレイしているプラットフォーム(e.g. PC, PS4, Xbox)
+ * @property {@link guildId} ディスコードサーバーのID
+ * @property {@link userInfoReader} ユーザーの情報をデータベースから読み込むクラス
+ */
 var UserInfoWriter = /** @class */ (function () {
+    /**
+     * ディスコードユーザーの情報や、ApexLegendsのユーザー名などをセットする
+     *
+     * @param discordUserId ディスコードのユーザーのID
+     * @param username ApexLegendsのユーザー名
+     * @param platform ApexLegendsのプレイしているプラットフォーム(e.g. PC, PS4, Xbox)
+     * @param guildId ディスコードサーバーのID
+     */
     function UserInfoWriter(discordUserId, username, platform, guildId) {
         this.discordUserId = discordUserId;
         this.username = username;
@@ -47,6 +65,10 @@ var UserInfoWriter = /** @class */ (function () {
         this.guildId = guildId;
         this.userInfoReader = new userinforeader_1.UserInfoReader(discordUserId, guildId);
     }
+    /**
+     * ディスコードユーザーの情報をデータベースに書き込むメソッド
+     * * もし既にデータが保存されていた場合は、データを上書きする
+     */
     UserInfoWriter.prototype.writeData = function () {
         return __awaiter(this, void 0, void 0, function () {
             var data, conditions, sqlDataManager;

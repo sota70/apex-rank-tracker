@@ -39,11 +39,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserInfoReader = void 0;
 var sqldatamanager_1 = require("../sql/sqldatamanager");
 var userinfo_1 = require("./userinfo");
+/**
+ * ディスコードのユーザー情報をデータべースから読み込むクラス
+ *
+ * @property {@link discordUserId} ディスコードのユーザーのID
+ * @property {@link guildId} ディスコードサーバーのID
+ */
 var UserInfoReader = /** @class */ (function () {
+    /**
+     * ディスコードのユーザー情報を読み込むために必要な情報をセットする
+     *
+     * @param discordUserId ディスコードのユーザーのID
+     * @param guildId ディスコードサーバーのID
+     */
     function UserInfoReader(discordUserId, guildId) {
         this.discordUserId = discordUserId;
         this.guildId = guildId;
     }
+    /**
+     * データベースに保存されている全てのディスコードユーザーの情報を読み込むメソッド
+     * {@link UserInfo}クラスにユーザーの情報を入れたものを一つずつ配列に入れていき、最後にそれを返す
+     *
+     * @returns ユーザー情報が入った{@link UserInfo}クラスの配列を返す
+     */
     UserInfoReader.getPlayerDatas = function () {
         return __awaiter(this, void 0, void 0, function () {
             var users, datas;
@@ -62,6 +80,13 @@ var UserInfoReader = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 指定したユーザー情報を読み込むメソッド
+     * データベースに、同じ{@link discordUserId}と{@link guildId}を持つデータがあれば、それを返す
+     * 同じデータが存在しない場合は、全てのプロパティにNULLを入れた{@link UserInfo}クラスを返す
+     *
+     * @returns 指定したユーザー情報が入った{@link UserInfo}クラスを返す
+     */
     UserInfoReader.prototype.getPlayerData = function () {
         return __awaiter(this, void 0, void 0, function () {
             var playerData, playerDatas, i;
@@ -84,6 +109,11 @@ var UserInfoReader = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 指定したユーザー情報がデータベース上にあるかどうか確認するメソッド
+     *
+     * @returns 同じ{@link discordUserId}と{@link guildId}があればtrueを返し、そうでない場合はfalseを返す
+     */
     UserInfoReader.prototype.isDataExists = function () {
         return __awaiter(this, void 0, void 0, function () {
             var playerDatas;

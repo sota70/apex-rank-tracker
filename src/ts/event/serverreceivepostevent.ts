@@ -5,6 +5,13 @@ import { ServerReceiveWakeUpPostListener } from "../listener/serverreceivewakeup
 import { Event } from "./event";
 import { EventType } from "./eventtype";
 
+/**
+ * botサーバーに外部からPostを受け取った時に使われるイベントクラス
+ * 
+ * @property {@link res} botサーバーに来るリクエストを処理するクラス
+ * @property {@link client} ディスコードのボットを管理するクラス
+ * @property {@link methodType} 外部から来たPostのメソッドの種類
+ */
 export class ServerReceivePostEvent extends Event {
 
     public res: ServerResponse
@@ -22,6 +29,11 @@ export class ServerReceivePostEvent extends Event {
         this.methodType = methodType
     }
 
+    /**
+     * {@link ServerReceivePostEvent}に対応したリスナーを登録するメソッド
+     * {@link ServerReceiveWakeUpPostListener}と{@link ServerReceiveUpdateRankPostListener}に
+     * {@link ServerReceivePostEvent}を使わせたいので、この二つをリスナーとして登録しているs
+     */
     override registerListeners() {
         this.addEventListener(new ServerReceiveWakeUpPostListener())
         this.addEventListener(new ServerReceiveUpdateRankPostListener())

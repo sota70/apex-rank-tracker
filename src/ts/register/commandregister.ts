@@ -3,8 +3,16 @@ import * as command from '../command/command'
 import { REST } from "@discordjs/rest"
 import { Routes } from "discord-api-types/v9"
 
+/**
+ * スラッシュコマンドをディスコードボットに登録するクラス
+ */
 export class CommandRegister implements Register {
 
+    /**
+     * スラッシュコマンドをディスコードボットに登録するメソッド
+     * 登録するスラッシュコマンドは{@link command}に定義されている
+     * * ディスコードサーバーに対してリクエストを送るので、反映に時間がかかる
+     */
     public async register() {
         const commands = [
             command.showApexStatusCommand,

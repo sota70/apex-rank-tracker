@@ -1,0 +1,4 @@
+{
+    "entryPoints": ["src/typing/index.d.ts"],
+    "out": "docs"
+}

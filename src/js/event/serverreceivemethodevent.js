@@ -20,6 +20,14 @@ var serverreceivegetmethodlistener_1 = require("../listener/serverreceivegetmeth
 var serverreceivepostmethodlistener_1 = require("../listener/serverreceivepostmethodlistener");
 var event_1 = require("./event");
 var eventtype_1 = require("./eventtype");
+/**
+ * botサーバーが外部から受け取ったメソッドを処理する時に使われるイベントクラス
+ *
+ * @property {@link method} 外部から受け取ったメソッド
+ * @property {@link req} 外部サーバーから受け取ったデータにアクセス可能なクラス
+ * @property {@link res} botサーバーに来るリクエストを処理するクラス
+ * @property {@link client} ディスコードのボットを管理するクラス
+ */
 var ServerReceiveMethodEvent = /** @class */ (function (_super) {
     __extends(ServerReceiveMethodEvent, _super);
     function ServerReceiveMethodEvent(method, req, res, client) {
@@ -30,6 +38,11 @@ var ServerReceiveMethodEvent = /** @class */ (function (_super) {
         _this.client = client;
         return _this;
     }
+    /**
+     * {@link ServerReceiveMethodEvent}に対応したリスナーを登録するメソッド
+     * {@link ServerReceiveGetMethodListener}と{@link ServerReceivePostMethodListener}に
+     * {@link ServerReceiveMethodEvent}を使わせたいので、この二つをリスナーとして登録しているs
+     */
     ServerReceiveMethodEvent.prototype.registerListeners = function () {
         this.addEventListener(new serverreceivegetmethodlistener_1.ServerReceiveGetMethodListener());
         this.addEventListener(new serverreceivepostmethodlistener_1.ServerReceivePostMethodListener());

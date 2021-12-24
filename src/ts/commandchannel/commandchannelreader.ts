@@ -2,6 +2,11 @@ import { Client, Guild } from 'discord.js'
 import { SqlDataManager } from '../sql/sqldatamanager'
 import { CommandChannel } from './commandchannel'
 
+/**
+ * コマンド専用チャンネルの情報をデータベースから取得するクラス
+ * 
+ * @property {@link serverId} ディスコードサーバーのID
+ */
 export class CommandChannelLoader {
 
     private serverId: string
@@ -10,6 +15,11 @@ export class CommandChannelLoader {
         this.serverId = serverId
     }
 
+    /**
+     * データベースサーバーに保存されている全てのコマンド専用チャンネルの情報を取得するメソッド
+     * 
+     * @returns チャンネルの情報を{@link CommandChannel}に入れ、それを配列として返す
+     */
     public async getAllCommandChannels(): Promise<Array<CommandChannel>> {
         let commandChannels: Array<CommandChannel> = []
         let commandChannelsData = await new SqlDataManager("command_channel").select()
@@ -19,6 +29,12 @@ export class CommandChannelLoader {
         return commandChannels
     }
 
+    /**
+     * {@link serverId}に適応したコマンド専用チャンネルをデータベースから取得するメソッド
+     * * もし適応したチャンネルが見つからなかった場合はundefinedが返る
+     * 
+     * @returns {@link serverId}に適応したチャンネルを{@link CommandChannel}として返す
+     */
     public async getCommandChannel(): Promise<CommandChannel | undefined> {
         let commandChannels = await this.getAllCommandChannels()
         for (let i = 0; i < commandChannels.length; i++) {
@@ -27,6 +43,12 @@ export class CommandChannelLoader {
         }
     }
 
+    /**
+     * 
+     * 
+     * @param client 
+     * @returns 
+     */
     public async getCommandChannelId(client: Client): Promise<string> {
         let commandChannel = await this.getCommandChannel()
         if (commandChannel === undefined) {

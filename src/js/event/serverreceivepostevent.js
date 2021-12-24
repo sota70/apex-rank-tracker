@@ -20,6 +20,13 @@ var serverreceiveupdaterankpostlistener_1 = require("../listener/serverreceiveup
 var serverreceivewakeuppostlistener_1 = require("../listener/serverreceivewakeuppostlistener");
 var event_1 = require("./event");
 var eventtype_1 = require("./eventtype");
+/**
+ * botサーバーに外部からPostを受け取った時に使われるイベントクラス
+ *
+ * @property {@link res} botサーバーに来るリクエストを処理するクラス
+ * @property {@link client} ディスコードのボットを管理するクラス
+ * @property {@link methodType} 外部から来たPostのメソッドの種類
+ */
 var ServerReceivePostEvent = /** @class */ (function (_super) {
     __extends(ServerReceivePostEvent, _super);
     function ServerReceivePostEvent(res, client, methodType) {
@@ -29,6 +36,11 @@ var ServerReceivePostEvent = /** @class */ (function (_super) {
         _this.methodType = methodType;
         return _this;
     }
+    /**
+     * {@link ServerReceivePostEvent}に対応したリスナーを登録するメソッド
+     * {@link ServerReceiveWakeUpPostListener}と{@link ServerReceiveUpdateRankPostListener}に
+     * {@link ServerReceivePostEvent}を使わせたいので、この二つをリスナーとして登録しているs
+     */
     ServerReceivePostEvent.prototype.registerListeners = function () {
         this.addEventListener(new serverreceivewakeuppostlistener_1.ServerReceiveWakeUpPostListener());
         this.addEventListener(new serverreceiveupdaterankpostlistener_1.ServerReceiveUpdateRankPostListener());

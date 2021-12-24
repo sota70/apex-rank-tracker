@@ -39,9 +39,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ShowApexStatusCommandExecuteListener = void 0;
 var apexuserdatareader_1 = require("../apexuser/apexuserdatareader");
 var playerstatusembedbuilder_1 = require("../util/playerstatusembedbuilder");
+/**
+ * Apexのプレイヤーステータス表示コマンドが呼び出された時の処理を担当するリスナークラス
+ */
 var ShowApexStatusCommandExecuteListener = /** @class */ (function () {
     function ShowApexStatusCommandExecuteListener() {
     }
+    /**
+     * Apexのプレイヤーステータス表示コマンドが呼び出されたときの処理をするメソッド
+     * * 取得したユーザー名とプラットフォームからステータスを取得し、メッセージとして送信する
+     *
+     * @param event コマンド呼び出しを検知するイベント
+     */
     ShowApexStatusCommandExecuteListener.prototype.handle = function (event) {
         return __awaiter(this, void 0, void 0, function () {
             var options, username, platform, playerDataLoader, apexUserData, playerName, playerLevel, playerRank, playerRankImage, playerRankRP, playerRanking, embedMessage;

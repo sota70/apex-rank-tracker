@@ -59,9 +59,17 @@ exports.CommandRegister = void 0;
 var command = __importStar(require("../command/command"));
 var rest_1 = require("@discordjs/rest");
 var v9_1 = require("discord-api-types/v9");
+/**
+ * スラッシュコマンドをディスコードボットに登録するクラス
+ */
 var CommandRegister = /** @class */ (function () {
     function CommandRegister() {
     }
+    /**
+     * スラッシュコマンドをディスコードボットに登録するメソッド
+     * 登録するスラッシュコマンドは{@link command}に定義されている
+     * * ディスコードサーバーに対してリクエストを送るので、反映に時間がかかる
+     */
     CommandRegister.prototype.register = function () {
         return __awaiter(this, void 0, void 0, function () {
             var commands, rest, clientId, err_1;

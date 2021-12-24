@@ -24,6 +24,8 @@ loginToClient()
 /**
  * ディスコードクライアントの準備完了時の処理
  * ClientApplicationの定義、SlashCommandの登録を行う
+ * 
+ * @notExported
  */
 client.on('ready',async () => {
     console.log(`${client.user?.tag}でログインしています`)
@@ -36,6 +38,8 @@ client.on('ready',async () => {
 /**
  * ボットを動かしているサーバーに送られてきたメソッドメソッドを受け取り、処理するメソッド
  * * 送られてきたメッセージはすべてListenerクラスで処理している
+ * 
+ * @notExported
  */
 http.createServer(function (req, res) {
     if (req.method === undefined) {
@@ -48,6 +52,8 @@ http.createServer(function (req, res) {
 /**
  * プレイヤーが打ったメッセージからコマンドを検知して、それぞれのコマンドに適応した処理をするメソッド
  * * コマンド処理はすべてListenerクラスで処理している
+ * 
+ * @notExported
  */ 
 client.on('interactionCreate', async function (interaction) {
     let serverId = interaction.guildId
@@ -64,6 +70,9 @@ client.on('interactionCreate', async function (interaction) {
 
 /**
  * ディスコードクライアントにログインするメソッド
+ * 
+ * @notExported
+ * @package
  */
 function loginToClient() {
     if (process.env.TOKEN == undefined) {
@@ -77,6 +86,8 @@ function loginToClient() {
  * イベントを呼び出すメソッド
  * 
  * @param event イベント
+ * @notExported
+ * @module Main
  */
 function callEvent(event: Event) {
     event.eventListeners.forEach(listener =>

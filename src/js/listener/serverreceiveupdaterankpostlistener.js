@@ -39,9 +39,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServerReceiveUpdateRankPostListener = void 0;
 var apexuserrolesetter_1 = require("../apexuser/apexuserrolesetter");
 var userinforeader_1 = require("../userinfo/userinforeader");
+/**
+ * ボットサーバーがUpdateRankメソッドを受け取った時の処理をするリスナークラス
+ */
 var ServerReceiveUpdateRankPostListener = /** @class */ (function () {
     function ServerReceiveUpdateRankPostListener() {
     }
+    /**
+     * ボットサーバーがUpdateRankメソッドを受け取った時の処理をするメソッド
+     * データベースからユーザーの情報を取ってきて、それをもとに現在のランクを確認する
+     * そのランクに適応したロールをユーザーに付ける
+     *
+     * @param event botサーバーが外部からPostを受け取った時の処理に使うイベント
+     */
     ServerReceiveUpdateRankPostListener.prototype.handle = function (event) {
         return __awaiter(this, void 0, void 0, function () {
             var res, client, methodType;

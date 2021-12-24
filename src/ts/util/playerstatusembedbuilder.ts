@@ -1,5 +1,15 @@
 import { MessageEmbed } from "discord.js"
 
+/**
+ * {@link MessageEmbed}にプレイヤーステータスを入力したものを作り、それを返すクラス
+ * 
+ * @property {@link playerName} プレイヤー名
+ * @property {@link playerLevel} プレイヤーのレベル
+ * @property {@link playerRank} プレイヤーのランク
+ * @property {@link playerRankImage} プレイヤーのランクアイコン
+ * @property {@link playerRankRP} プレイヤーのランクポイント
+ * @property {@link playerRanking} プレイヤーのランク順位
+ */
 export class PlayerStatusEmbedBuilder {
 
     private playerName: string
@@ -9,6 +19,16 @@ export class PlayerStatusEmbedBuilder {
     private playerRankRP: number
     private playerRanking: number
 
+    /**
+     * プレイヤーステータスMessageEmbedを作成するのに必要な情報をプロパティに代入する
+     * 
+     * @param playerName プレイヤーの名前
+     * @param playerLevel プレイヤーのレベル
+     * @param playerRank プレイヤーのランク名
+     * @param playerRankImage プレイヤーのランクのアイコン
+     * @param playerRankRP プレイヤーのランクポイント
+     * @param playerRanking プレイヤーのランク順位
+     */
     constructor(
         playerName: string,
         playerLevel: number,
@@ -25,6 +45,13 @@ export class PlayerStatusEmbedBuilder {
         this.playerRanking = playerRanking
     }
 
+    /**
+     * {@link MessageEmbed}にプレイヤーステータスを入力したものを作り、それを返すメソッド
+     * *プレイヤーがプレデターの場合、プレデターのプレイヤーステータスメッセージを作成し
+     * *プレデターでない場合、普通のプレイヤーステータスメッセージを作成する
+     * 
+     * @returns {@link MessageEmbed}にプレイヤーステータスを入力したものを返す
+     */
     public build(): MessageEmbed {
         let embed
         if (this.isPlayerRankPredator()) {
@@ -35,6 +62,7 @@ export class PlayerStatusEmbedBuilder {
         return embed
     }
 
+    // MessageEmbedにプレイヤーステータスを入力したものを作り、それを返すメソッド
     private buildPlayerStatusEmbed(): MessageEmbed {
         let blank = '\u200b'
         return new MessageEmbed()
@@ -50,6 +78,7 @@ export class PlayerStatusEmbedBuilder {
             .setImage(this.playerRankImage)
     }
 
+    // MessageEmbedにプレデターのプレイヤーステータスを入力したものを作り、それを返すメソッド
     private buildPredatorPlayerStatusEmbed(): MessageEmbed {
         let blank = '\u200b'
         let predatorIconImage =
@@ -69,6 +98,7 @@ export class PlayerStatusEmbedBuilder {
             .setImage(predatorIconImage)
     }
 
+    // プレイヤーがプレデターか確認するメソッド
     private isPlayerRankPredator(): Boolean {
         return this.playerRanking <= 750
     }

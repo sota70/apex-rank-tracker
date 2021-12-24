@@ -39,10 +39,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommandChannelLoader = void 0;
 var sqldatamanager_1 = require("../sql/sqldatamanager");
 var commandchannel_1 = require("./commandchannel");
+/**
+ * コマンド専用チャンネルの情報をデータベースから取得するクラス
+ *
+ * @property {@link serverId} ディスコードサーバーのID
+ */
 var CommandChannelLoader = /** @class */ (function () {
     function CommandChannelLoader(serverId) {
         this.serverId = serverId;
     }
+    /**
+     * データベースサーバーに保存されている全てのコマンド専用チャンネルの情報を取得するメソッド
+     *
+     * @returns チャンネルの情報を{@link CommandChannel}に入れ、それを配列として返す
+     */
     CommandChannelLoader.prototype.getAllCommandChannels = function () {
         return __awaiter(this, void 0, void 0, function () {
             var commandChannels, commandChannelsData;
@@ -61,6 +71,12 @@ var CommandChannelLoader = /** @class */ (function () {
             });
         });
     };
+    /**
+     * {@link serverId}に適応したコマンド専用チャンネルをデータベースから取得するメソッド
+     * * もし適応したチャンネルが見つからなかった場合はundefinedが返る
+     *
+     * @returns {@link serverId}に適応したチャンネルを{@link CommandChannel}として返す
+     */
     CommandChannelLoader.prototype.getCommandChannel = function () {
         return __awaiter(this, void 0, void 0, function () {
             var commandChannels, i;
@@ -79,6 +95,12 @@ var CommandChannelLoader = /** @class */ (function () {
             });
         });
     };
+    /**
+     *
+     *
+     * @param client
+     * @returns
+     */
     CommandChannelLoader.prototype.getCommandChannelId = function (client) {
         return __awaiter(this, void 0, void 0, function () {
             var commandChannel, guild;

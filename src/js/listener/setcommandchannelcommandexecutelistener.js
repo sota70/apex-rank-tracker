@@ -2,9 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SetCommandChannelCommandExecuteListener = void 0;
 var commandchannelwriter_1 = require("../commandchannel/commandchannelwriter");
+/**
+ * ディスコードのサーバーのコマンドチャンネルを指定するコマンドが呼び出されたときの処理をするリスナークラス
+ */
 var SetCommandChannelCommandExecuteListener = /** @class */ (function () {
     function SetCommandChannelCommandExecuteListener() {
     }
+    /**
+     * ディスコードのサーバーのコマンドチャンネルを指定するコマンドが呼び出されたときの処理をするメソッド
+     * * そのディスコードサーバーのIDとコマンドチャンネルに指定したチャンネルIDをセットでデータベースに保存する
+     *
+     * @param event コマンド呼び出しを検知するイベント
+     */
     SetCommandChannelCommandExecuteListener.prototype.handle = function (event) {
         if (event.commandName !== 'setcommandchannel' && event.commandName !== 'scc')
             return;

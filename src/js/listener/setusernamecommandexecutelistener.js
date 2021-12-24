@@ -2,9 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SetUsernameCommandExecuteListener = void 0;
 var userinfowriter_1 = require("../userinfo/userinfowriter");
+/**
+ * ユーザー名を設定するコマンドが呼び出されたときの処理をするリスナークラス
+ */
 var SetUsernameCommandExecuteListener = /** @class */ (function () {
     function SetUsernameCommandExecuteListener() {
     }
+    /**
+     * ユーザー名を設定するコマンドが呼び出されたときの処理をするメソッド
+     * * ユーザー名とプラットフォームをコマンドを実行したディスコードユーザーIDと一緒にデータベースに保存する
+     *
+     * @param event コマンド呼び出しを検知するイベント
+     */
     SetUsernameCommandExecuteListener.prototype.handle = function (event) {
         if (event.commandName !== 'setusername' && event.commandName !== 'sun')
             return;
