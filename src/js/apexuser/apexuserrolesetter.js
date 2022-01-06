@@ -35,13 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ApexUserRoleSetter = void 0;
-var request_1 = __importDefault(require("request"));
-var rankrolebuilder_1 = require("../util/rankrolebuilder");
+var guildroleloader_1 = require("../guildrole/guildroleloader");
+var guildrankroleloader_1 = require("../guildrole/guildrankroleloader");
+var rankroles_1 = require("../guildrole/rankroles");
 var apexuserdatareader_1 = require("./apexuserdatareader");
 /**
  * ディスコードユーザーがセットしたapexユーザーのランクに適応したロールを付与するクラス
@@ -64,91 +62,72 @@ var ApexUserRoleSetter = /** @class */ (function () {
      * * ディスコードユーザーはあらかじめapexユーザーをセットしておく必要がある
      */
     ApexUserRoleSetter.prototype.setPlayerRankRole = function () {
-        var _this = this;
-        var url = "https://public-api.tracker.gg/apex/v1/standard/profile/" + this.checkPlatform() + "/" + this.username;
-        request_1.default.get({
-            url: url,
-            headers: { "TRN-Api-Key": process.env.APEX_TRACKER_API_KEY }
-        }, function (err, res, body) {
-            var jsonData = JSON.parse(body);
-            if (jsonData.data === undefined)
-                return;
-            var apexUserDataLoader = new apexuserdatareader_1.ApexUserDataLoader(_this.username, _this.platform);
-            var playerRank = jsonData.data.metadata.rankName;
-            var playerRanking = apexUserDataLoader.getPlayerRanking(jsonData.data.stats);
-            _this.setPlayerRole(playerRank, playerRanking);
-        });
-    };
-    // ディスコードユーザーがセットしたapexユーザーのランクに適応したロールを付与するメソッド
-    ApexUserRoleSetter.prototype.setPlayerRole = function (rankName, ranking) {
         return __awaiter(this, void 0, void 0, function () {
-            var role, isPlayerRankPredator, rankRoleBuilder;
+            var apexUserData, battleRoyalRankName, arenaRankName, guildRankRoleLoader, battleRoyalRankRole, arenaRankRole;
             return __generator(this, function (_a) {
-                isPlayerRankPredator = ranking <= 750;
-                rankRoleBuilder = new rankrolebuilder_1.RankRoleBuilder(rankName, this.guild);
-                if (isPlayerRankPredator) {
-                    role = rankRoleBuilder.buildPredatorRole();
-                    this.resetPlayerRankRole();
-                    this.discordUser.roles.add(role);
-                    return [2 /*return*/];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, new apexuserdatareader_1.ApexUserDataLoader(this.username, this.platform).getPlayerData()];
+                    case 1:
+                        apexUserData = _a.sent();
+                        battleRoyalRankName = apexUserData.battleRoyalData.rank;
+                        arenaRankName = apexUserData.arenaData.rank;
+                        guildRankRoleLoader = new guildrankroleloader_1.GuildRankRoleLoader(this.guild);
+                        battleRoyalRankRole = guildRankRoleLoader.fetchApexBattleRoyalRankRoleFromName(battleRoyalRankName);
+                        arenaRankRole = guildRankRoleLoader.fetchApexArenaRankRoleFromName(arenaRankName);
+                        if (battleRoyalRankRole === undefined || arenaRankRole === undefined)
+                            return [2 /*return*/];
+                        this.resetPlayerRankRole();
+                        this.discordUser.roles.add(battleRoyalRankRole);
+                        this.discordUser.roles.add(arenaRankRole);
+                        return [2 /*return*/];
                 }
-                role = rankRoleBuilder.build();
-                this.resetPlayerRankRole();
-                this.discordUser.roles.add(role);
-                return [2 /*return*/];
             });
         });
     };
     // ディスコードユーザーのランクをリセットするメソッド
     ApexUserRoleSetter.prototype.resetPlayerRankRole = function () {
-        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var rankRoles, i;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        rankRoles = [
-                            this.guild.roles.cache.find(function (r) { return r.name === "Gold 4"; }),
-                            this.guild.roles.cache.find(function (r) { return r.name === "Gold 3"; }),
-                            this.guild.roles.cache.find(function (r) { return r.name === "Gold 2"; }),
-                            this.guild.roles.cache.find(function (r) { return r.name === "Gold 1"; }),
-                            this.guild.roles.cache.find(function (r) { return r.name === "Platinum 4"; }),
-                            this.guild.roles.cache.find(function (r) { return r.name === "Platinum 3"; }),
-                            this.guild.roles.cache.find(function (r) { return r.name === "Platinum 2"; }),
-                            this.guild.roles.cache.find(function (r) { return r.name === "Platinum 1"; }),
-                            this.guild.roles.cache.find(function (r) { return r.name === "Diamond 4"; }),
-                            this.guild.roles.cache.find(function (r) { return r.name === "Diamond 3"; }),
-                            this.guild.roles.cache.find(function (r) { return r.name === "Diamond 2"; }),
-                            this.guild.roles.cache.find(function (r) { return r.name === "Diamond 1"; }),
-                            this.guild.roles.cache.find(function (r) { return r.name === "Master"; }),
-                            this.guild.roles.cache.find(function (r) { return r.name === "Predator"; })
-                        ];
-                        i = 0;
-                        _b.label = 1;
-                    case 1:
-                        if (!(i < rankRoles.length)) return [3 /*break*/, 4];
-                        if (!this.discordUser.roles.cache.has((_a = rankRoles[i]) === null || _a === void 0 ? void 0 : _a.id))
-                            return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.discordUser.roles.remove(rankRoles[i])];
-                    case 2:
-                        _b.sent();
-                        _b.label = 3;
-                    case 3:
-                        i++;
-                        return [3 /*break*/, 1];
-                    case 4: return [2 /*return*/];
-                }
+            var guildRoleLoader;
+            var _this = this;
+            return __generator(this, function (_a) {
+                guildRoleLoader = new guildroleloader_1.GuildRoleLoader(this.guild);
+                rankroles_1.BATTLE_ROYAL_RANK_ROLE_NAMES.forEach(function (rankName) { return __awaiter(_this, void 0, void 0, function () {
+                    var rankRole;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                rankRole = guildRoleLoader.fetchRoleFromName(rankName);
+                                if (rankRole === undefined)
+                                    return [2 /*return*/];
+                                if (!this.discordUser.roles.cache.has(rankRole.id))
+                                    return [2 /*return*/];
+                                return [4 /*yield*/, this.discordUser.roles.remove(rankRole)];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
+                rankroles_1.ARENA_RANK_ROLE_NAMES.forEach(function (rankName) { return __awaiter(_this, void 0, void 0, function () {
+                    var rankRole;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                rankRole = guildRoleLoader.fetchRoleFromName(rankName);
+                                if (rankRole === undefined)
+                                    return [2 /*return*/];
+                                if (!this.discordUser.roles.cache.has(rankRole.id))
+                                    return [2 /*return*/];
+                                return [4 /*yield*/, this.discordUser.roles.remove(rankRole)];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/];
             });
         });
-    };
-    // apiを使う用にプラットフォームを数字に変更するメソッド
-    ApexUserRoleSetter.prototype.checkPlatform = function () {
-        switch (this.platform) {
-            case "pc": return 5;
-            case "ps4": return 2;
-            case "xbox": return 1;
-            default: return 0;
-        }
     };
     return ApexUserRoleSetter;
 }());

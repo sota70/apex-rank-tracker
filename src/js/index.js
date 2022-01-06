@@ -62,6 +62,8 @@ var commandchannelreader_1 = require("./commandchannel/commandchannelreader");
 var commandexecuteevent_1 = require("./event/commandexecuteevent");
 var commandregister_1 = require("./register/commandregister");
 var serverreceivemethodevent_1 = require("./event/serverreceivemethodevent");
+var apexuserdatareader_1 = require("./apexuser/apexuserdatareader");
+var rankroles_1 = require("./guildrole/rankroles");
 var config = env.config();
 var client = new discord_js_1.Client({
     intents: [
@@ -81,6 +83,7 @@ loginToClient();
  * @notExported
  */
 client.on('ready', function () { return __awaiter(void 0, void 0, void 0, function () {
+    var apexUserDataLoader, data;
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
@@ -91,9 +94,18 @@ client.on('ready', function () { return __awaiter(void 0, void 0, void 0, functi
             case 1:
                 _b.sent();
                 client.application = new discord_js_1.ClientApplication(client, {});
-                return [4 /*yield*/, client.application.fetch()];
+                return [4 /*yield*/, client.application.fetch()
+                    // Debug
+                ];
             case 2:
                 _b.sent();
+                apexUserDataLoader = new apexuserdatareader_1.ApexUserDataLoader("Emotional_Sota", "origin");
+                return [4 /*yield*/, apexUserDataLoader.getPlayerData()];
+            case 3:
+                data = _b.sent();
+                console.log(data);
+                console.log(rankroles_1.BATTLE_ROYAL_RANK_ROLE_NAMES.get(data.battleRoyalData.rank));
+                console.log(rankroles_1.ARENA_RANK_ROLE_NAMES.get(data.arenaData.rank));
                 return [2 /*return*/];
         }
     });

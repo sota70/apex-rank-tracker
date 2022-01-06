@@ -1,5 +1,9 @@
 import { ApexUserData } from "./apexuserdata"
 import * as request from 'request'
+import { ApexUserBattleRoyalData } from "./apexuserbattleroyaldata"
+import { ApexUserArenaData } from "./apexuserarenadata"
+import { ApexUserBattleRoyalDataBuilder } from "./apexuserbattleroyaldatabuilder"
+import { ApexUserArenaDataBuilder } from "./apexuserarenadatabuilder"
 
 /**
  * apexプレイヤーのデータを取得するクラス
@@ -26,21 +30,22 @@ export class ApexUserDataLoader {
      * @returns プレイヤーデータを{@link ApexUserData}型で返す
      */
     public async getPlayerData(): Promise<ApexUserData> {
-        let apexUserData = new ApexUserData("None", 0, "None", "None", -1, -1)
-        let url = `https://public-api.tracker.gg/apex/v1/standard/profile/${this.checkPlatform()}/${this.username}`
-        request.get({
+        let apexUserData = 
+            new ApexUserData("", 0, new ApexUserBattleRoyalData("", "", -1, -1), new ApexUserArenaData("", "", -1, -1))
+        let url = `https://public-api.tracker.gg/v2/apex/standard/profile/${this.platform}/${this.username}`
+        let requestOptions = {
             url: url,
             headers: { "TRN-Api-Key": process.env.APEX_TRACKER_API_KEY }
-        }, (err, res, body) => {
+        }
+        request.get(requestOptions, (err, res, body) => {
             let jsonData = JSON.parse(body)
             if (jsonData.data === undefined) return apexUserData
-            let playerName = jsonData.data.metadata.platformUserHandle
-            let playerLevel = jsonData.data.metadata.level
-            let playerRank = jsonData.data.metadata.rankName
-            let playerRankImage = jsonData.data.metadata.rankImage
-            let playerRankRP = this.getPlayerRP(jsonData.data.stats)
-            let playerRanking = this.getPlayerRanking(jsonData.data.stats)
-            apexUserData = new ApexUserData(playerName, playerLevel, playerRank, playerRankImage, playerRankRP, playerRanking)
+            let playerName = jsonData.data.platformInfo.platformUserId
+            let playerStats = jsonData.data.segments[0].stats
+            let playerLevel = playerStats.level.value
+            let battleRoyalData = new ApexUserBattleRoyalDataBuilder(playerStats).build()
+            let arenaData = new ApexUserArenaDataBuilder(playerStats).build()
+            apexUserData = new ApexUserData(playerName, playerLevel, battleRoyalData, arenaData)
         })
         await this.delay()
         return apexUserData
@@ -52,11 +57,8 @@ export class ApexUserDataLoader {
      * @param playerStatistics プレイヤーの統計データ
      * @returns プレイヤーのランクポイントを返す
      */
-    public getPlayerRP(playerStatistics: Array<any>): any {
-        for (let i = 0; i < playerStatistics.length; i++) {
-            if (playerStatistics[i].metadata.key !== "RankScore") continue
-            return playerStatistics[i].value
-        }
+    public getPlayerBattleRoyalRP(playerStats: any): number {
+        return playerStats.rankScore.value
     }
 
     /**
@@ -65,21 +67,8 @@ export class ApexUserDataLoader {
      * @param playerStatistics プレイヤーの統計データ
      * @returns プレイヤーのランク順位を返す
      */
-    public getPlayerRanking(playerStatistics: Array<any>): any {
-        for (let i = 0; i < playerStatistics.length; i++) {
-            if (playerStatistics[i].metadata.key !== "RankScore") continue
-            return playerStatistics[i].rank
-        }
-    }
-
-    // apiを使う用にプラットフォームを数字に変更するメソッド
-    private checkPlatform(): number {
-        switch (this.platform) {
-            case "pc": return 5
-            case "ps4": return 2
-            case "xbox": return 1
-            default: return 0
-        }
+    public getPlayerRanking(playerStats: any): number {
+        return playerStats.rankScore.rank
     }
 
     // 1秒間の遅延を発生させるメソッド

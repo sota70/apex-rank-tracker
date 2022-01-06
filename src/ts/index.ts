@@ -6,6 +6,10 @@ import { CommandExecuteEvent } from './event/commandexecuteevent'
 import { Event } from './event/event'
 import { CommandRegister } from './register/commandregister'
 import { ServerReceiveMethodEvent } from './event/serverreceivemethodevent'
+import * as request from 'request'
+import { ApexUserDataLoader } from './apexuser/apexuserdatareader'
+import { GuildRankRoleLoader } from './guildrole/guildrankroleloader'
+import { ARENA_RANK_ROLE_NAMES, BATTLE_ROYAL_RANK_ROLE_NAMES } from './guildrole/rankroles'
 
 const config = env.config()
 const client = new Client({
@@ -33,6 +37,13 @@ client.on('ready',async () => {
     await new CommandRegister().register()
     client.application = new ClientApplication(client, {})
     await client.application.fetch()
+
+    // Debug
+    let apexUserDataLoader = new ApexUserDataLoader("Emotional_Sota", "origin")
+    let data = await apexUserDataLoader.getPlayerData()
+    console.log(data)
+    console.log(BATTLE_ROYAL_RANK_ROLE_NAMES.get(data.battleRoyalData.rank))
+    console.log(ARENA_RANK_ROLE_NAMES.get(data.arenaData.rank))
 })
 
 /**
