@@ -49,21 +49,6 @@ export class ApexUserRoleSetter {
         this.resetPlayerRankRole()
         this.discordUser.roles.add(battleRoyalRankRole)
         this.discordUser.roles.add(arenaRankRole)
-        
-        // let url = `https://public-api.tracker.gg/apex/v1/standard/profile/${this.checkPlatform()}/${this.username}`
-        // request.get({
-        //     url: url,
-        //     headers: { "TRN-Api-Key": process.env.APEX_TRACKER_API_KEY }
-        // }, (err, res, body) => {
-        //     let jsonData = JSON.parse(body)
-        //     if (jsonData.data === undefined) return
-        //     let apexUserDataLoader = new ApexUserDataLoader(this.username, this.platform)
-        //     let playerRank = jsonData.data.metadata.rankName
-        //     let playerRanking = apexUserDataLoader.getPlayerRanking(jsonData.data.stats)
-        //     let guildRoleLoader = new GuildRoleLoader(this.guild)
-        //     this.resetPlayerRankRole()
-        //     this.setPlayerBattleRoyalRole(playerRank, playerRanking)
-        // })
     }
 
     // ディスコードユーザーのランクをリセットするメソッド

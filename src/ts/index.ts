@@ -6,6 +6,7 @@ import { CommandExecuteEvent } from './event/commandexecuteevent'
 import { Event } from './event/event'
 import { CommandRegister } from './register/commandregister'
 import { ServerReceiveMethodEvent } from './event/serverreceivemethodevent'
+import { ApexUserRoleSetter } from './apexuser/apexuserrolesetter'
 const config = env.config()
 const client = new Client({
     intents: [

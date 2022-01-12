@@ -1,5 +1,3 @@
-import { ApexUserData } from "./apexuserdata"
-
 /**
  * apexプレイヤーのバトルロワイヤルのデータを保管しておくデータクラス
  * * {@link ApexUserData}の一部として使われる

@@ -56,12 +56,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ApexUserDataLoader = void 0;
-var apexuserdata_1 = require("./apexuserdata");
 var request = __importStar(require("request"));
 var apexuserbattleroyaldata_1 = require("./apexuserbattleroyaldata");
 var apexuserarenadata_1 = require("./apexuserarenadata");
 var apexuserbattleroyaldatabuilder_1 = require("./apexuserbattleroyaldatabuilder");
 var apexuserarenadatabuilder_1 = require("./apexuserarenadatabuilder");
+var apexuserdata_1 = require("./apexuserdata");
 /**
  * apexプレイヤーのデータを取得するクラス
  *

@@ -1,5 +1,3 @@
-import { ApexUserData } from './apexuserdata'
-
 /**
  * apexプレイヤーのアリーナーデータを保管しておくデータクラス
  * * {@link ApexUserData}の一部として使われる

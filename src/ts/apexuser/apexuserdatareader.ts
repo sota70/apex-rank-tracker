@@ -1,9 +1,9 @@
-import { ApexUserData } from "./apexuserdata"
 import * as request from 'request'
 import { ApexUserBattleRoyalData } from "./apexuserbattleroyaldata"
 import { ApexUserArenaData } from "./apexuserarenadata"
 import { ApexUserBattleRoyalDataBuilder } from "./apexuserbattleroyaldatabuilder"
 import { ApexUserArenaDataBuilder } from "./apexuserarenadatabuilder"
+import { ApexUserData } from './apexuserdata'
 
 /**
  * apexプレイヤーのデータを取得するクラス
